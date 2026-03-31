@@ -734,6 +734,17 @@ export default function AdminPage() {
   const [selectedH, setSelectedH] = useState<Set<string>>(new Set());
   const [showBulkH, setShowBulkH] = useState(false);
 
+  /* PROMO BANNER */
+  const [promoCfg, setPromoCfg] = useState<{
+    enabled: boolean;
+    min_order: number;
+    discount_type: 'percent' | 'value';
+    discount_amount: number;
+    message: string;
+  }>({ enabled: false, min_order: 50, discount_type: 'percent', discount_amount: 10, message: '' });
+  const [savingPromo, setSavingPromo] = useState(false);
+  const [promoMsg, setPromoMsg] = useState('');
+
   /* ── fetch rezervări ── */
   const fetchRezervari = useCallback(async () => {
     setLoadingRez(true);
@@ -757,14 +768,29 @@ export default function AdminPage() {
   /* ── fetch sărbători ── */
   const fetchHoliday = useCallback(async () => {
     setLoadingHoliday(true);
-    const [menuRes, holidayRes] = await Promise.all([
+    const [menuRes, holidayRes, promoRes] = await Promise.all([
       fetch('/api/menu').then((r) => r.json()),
       fetch('/api/holiday').then((r) => r.json()),
+      fetch('/api/promo').then((r) => r.json()).catch(() => ({ data: null })),
     ]);
     setHolidayItems((menuRes.data as MenuItem[]).filter((i) => i.available));
     if (holidayRes.data) setHolidayCfg(holidayRes.data as HolidayConfig);
+    if (promoRes.data) setPromoCfg(promoRes.data);
     setLoadingHoliday(false);
   }, []);
+
+  /* ── save promo config ── */
+  const savePromoConfig = async () => {
+    setSavingPromo(true); setPromoMsg('');
+    const res = await fetch('/api/promo', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(promoCfg),
+    });
+    setPromoMsg(res.ok ? 'Salvat cu succes!' : 'Eroare la salvare.');
+    setSavingPromo(false);
+    setTimeout(() => setPromoMsg(''), 3000);
+  };
 
   useEffect(() => { fetchRezervari(); }, [fetchRezervari]);
   useEffect(() => { if (tab === 'meniu') fetchMenu(); }, [tab, fetchMenu]);
@@ -947,7 +973,7 @@ export default function AdminPage() {
 
       <main className="max-w-7xl mx-auto px-6 pt-28 pb-16">
         {/* ── Tabs ── */}
-        <div className="flex gap-2 mb-8">
+        <div className="flex flex-wrap gap-2 mb-8">
           {(['rezervari', 'meniu', 'sarbatori'] as const).map((t) => (
             <button
               key={t}
@@ -973,7 +999,7 @@ export default function AdminPage() {
                 <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Dashboard Rezervări</h1>
                 <p className="text-gray-500 mt-1">{rezervari.length} rezervări în total</p>
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-3">
                 <button
                   onClick={() => exportRezervariExcel(rezervari)}
                   disabled={rezervari.length === 0}
@@ -1036,11 +1062,11 @@ export default function AdminPage() {
 
             {/* Bara acțiuni bulk — apare doar când există selecție */}
             {selectedRez.size > 0 && (
-              <div className="mb-4 flex items-center gap-3 p-4 bg-teal-50 border border-teal-200 rounded-2xl">
+              <div className="mb-4 flex flex-wrap items-center gap-3 p-4 bg-teal-50 border border-teal-200 rounded-2xl">
                 <span className="text-sm font-semibold text-teal-700">
                   {selectedRez.size} selectate
                 </span>
-                <div className="flex gap-2 ml-auto">
+                <div className="flex flex-wrap gap-2 ml-auto">
                   <button
                     onClick={() => bulkUpdateStatus('confirmat')}
                     disabled={bulkLoading}
@@ -1461,6 +1487,82 @@ export default function AdminPage() {
                   {holidayMsg && (
                     <span className={`text-sm font-semibold ${holidayMsg.includes('succes') ? 'text-teal-600' : 'text-red-600'}`}>
                       {holidayMsg}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* ── Banner promoțional ── */}
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="font-bold text-gray-800 text-base">Banner promoțional meniu</h2>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <span className="text-sm text-gray-500">Activ</span>
+                    <div
+                      onClick={() => setPromoCfg((c) => ({ ...c, enabled: !c.enabled }))}
+                      className={`relative w-11 h-6 rounded-full transition-colors cursor-pointer ${promoCfg.enabled ? 'bg-amber-500' : 'bg-gray-300'}`}
+                    >
+                      <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${promoCfg.enabled ? 'translate-x-5' : ''}`} />
+                    </div>
+                  </label>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Comandă minimă (RON)</label>
+                    <input type="number" min={0} step={5}
+                      value={promoCfg.min_order}
+                      onChange={(e) => setPromoCfg((c) => ({ ...c, min_order: parseFloat(e.target.value) || 0 }))}
+                      className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Tip reducere</label>
+                    <select
+                      value={promoCfg.discount_type}
+                      onChange={(e) => setPromoCfg((c) => ({ ...c, discount_type: e.target.value as 'percent' | 'value' }))}
+                      className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    >
+                      <option value="percent">Procent (%)</option>
+                      <option value="value">Valoare fixă (RON)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">
+                      Valoare {promoCfg.discount_type === 'percent' ? '(%)' : '(RON)'}
+                    </label>
+                    <input type="number" min={0} step={0.5}
+                      value={promoCfg.discount_amount}
+                      onChange={(e) => setPromoCfg((c) => ({ ...c, discount_amount: parseFloat(e.target.value) || 0 }))}
+                      className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Mesaj personalizat (opțional)</label>
+                    <input type="text"
+                      value={promoCfg.message}
+                      onChange={(e) => setPromoCfg((c) => ({ ...c, message: e.target.value }))}
+                      placeholder="Lasă gol pentru mesaj automat"
+                      className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    />
+                  </div>
+                </div>
+                {promoCfg.enabled && (
+                  <div className="mb-4 flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-800">
+                    <span>👁 Preview:</span>
+                    <span>{promoCfg.message || `Comandă de peste ${promoCfg.min_order} RON și primești ${promoCfg.discount_type === 'percent' ? `${promoCfg.discount_amount}% reducere` : `${promoCfg.discount_amount} RON reducere`}! Menționează la comandă.`}</span>
+                  </div>
+                )}
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={savePromoConfig}
+                    disabled={savingPromo}
+                    className="px-6 py-2.5 bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-white font-semibold text-sm rounded-xl transition-all"
+                  >
+                    {savingPromo ? 'Se salvează…' : 'Salvează banner'}
+                  </button>
+                  {promoMsg && (
+                    <span className={`text-sm font-semibold ${promoMsg.includes('succes') ? 'text-teal-600' : 'text-red-600'}`}>
+                      {promoMsg}
                     </span>
                   )}
                 </div>

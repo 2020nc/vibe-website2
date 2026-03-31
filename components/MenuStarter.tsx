@@ -44,14 +44,53 @@ function discountLabel(item: MenuItem): string | null {
     : `-${item.discount_amount} RON`;
 }
 
+type Currency = 'RON' | 'EUR' | 'USD';
+
+interface CursValutar {
+  EUR: number;
+  USD: number;
+  updatedAt: string;
+}
+
+interface PromoConfig {
+  enabled: boolean;
+  min_order: number;
+  discount_type: 'percent' | 'value';
+  discount_amount: number;
+  message: string;
+}
+
+type ColCount = 3 | 4 | 5;
+
+const COL_CLASSES: Record<ColCount, string> = {
+  3: 'grid-cols-1 md:grid-cols-3',
+  4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
+  5: 'grid-cols-1 md:grid-cols-3 lg:grid-cols-5',
+};
+
 export default function MenuStarter() {
   const [items, setItems]         = useState<MenuItem[]>([]);
   const [loading, setLoading]     = useState(true);
   const [activeTab, setActiveTab] = useState('');
   const [visible, setVisible]     = useState(true);
+  const [cols, setCols]           = useState<ColCount>(3);
+  const [promo, setPromo]         = useState<PromoConfig | null>(null);
+  const [currency, setCurrency]   = useState<Currency>('RON');
+  const [curs, setCurs]           = useState<CursValutar | null>(null);
   // ID-ul cardului deschis + add-on-urile selectate
   const [openCard, setOpenCard]   = useState<string | null>(null);
   const [selected, setSelected]   = useState<Record<string, Set<string>>>({});
+
+  // Citește preferința din localStorage la mount
+  useEffect(() => {
+    const saved = localStorage.getItem('menu_cols');
+    if (saved === '4' || saved === '5') setCols(Number(saved) as ColCount);
+  }, []);
+
+  function changeCols(n: ColCount) {
+    setCols(n);
+    localStorage.setItem('menu_cols', String(n));
+  }
 
   function toggleAddOn(itemId: string, addOnId: string) {
     setSelected((prev) => {
@@ -67,15 +106,24 @@ export default function MenuStarter() {
   }
 
   useEffect(() => {
-    fetch('/api/menu')
-      .then((r) => r.json())
-      .then(({ data }) => {
-        const available = (data as MenuItem[]).filter((i) => i.available);
-        setItems(available);
-        if (available.length > 0) setActiveTab(available[0].category);
-      })
-      .finally(() => setLoading(false));
+    Promise.all([
+      fetch('/api/menu').then((r) => r.json()),
+      fetch('/api/promo').then((r) => r.json()).catch(() => ({ data: null })),
+      fetch('/api/curs').then((r) => r.json()).catch(() => ({ data: null })),
+    ]).then(([menuRes, promoRes, cursRes]) => {
+      const available = (menuRes.data as MenuItem[]).filter((i) => i.available);
+      setItems(available);
+      if (available.length > 0) setActiveTab(available[0].category);
+      if (promoRes.data) setPromo(promoRes.data as PromoConfig);
+      if (cursRes.data) setCurs(cursRes.data as CursValutar);
+    }).finally(() => setLoading(false));
   }, []);
+
+  function toDisplayPrice(ron: number): string {
+    if (currency === 'EUR' && curs) return (ron / curs.EUR).toFixed(2) + ' €';
+    if (currency === 'USD' && curs) return (ron / curs.USD).toFixed(2) + ' $';
+    return ron + ' RON';
+  }
 
   // Categorii unice în ordinea în care apar
   const categories = [...new Set(items.map((i) => i.category))];
@@ -110,10 +158,25 @@ export default function MenuStarter() {
           </div>
         )}
 
+        {!loading && promo?.enabled && (
+          <div className="mb-8 flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-6 py-4">
+            <span className="text-2xl">🎁</span>
+            <p className="text-amber-800 font-medium text-sm md:text-base">
+              {promo.message
+                ? promo.message
+                : `Comandă de peste ${promo.min_order} RON și primești ${
+                    promo.discount_type === 'percent'
+                      ? `${promo.discount_amount}% reducere`
+                      : `${promo.discount_amount} RON reducere`
+                  }! Menționează la comandă.`}
+            </p>
+          </div>
+        )}
+
         {!loading && (
           <>
-            {/* Tab-uri categorii */}
-            <div className="flex flex-wrap justify-center gap-3 mb-12">
+            {/* Tab-uri categorii + toggle coloane */}
+            <div className="flex flex-wrap justify-center gap-3 mb-8">
               {categories.map((cat) => (
                 <button
                   key={cat}
@@ -129,9 +192,53 @@ export default function MenuStarter() {
               ))}
             </div>
 
+            {/* Toggle coloane + valută */}
+            <div className="flex flex-wrap justify-between items-center gap-3 mb-6">
+              {/* Valută — vizibil oricând dacă avem curs */}
+              {curs ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-400 font-medium">Preț în:</span>
+                  {(['RON', 'EUR', 'USD'] as Currency[]).map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => setCurrency(c)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                        currency === c
+                          ? 'bg-amber-600 text-white shadow-sm'
+                          : 'bg-gray-100 text-gray-500 hover:bg-amber-100 hover:text-amber-700'
+                      }`}
+                    >
+                      {c}
+                    </button>
+                  ))}
+                  <span className="text-xs text-gray-400 ml-1">
+                    1€={curs.EUR.toFixed(2)} RON · 1$={curs.USD.toFixed(2)} RON
+                  </span>
+                </div>
+              ) : <div />}
+
+              {/* Coloane — vizibil doar pe desktop */}
+              <div className="hidden md:flex items-center gap-2">
+                <span className="text-xs text-gray-400 font-medium mr-1">Coloane:</span>
+                {([3, 4, 5] as ColCount[]).map((n) => (
+                  <button
+                    key={n}
+                    onClick={() => changeCols(n)}
+                    className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
+                      cols === n
+                        ? 'bg-amber-600 text-white shadow-sm'
+                        : 'bg-gray-100 text-gray-500 hover:bg-amber-100 hover:text-amber-700'
+                    }`}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Grid produse */}
             <div
-              className="grid grid-cols-1 md:grid-cols-3 gap-6 transition-opacity duration-200"
+              className={`grid ${COL_CLASSES[cols]} gap-6 transition-opacity duration-200`}
               style={{ opacity: visible ? 1 : 0 }}
             >
               {tabItems.map((item) => {
@@ -171,11 +278,11 @@ export default function MenuStarter() {
                         <div className="text-right">
                           {hasDiscount && (
                             <span className="block text-xs text-gray-400 line-through">
-                              {item.price} RON
+                              {toDisplayPrice(item.price)}
                             </span>
                           )}
                           <span className={`font-bold ${hasDiscount ? 'text-red-500' : 'text-amber-600'}`}>
-                            {finalPrice} RON
+                            {toDisplayPrice(finalPrice)}
                           </span>
                         </div>
                       </div>
@@ -215,7 +322,7 @@ export default function MenuStarter() {
                                   {addon.name}
                                 </span>
                                 <span className="text-xs font-semibold text-amber-600">
-                                  +{addon.price} RON
+                                  +{toDisplayPrice(addon.price)}
                                 </span>
                               </label>
                             );
@@ -226,7 +333,7 @@ export default function MenuStarter() {
                         <div className="mt-4 pt-3 border-t border-gray-200 flex justify-between items-center">
                           <span className="text-sm font-semibold text-gray-700">Total estimat:</span>
                           <span className="text-base font-bold text-amber-700">
-                            {total.toFixed(2)} RON
+                            {toDisplayPrice(total)}
                           </span>
                         </div>
                         <p className="text-xs text-gray-400 mt-1">
