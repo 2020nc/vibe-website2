@@ -52,8 +52,7 @@ export default function Navigation() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 18v3" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 18v3" />
           </svg>
-          <span className="font-bold text-xl transition-all duration-300" style={{ color: '#111827' }}
-            style={{ fontFamily: 'var(--font-playfair)' }}
+          <span className="font-bold text-xl transition-all duration-300" style={{ color: '#111827', fontFamily: 'var(--font-playfair)' }}
           >
             Vibe Coffee
           </span>
