@@ -28,7 +28,7 @@ export default function Navigation() {
       if (!el) return;
       const obs = new IntersectionObserver(
         ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
-        { threshold: 0.3 }
+        { threshold: 0.1, rootMargin: '-60px 0px -40% 0px' }
       );
       obs.observe(el);
       observers.push(obs);
@@ -40,8 +40,8 @@ export default function Navigation() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/85 backdrop-blur-md shadow-lg py-3'
-          : 'bg-transparent py-5'
+          ? 'bg-white/95 backdrop-blur-md shadow-lg py-3'
+          : 'bg-black/30 backdrop-blur-sm py-5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
@@ -107,9 +107,7 @@ export default function Navigation() {
 
         {/* Mobile Menu Button */}
         <button
-          className={`md:hidden ${
-            isScrolled ? 'text-gray-900' : 'text-white dark:text-gray-900'
-          }`}
+          className={`md:hidden ${isScrolled ? 'text-gray-900' : 'text-white'}`}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
