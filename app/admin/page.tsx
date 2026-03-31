@@ -711,6 +711,8 @@ export default function AdminPage() {
   const [cautare, setCautare] = useState('');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [eroareRez, setEroareRez] = useState('');
+  const [selectedRez, setSelectedRez] = useState<Set<string>>(new Set());
+  const [bulkLoading, setBulkLoading] = useState(false);
 
   /* MENIU */
   const [items, setItems] = useState<MenuItem[]>([]);
@@ -790,6 +792,50 @@ export default function AdminPage() {
     if (!res.ok) { const { error } = await res.json(); setEroareRez(error ?? 'Eroare'); }
     else { await fetchRezervari(); }
     setActionLoading(null);
+  };
+
+  /* ── bulk rezervări ── */
+  const toggleSelectRez = (id: string) => {
+    setSelectedRez((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const bulkUpdateStatus = async (status: Status) => {
+    if (selectedRez.size === 0) return;
+    setBulkLoading(true); setEroareRez('');
+    const ids = Array.from(selectedRez);
+    await Promise.all(
+      ids.map((id) =>
+        fetch('/api/rezervari', {
+          method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, status }),
+        })
+      )
+    );
+    setSelectedRez(new Set());
+    await fetchRezervari();
+    setBulkLoading(false);
+  };
+
+  const bulkSterge = async () => {
+    if (selectedRez.size === 0) return;
+    if (!window.confirm(`Ștergi ${selectedRez.size} rezervări selectate?`)) return;
+    setBulkLoading(true); setEroareRez('');
+    const ids = Array.from(selectedRez);
+    await Promise.all(
+      ids.map((id) =>
+        fetch('/api/rezervari', {
+          method: 'DELETE', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id }),
+        })
+      )
+    );
+    setSelectedRez(new Set());
+    await fetchRezervari();
+    setBulkLoading(false);
   };
 
   /* ── meniu actions ── */
@@ -874,6 +920,15 @@ export default function AdminPage() {
       setSelected((s) => { const n = new Set(s); filteredItems.forEach((i) => n.delete(i.id)); return n; });
     } else {
       setSelected((s) => { const n = new Set(s); filteredItems.forEach((i) => n.add(i.id)); return n; });
+    }
+  };
+
+  const allRezVisible = rezervariFiltrate.length > 0 && rezervariFiltrate.every((r) => selectedRez.has(r.id));
+  const toggleSelectAllRez = () => {
+    if (allRezVisible) {
+      setSelectedRez((prev) => { const n = new Set(prev); rezervariFiltrate.forEach((r) => n.delete(r.id)); return n; });
+    } else {
+      setSelectedRez((prev) => { const n = new Set(prev); rezervariFiltrate.forEach((r) => n.add(r.id)); return n; });
     }
   };
 
@@ -979,11 +1034,57 @@ export default function AdminPage() {
               <div className="text-center py-20 text-gray-400"><div className="text-5xl mb-4">☕</div><p>Nicio rezervare găsită.</p></div>
             )}
 
+            {/* Bara acțiuni bulk — apare doar când există selecție */}
+            {selectedRez.size > 0 && (
+              <div className="mb-4 flex items-center gap-3 p-4 bg-teal-50 border border-teal-200 rounded-2xl">
+                <span className="text-sm font-semibold text-teal-700">
+                  {selectedRez.size} selectate
+                </span>
+                <div className="flex gap-2 ml-auto">
+                  <button
+                    onClick={() => bulkUpdateStatus('confirmat')}
+                    disabled={bulkLoading}
+                    className="px-4 py-2 bg-teal-500 hover:bg-teal-600 disabled:opacity-50 text-white text-xs font-semibold rounded-xl transition-colors"
+                  >
+                    {bulkLoading ? '…' : 'Confirmă toate'}
+                  </button>
+                  <button
+                    onClick={() => bulkUpdateStatus('respins')}
+                    disabled={bulkLoading}
+                    className="px-4 py-2 bg-orange-100 hover:bg-orange-200 disabled:opacity-50 text-orange-700 text-xs font-semibold rounded-xl transition-colors"
+                  >
+                    {bulkLoading ? '…' : 'Respinge toate'}
+                  </button>
+                  <button
+                    onClick={bulkSterge}
+                    disabled={bulkLoading}
+                    className="px-4 py-2 bg-red-100 hover:bg-red-200 disabled:opacity-50 text-red-700 text-xs font-semibold rounded-xl transition-colors"
+                  >
+                    {bulkLoading ? '…' : 'Șterge toate'}
+                  </button>
+                  <button
+                    onClick={() => setSelectedRez(new Set())}
+                    className="px-3 py-2 text-gray-400 hover:text-gray-600 text-xs rounded-xl transition-colors"
+                  >
+                    Anulează
+                  </button>
+                </div>
+              </div>
+            )}
+
             {!loadingRez && rezervariFiltrate.length > 0 && (
               <div className="hidden md:block bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-gray-100 bg-gray-50/80">
+                      <th className="px-5 py-3 w-10">
+                        <input
+                          type="checkbox"
+                          checked={allRezVisible}
+                          onChange={toggleSelectAllRez}
+                          className="w-4 h-4 accent-teal-500 rounded cursor-pointer"
+                        />
+                      </th>
                       {['Client','Contact','Data / Ora','Persoane','Status','Acțiuni'].map((h, i) => (
                         <th key={h} className={`px-5 py-3 text-gray-500 font-semibold ${i === 5 ? 'text-right' : 'text-left'}`}>{h}</th>
                       ))}
@@ -992,8 +1093,17 @@ export default function AdminPage() {
                   <tbody className="divide-y divide-gray-50">
                     {rezervariFiltrate.map((r) => {
                       const cfg = STATUS_CONFIG[r.status] ?? STATUS_CONFIG['în așteptare'];
+                      const isChecked = selectedRez.has(r.id);
                       return (
-                        <tr key={r.id} className="hover:bg-teal-50/30 transition-colors">
+                        <tr key={r.id} className={`transition-colors ${isChecked ? 'bg-teal-50/60' : 'hover:bg-teal-50/30'}`}>
+                          <td className="px-5 py-4 w-10">
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={() => toggleSelectRez(r.id)}
+                              className="w-4 h-4 accent-teal-500 rounded cursor-pointer"
+                            />
+                          </td>
                           <td className="px-5 py-4">
                             <p className="font-semibold text-gray-900">{r.nume}</p>
                             {r.mesaj && <p className="text-xs text-gray-400 mt-0.5 truncate max-w-[180px]">{r.mesaj}</p>}
@@ -1038,11 +1148,19 @@ export default function AdminPage() {
                 {rezervariFiltrate.map((r) => {
                   const cfg = STATUS_CONFIG[r.status] ?? STATUS_CONFIG['în așteptare'];
                   return (
-                    <div key={r.id} className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-100 p-5">
+                    <div key={r.id} className={`backdrop-blur-sm rounded-2xl shadow-sm border p-5 transition-colors ${selectedRez.has(r.id) ? 'bg-teal-50 border-teal-200' : 'bg-white/80 border-gray-100'}`}>
                       <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <p className="font-bold text-gray-900">{r.nume}</p>
-                          <p className="text-xs text-gray-400">{r.email}</p>
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            checked={selectedRez.has(r.id)}
+                            onChange={() => toggleSelectRez(r.id)}
+                            className="w-4 h-4 accent-teal-500 rounded cursor-pointer"
+                          />
+                          <div>
+                            <p className="font-bold text-gray-900">{r.nume}</p>
+                            <p className="text-xs text-gray-400">{r.email}</p>
+                          </div>
                         </div>
                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${cfg.bg} ${cfg.text}`}>{cfg.label}</span>
                       </div>
