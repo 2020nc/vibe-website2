@@ -9,16 +9,31 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import ThemeToggle from './ThemeToggle';
 
+const NAV_SECTIONS = ['menu', 'features', 'sarbatori', 'footer'];
+
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const observers: IntersectionObserver[] = [];
+    NAV_SECTIONS.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
+        { threshold: 0.3 }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+    return () => observers.forEach((o) => o.disconnect());
   }, []);
 
   return (
@@ -56,16 +71,20 @@ export default function Navigation() {
         <div className="hidden md:flex items-center gap-6">
           <a
             href="#menu"
-            className={`link-underline font-semibold transition-colors ${
-              isScrolled ? 'text-gray-900' : 'text-white dark:text-gray-900'
+            className={`font-semibold transition-all duration-200 px-3 py-1.5 rounded-full ${
+              activeSection === 'menu'
+                ? 'bg-primary text-white shadow-sm'
+                : isScrolled
+                  ? 'text-gray-900 hover:text-primary'
+                  : 'text-white hover:text-primary-dark'
             }`}
           >
             Meniu
           </a>
           <a
             href="/locatie"
-            className={`link-underline font-semibold transition-colors ${
-              isScrolled ? 'text-gray-900' : 'text-white dark:text-gray-900'
+            className={`font-semibold transition-all duration-200 px-3 py-1.5 rounded-full ${
+              isScrolled ? 'text-gray-900 hover:text-primary' : 'text-white hover:text-primary-dark'
             }`}
           >
             Locație

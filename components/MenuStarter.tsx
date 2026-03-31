@@ -115,7 +115,8 @@ export default function MenuStarter() {
       setItems(available);
       if (available.length > 0) setActiveTab(available[0].category);
       if (promoRes.data) setPromo(promoRes.data as PromoConfig);
-      if (cursRes.data) setCurs(cursRes.data as CursValutar);
+      // Dacă BNR nu răspunde, folosim rate de fallback
+      setCurs(cursRes.data ?? { EUR: 4.97, USD: 4.56, updatedAt: '' });
     }).finally(() => setLoading(false));
   }, []);
 
@@ -195,7 +196,7 @@ export default function MenuStarter() {
             {/* Toggle coloane + valută */}
             <div className="flex flex-wrap justify-between items-center gap-3 mb-6">
               {/* Valută — vizibil oricând dacă avem curs */}
-              {curs ? (
+              {true ? (
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-gray-400 font-medium">Preț în:</span>
                   {(['RON', 'EUR', 'USD'] as Currency[]).map((c) => (
@@ -211,9 +212,12 @@ export default function MenuStarter() {
                       {c}
                     </button>
                   ))}
-                  <span className="text-xs text-gray-400 ml-1">
-                    1€={curs.EUR.toFixed(2)} RON · 1$={curs.USD.toFixed(2)} RON
-                  </span>
+                  {curs && (
+                    <span className="text-xs text-gray-400 ml-1">
+                      1€={curs.EUR.toFixed(2)} RON · 1$={curs.USD.toFixed(2)} RON
+                      {!curs.updatedAt && <span className="text-amber-400"> (estimativ)</span>}
+                    </span>
+                  )}
                 </div>
               ) : <div />}
 
