@@ -37,7 +37,7 @@ export default function Navigation() {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-sm py-4 transition-all duration-300">
+    <nav className="fixed top-0 left-0 right-0 z-50 py-4 transition-all duration-300" style={{ backgroundColor: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(12px)', boxShadow: '0 1px 8px rgba(0,0,0,0.08)' }}>
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
@@ -52,7 +52,7 @@ export default function Navigation() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 18v3" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 18v3" />
           </svg>
-          <span className="font-bold text-xl text-gray-900 transition-all duration-300"
+          <span className="font-bold text-xl transition-all duration-300" style={{ color: '#111827' }}
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
             Vibe Coffee
@@ -64,16 +64,16 @@ export default function Navigation() {
           <a
             href="#menu"
             className={`font-semibold transition-all duration-200 px-3 py-1.5 rounded-full ${
-              activeSection === 'menu'
-                ? 'bg-primary text-white shadow-sm'
-                : 'text-gray-900 hover:text-primary'
+              activeSection === 'menu' ? 'bg-primary text-white shadow-sm' : 'hover:text-primary'
             }`}
+            style={{ color: activeSection === 'menu' ? undefined : '#111827' }}
           >
             Meniu
           </a>
           <a
             href="/locatie"
-            className="font-semibold transition-all duration-200 px-3 py-1.5 rounded-full text-gray-900 hover:text-primary"
+            className="font-semibold transition-all duration-200 px-3 py-1.5 rounded-full hover:text-primary"
+            style={{ color: '#111827' }}
           >
             Locație
           </a>
