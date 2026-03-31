@@ -37,13 +37,7 @@ export default function Navigation() {
   }, []);
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-lg py-3'
-          : 'bg-black/30 backdrop-blur-sm py-5'
-      }`}
-    >
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-sm py-4 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
@@ -58,9 +52,7 @@ export default function Navigation() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 18v3" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 18v3" />
           </svg>
-          <span className={`font-bold transition-all duration-300 ${
-            isScrolled ? 'text-xl text-gray-900' : 'text-2xl text-white dark:text-gray-900'
-          }`}
+          <span className="font-bold text-xl text-gray-900 transition-all duration-300"
             style={{ fontFamily: 'var(--font-playfair)' }}
           >
             Vibe Coffee
@@ -74,18 +66,14 @@ export default function Navigation() {
             className={`font-semibold transition-all duration-200 px-3 py-1.5 rounded-full ${
               activeSection === 'menu'
                 ? 'bg-primary text-white shadow-sm'
-                : isScrolled
-                  ? 'text-gray-900 hover:text-primary'
-                  : 'text-white hover:text-primary-dark'
+                : 'text-gray-900 hover:text-primary'
             }`}
           >
             Meniu
           </a>
           <a
             href="/locatie"
-            className={`font-semibold transition-all duration-200 px-3 py-1.5 rounded-full ${
-              isScrolled ? 'text-gray-900 hover:text-primary' : 'text-white hover:text-primary-dark'
-            }`}
+            className="font-semibold transition-all duration-200 px-3 py-1.5 rounded-full text-gray-900 hover:text-primary"
           >
             Locație
           </a>
@@ -95,20 +83,14 @@ export default function Navigation() {
 
           <a
             href="/rezervari"
-            className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
-              isScrolled
-                ? 'bg-primary text-white hover:bg-primary-dark'
-                : 'bg-white text-primary hover:bg-gray-100'
-            }`}
+            className="px-6 py-3 rounded-full font-semibold transition-all duration-300 bg-primary text-white hover:bg-primary-dark"
           >
             Rezervă Masă
           </a>
         </div>
 
         {/* Mobile Menu Button */}
-        <button
-          className={`md:hidden ${isScrolled ? 'text-gray-900' : 'text-white'}`}
-        >
+        <button className="md:hidden text-gray-900">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
