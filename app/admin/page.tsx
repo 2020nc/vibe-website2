@@ -214,6 +214,179 @@ async function exportHolidayPDF(items: MenuItem[], cfg: HolidayConfig) {
   doc.save(`sarbatori-vibe-caffe-${new Date().toISOString().slice(0,10)}.pdf`);
 }
 
+/* ─── EXPORT REZERVĂRI ────────────────────────────────────── */
+const ZILE_RO = ['Duminică', 'Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri', 'Sâmbătă'];
+
+function buildAnaliza(rezervari: Rezervare[]) {
+  // Distribuție pe zi a săptămânii
+  const perZi: Record<string, number> = {};
+  ZILE_RO.forEach((z) => { perZi[z] = 0; });
+
+  // Distribuție pe oră
+  const perOra: Record<string, number> = {};
+
+  rezervari.forEach((r) => {
+    const zi = ZILE_RO[new Date(r.data).getDay()];
+    perZi[zi] = (perZi[zi] ?? 0) + 1;
+    const ora = r.ora?.slice(0, 5) ?? 'N/A';
+    perOra[ora] = (perOra[ora] ?? 0) + 1;
+  });
+
+  const ziRows = ZILE_RO.map((z) => ({ 'Zi': z, 'Nr. rezervări': perZi[z] }));
+  const oraRows = Object.entries(perOra)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([ora, nr]) => ({ 'Ora': ora, 'Nr. rezervări': nr }));
+
+  return { ziRows, oraRows };
+}
+
+function exportRezervariExcel(rezervari: Rezervare[]) {
+  const wb = XLSX.utils.book_new();
+
+  // Foaia 1 — Date brute
+  const brute = rezervari.map((r) => ({
+    'Nume':      r.nume,
+    'Email':     r.email,
+    'Telefon':   r.telefon,
+    'Data':      r.data,
+    'Ora':       r.ora,
+    'Persoane':  r.persoane,
+    'Status':    r.status,
+    'Mesaj':     r.mesaj ?? '',
+    'Creat la':  new Date(r.created_at).toLocaleString('ro-RO'),
+  }));
+  const ws1 = XLSX.utils.json_to_sheet(brute);
+  ws1['!cols'] = [20, 28, 14, 12, 8, 10, 14, 40, 20].map((w) => ({ wch: w }));
+  XLSX.utils.book_append_sheet(wb, ws1, 'Rezervari');
+
+  // Foaia 2 — Analiză
+  const { ziRows, oraRows } = buildAnaliza(rezervari);
+  const ws2 = XLSX.utils.book_new();
+
+  // Titlu
+  const wsA = XLSX.utils.aoa_to_sheet([
+    ['ANALIZA REZERVARI — Vibe Caffe'],
+    [`Generat: ${new Date().toLocaleDateString('ro-RO')}   |   Total: ${rezervari.length} rezervari`],
+    [],
+    ['Distribuție pe zi a săptămânii'],
+  ]);
+  XLSX.utils.sheet_add_json(wsA, ziRows, { origin: 'A5' });
+
+  const offsetOra = 5 + ziRows.length + 2;
+  XLSX.utils.sheet_add_aoa(wsA, [['Distribuție pe oră']], { origin: `A${offsetOra}` });
+  XLSX.utils.sheet_add_json(wsA, oraRows, { origin: `A${offsetOra + 1}` });
+
+  wsA['!cols'] = [{ wch: 20 }, { wch: 16 }];
+  XLSX.utils.book_append_sheet(wb, wsA, 'Analiza');
+
+  XLSX.writeFile(wb, `rezervari-vibe-caffe-${new Date().toISOString().slice(0, 10)}.xlsx`);
+}
+
+async function exportRezervariPDF(rezervari: Rezervare[]) {
+  const { default: jsPDF } = await import('jspdf');
+  const { default: autoTable } = await import('jspdf-autotable');
+
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+
+  const loadFont = async (url: string): Promise<string> => {
+    const res = await fetch(url);
+    const buf = await res.arrayBuffer();
+    const bytes = new Uint8Array(buf);
+    let binary = '';
+    for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+    return btoa(binary);
+  };
+
+  const [b64, bdB64] = await Promise.all([
+    loadFont('/DejaVuSans.ttf'),
+    loadFont('/DejaVuSans-Bold.ttf'),
+  ]);
+  doc.addFileToVFS('DejaVuSans.ttf', b64);
+  doc.addFont('DejaVuSans.ttf', 'DejaVu', 'normal');
+  doc.addFileToVFS('DejaVuSans-Bold.ttf', bdB64);
+  doc.addFont('DejaVuSans-Bold.ttf', 'DejaVu', 'bold');
+  doc.setFont('DejaVu');
+
+  const teal: [number, number, number] = [20, 184, 166];
+  const date = new Date().toLocaleDateString('ro-RO');
+
+  // ── Pagina 1: Lista rezervări ──
+  doc.setFontSize(18); doc.setTextColor(40);
+  doc.text('Rezervari Vibe Caffe', 40, 40);
+  doc.setFontSize(10); doc.setTextColor(120);
+  doc.text(`Generat: ${date}   |   Total: ${rezervari.length} rezervari`, 40, 58);
+
+  autoTable(doc, {
+    startY: 72,
+    head: [['Nume', 'Data', 'Ora', 'Persoane', 'Status', 'Telefon', 'Email', 'Mesaj']],
+    body: rezervari.map((r) => [
+      r.nume,
+      r.data,
+      r.ora?.slice(0, 5) ?? '',
+      r.persoane.toString(),
+      r.status,
+      r.telefon,
+      r.email,
+      r.mesaj ?? '',
+    ]),
+    styles: { fontSize: 8, cellPadding: 4, font: 'DejaVu' },
+    headStyles: { fillColor: teal, textColor: 255, fontStyle: 'bold', font: 'DejaVu' },
+    alternateRowStyles: { fillColor: [240, 253, 250] },
+    columnStyles: {
+      0: { cellWidth: 90 },
+      1: { cellWidth: 65 },
+      2: { cellWidth: 40, halign: 'center' },
+      3: { cellWidth: 55, halign: 'center' },
+      4: { cellWidth: 75, halign: 'center' },
+      5: { cellWidth: 80 },
+      6: { cellWidth: 110 },
+      7: { cellWidth: 'auto' },
+    },
+  });
+
+  // ── Pagina 2: Analiză ──
+  doc.addPage();
+  doc.setFontSize(18); doc.setTextColor(40);
+  doc.text('Analiza Rezervari', 40, 40);
+  doc.setFontSize(10); doc.setTextColor(120);
+  doc.text(`Generat: ${date}`, 40, 58);
+
+  const { ziRows, oraRows } = buildAnaliza(rezervari);
+
+  doc.setFontSize(13); doc.setTextColor(40); doc.setFont('DejaVu', 'bold');
+  doc.text('Distributie pe zi a saptamanii', 40, 85);
+  doc.setFont('DejaVu', 'normal');
+
+  autoTable(doc, {
+    startY: 95,
+    head: [['Zi', 'Nr. rezervari']],
+    body: ziRows.map((r) => [r['Zi'], r['Nr. rezervări'].toString()]),
+    styles: { fontSize: 10, cellPadding: 5, font: 'DejaVu' },
+    headStyles: { fillColor: teal, textColor: 255, fontStyle: 'bold', font: 'DejaVu' },
+    alternateRowStyles: { fillColor: [240, 253, 250] },
+    columnStyles: { 0: { cellWidth: 150 }, 1: { cellWidth: 100, halign: 'center' } },
+    tableWidth: 280,
+  });
+
+  const y2 = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 30;
+  doc.setFontSize(13); doc.setTextColor(40); doc.setFont('DejaVu', 'bold');
+  doc.text('Distributie pe ora', 40, y2);
+  doc.setFont('DejaVu', 'normal');
+
+  autoTable(doc, {
+    startY: y2 + 10,
+    head: [['Ora', 'Nr. rezervari']],
+    body: oraRows.map((r) => [r['Ora'], r['Nr. rezervări'].toString()]),
+    styles: { fontSize: 10, cellPadding: 5, font: 'DejaVu' },
+    headStyles: { fillColor: teal, textColor: 255, fontStyle: 'bold', font: 'DejaVu' },
+    alternateRowStyles: { fillColor: [240, 253, 250] },
+    columnStyles: { 0: { cellWidth: 100, halign: 'center' }, 1: { cellWidth: 100, halign: 'center' } },
+    tableWidth: 230,
+  });
+
+  doc.save(`rezervari-vibe-caffe-${new Date().toISOString().slice(0, 10)}.pdf`);
+}
+
 /* ─── HELPERS ─────────────────────────────────────────────── */
 function calcFinalPrice(item: MenuItem): number {
   if (!item.discount_type || !item.discount_amount) return item.price;
@@ -740,9 +913,33 @@ export default function AdminPage() {
         {/* ════════════════════ TAB REZERVĂRI ════════════════════ */}
         {tab === 'rezervari' && (
           <>
-            <div className="mb-8">
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Dashboard Rezervări</h1>
-              <p className="text-gray-500 mt-1">{rezervari.length} rezervări în total</p>
+            <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Dashboard Rezervări</h1>
+                <p className="text-gray-500 mt-1">{rezervari.length} rezervări în total</p>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => exportRezervariExcel(rezervari)}
+                  disabled={rezervari.length === 0}
+                  className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                  </svg>
+                  Export Excel
+                </button>
+                <button
+                  onClick={() => exportRezervariPDF(rezervari)}
+                  disabled={rezervari.length === 0}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                  </svg>
+                  Export PDF
+                </button>
+              </div>
             </div>
 
             {eroareRez && (

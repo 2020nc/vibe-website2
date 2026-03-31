@@ -230,7 +230,7 @@ export default function MenuStarter() {
                           </span>
                         </div>
                         <p className="text-xs text-gray-400 mt-1">
-                          * Spune barista-ului opțiunile la comandă
+                          * Menționează opțiunile dorite la comandă
                         </p>
                       </div>
                     )}

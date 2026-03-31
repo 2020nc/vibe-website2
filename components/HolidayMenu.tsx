@@ -11,6 +11,16 @@
 import { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 
+const ADD_ONS = [
+  { id: 'lapte_ovaz',    name: 'Lapte de ovăz',      price: 3 },
+  { id: 'lapte_soia',    name: 'Lapte de soia',       price: 3 },
+  { id: 'lapte_migdale', name: 'Lapte de migdale',    price: 3 },
+  { id: 'shot_extra',    name: 'Shot espresso extra', price: 4 },
+  { id: 'sirop_vanilie', name: 'Sirop vanilie',       price: 2 },
+  { id: 'sirop_caramel', name: 'Sirop caramel',       price: 2 },
+  { id: 'sirop_alune',   name: 'Sirop alune',         price: 2 },
+];
+
 /* ─── TYPES ─────────────────────────────────────────────────── */
 interface MenuItem {
   id: string;
@@ -74,6 +84,18 @@ function HolidayCard({
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+
+  function toggleAddOn(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
+  const extra = ADD_ONS.filter((a) => selected.has(a.id)).reduce((s, a) => s + a.price, 0);
 
   useEffect(() => {
     setInView(false);
@@ -128,7 +150,7 @@ function HolidayCard({
         <h3 className="text-lg font-bold text-gray-900 mb-1">{item.name}</h3>
         <p className="text-gray-500 text-sm leading-relaxed mb-3">{item.description}</p>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 mb-3">
           <span
             className={inView ? 'price-strike text-gray-500 font-semibold text-base' : 'text-gray-500 font-semibold text-base'}
             style={{ '--strike-delay': `${index * 80 + 300}ms` } as React.CSSProperties}
@@ -142,7 +164,50 @@ function HolidayCard({
             {finalPrice} RON
           </span>
         </div>
+
+        {/* Buton toggle personalizare */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="text-xs font-semibold text-rose-500 hover:text-rose-700 flex items-center gap-1 transition-colors"
+        >
+          <span>{isOpen ? '▲' : '▼'}</span>
+          Personalizează comanda
+        </button>
       </div>
+
+      {/* Panel add-on-uri */}
+      {isOpen && (
+        <div className="px-5 pb-5 border-t border-gray-100 pt-4">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+            Adaugă la comandă
+          </p>
+          <div className="space-y-2">
+            {ADD_ONS.map((addon) => (
+              <label key={addon.id} className="flex items-center justify-between cursor-pointer">
+                <span className="flex items-center gap-2 text-sm text-gray-700">
+                  <input
+                    type="checkbox"
+                    checked={selected.has(addon.id)}
+                    onChange={() => toggleAddOn(addon.id)}
+                    className="w-4 h-4 accent-rose-500 rounded"
+                  />
+                  {addon.name}
+                </span>
+                <span className="text-xs font-semibold text-rose-500">+{addon.price} RON</span>
+              </label>
+            ))}
+          </div>
+          <div className="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center">
+            <span className="text-sm font-semibold text-gray-700">Total estimat:</span>
+            <span className="text-base font-bold text-rose-600">
+              {(finalPrice + extra).toFixed(2)} RON
+            </span>
+          </div>
+          <p className="text-xs text-gray-400 mt-1">
+            * Menționează opțiunile dorite la comandă
+          </p>
+        </div>
+      )}
     </div>
   );
 }
