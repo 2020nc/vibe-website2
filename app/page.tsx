@@ -14,6 +14,7 @@ import HeroStarter from '@/components/HeroStarter';
 import FeaturesStarter from '@/components/FeaturesStarter';
 import MenuStarter from '@/components/MenuStarter';
 import HolidayMenu, { getTodayHoliday } from '@/components/HolidayMenu';
+import About from '@/components/About';
 import FooterStarter from '@/components/FooterStarter';
 import Preloader from '@/components/Preloader';
 
@@ -32,6 +33,7 @@ function PageContent() {
       <FeaturesStarter />
       {showHoliday && <HolidayMenu holidayLabel={holidayLabel} />}
       <MenuStarter />
+      <About />
       <FooterStarter />
     </>
   );

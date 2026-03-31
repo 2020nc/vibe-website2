@@ -2,6 +2,20 @@
 
 import { useState, useEffect } from 'react';
 
+/**
+ * Personalizari disponibile pentru orice produs
+ * Preturile sunt exprimate in RON si se adauga la pretul de baza
+ */
+const ADD_ONS = [
+  { id: 'lapte_ovaz',    name: 'Lapte de ovăz',    price: 3 },
+  { id: 'lapte_soia',    name: 'Lapte de soia',     price: 3 },
+  { id: 'lapte_migdale', name: 'Lapte de migdale',  price: 3 },
+  { id: 'shot_extra',    name: 'Shot espresso extra', price: 4 },
+  { id: 'sirop_vanilie', name: 'Sirop vanilie',     price: 2 },
+  { id: 'sirop_caramel', name: 'Sirop caramel',     price: 2 },
+  { id: 'sirop_alune',   name: 'Sirop alune',       price: 2 },
+];
+
 interface MenuItem {
   id: string;
   name: string;
@@ -35,6 +49,22 @@ export default function MenuStarter() {
   const [loading, setLoading]     = useState(true);
   const [activeTab, setActiveTab] = useState('');
   const [visible, setVisible]     = useState(true);
+  // ID-ul cardului deschis + add-on-urile selectate
+  const [openCard, setOpenCard]   = useState<string | null>(null);
+  const [selected, setSelected]   = useState<Record<string, Set<string>>>({});
+
+  function toggleAddOn(itemId: string, addOnId: string) {
+    setSelected((prev) => {
+      const current = new Set(prev[itemId] ?? []);
+      current.has(addOnId) ? current.delete(addOnId) : current.add(addOnId);
+      return { ...prev, [itemId]: current };
+    });
+  }
+
+  function addOnTotal(itemId: string): number {
+    const ids = selected[itemId] ?? new Set<string>();
+    return ADD_ONS.filter((a) => ids.has(a.id)).reduce((sum, a) => sum + a.price, 0);
+  }
 
   useEffect(() => {
     fetch('/api/menu')
@@ -105,18 +135,20 @@ export default function MenuStarter() {
               style={{ opacity: visible ? 1 : 0 }}
             >
               {tabItems.map((item) => {
-                const finalPrice = calcFinalPrice(item);
-                const badge      = discountLabel(item);
+                const finalPrice  = calcFinalPrice(item);
+                const badge       = discountLabel(item);
                 const hasDiscount = badge !== null;
+                const isOpen      = openCard === item.id;
+                const extra       = addOnTotal(item.id);
+                const total       = finalPrice + extra;
 
                 return (
                   <div
                     key={item.id}
-                    className="group bg-gray-50 rounded-2xl overflow-hidden hover:shadow-lg hover:scale-[1.02] transition-all duration-300"
+                    className="group bg-gray-50 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300"
                   >
                     {/* Imagine */}
                     <div className="relative overflow-hidden rounded-xl mx-3 mt-3" style={{ aspectRatio: '4/3' }}>
-                      {/* Badge reducere */}
                       {hasDiscount && (
                         <div className="absolute top-2 left-2 z-10 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow">
                           {badge}
@@ -132,7 +164,7 @@ export default function MenuStarter() {
                       />
                     </div>
 
-                    {/* Text */}
+                    {/* Text + buton personalizare */}
                     <div className="p-5">
                       <div className="flex justify-between items-start mb-1">
                         <h3 className="text-lg font-bold text-gray-900">{item.name}</h3>
@@ -147,8 +179,61 @@ export default function MenuStarter() {
                           </span>
                         </div>
                       </div>
-                      <p className="text-gray-500 text-sm leading-relaxed">{item.description}</p>
+                      <p className="text-gray-500 text-sm leading-relaxed mb-3">{item.description}</p>
+
+                      {/* Buton toggle personalizare */}
+                      <button
+                        onClick={() => setOpenCard(isOpen ? null : item.id)}
+                        className="text-xs font-semibold text-amber-600 hover:text-amber-800 flex items-center gap-1 transition-colors"
+                      >
+                        <span>{isOpen ? '▲' : '▼'}</span>
+                        Personalizează comanda
+                      </button>
                     </div>
+
+                    {/* Panel add-on-uri (expandabil) */}
+                    {isOpen && (
+                      <div className="px-5 pb-5 border-t border-gray-200 pt-4">
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                          Adaugă la comandă
+                        </p>
+                        <div className="space-y-2">
+                          {ADD_ONS.map((addon) => {
+                            const checked = (selected[item.id] ?? new Set()).has(addon.id);
+                            return (
+                              <label
+                                key={addon.id}
+                                className="flex items-center justify-between cursor-pointer group/addon"
+                              >
+                                <span className="flex items-center gap-2 text-sm text-gray-700">
+                                  <input
+                                    type="checkbox"
+                                    checked={checked}
+                                    onChange={() => toggleAddOn(item.id, addon.id)}
+                                    className="w-4 h-4 accent-amber-600 rounded"
+                                  />
+                                  {addon.name}
+                                </span>
+                                <span className="text-xs font-semibold text-amber-600">
+                                  +{addon.price} RON
+                                </span>
+                              </label>
+                            );
+                          })}
+                        </div>
+
+                        {/* Total calculat */}
+                        <div className="mt-4 pt-3 border-t border-gray-200 flex justify-between items-center">
+                          <span className="text-sm font-semibold text-gray-700">Total estimat:</span>
+                          <span className="text-base font-bold text-amber-700">
+                            {total.toFixed(2)} RON
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-400 mt-1">
+                          * Spune barista-ului opțiunile la comandă
+                        </p>
+                      </div>
+                    )}
                   </div>
                 );
               })}

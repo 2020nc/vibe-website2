@@ -95,8 +95,8 @@ export default function LocatiePage() {
                 <div>
                   <h3 className="text-xl font-semibold text-primary mb-2">Adresă</h3>
                   <p className="text-gray-700 dark:text-gray-300">
-                    Strada Cafenelelor, Nr. 42<br />
-                    Sector 1, București 010101
+                    Bld. Regina Elisabeta, Nr. 30<br />
+                    Sector 5, București
                   </p>
                 </div>
 
@@ -137,19 +137,17 @@ export default function LocatiePage() {
               <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center gap-3">
                 Hartă
               </h2>
-              <div className="w-full h-[400px] bg-gray-200 dark:bg-gray-700 rounded-2xl overflow-hidden">
-                {/* Placeholder pentru Google Maps - în producție ar fi un iframe real */}
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-secondary/20">
-                  <div className="text-center">
-                    <svg className="w-24 h-24 mx-auto mb-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                    </svg>
-                    <p className="text-gray-600 dark:text-gray-300 font-medium">Google Maps Embed</p>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">
-                      (În producție: iframe cu Google Maps)
-                    </p>
-                  </div>
-                </div>
+              <div className="w-full h-[400px] rounded-2xl overflow-hidden">
+                <iframe
+                  src="https://maps.google.com/maps?q=Bulevardul+Regina+Elisabeta+30+Sector+5+Bucuresti+Romania&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Locația Vibe Coffee — Bld. Regina Elisabeta 30, București"
+                />
               </div>
             </div>
           </div>
