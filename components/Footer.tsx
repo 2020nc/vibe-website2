@@ -37,7 +37,7 @@ export default function Footer() {
             <div>
               <h3 className="text-3xl font-bold text-white mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
                 <span className="text-primary">Vibe</span>{' '}
-                <span className="text-secondary">Coffee</span>
+                <span className="text-secondary">Caffè</span>
               </h3>
               <p className="mb-6 leading-relaxed text-lg">
                 Locul perfect pentru cafeaua ta zilnică și momente de relaxare
@@ -124,7 +124,7 @@ export default function Footer() {
               <div className="mt-8">
                 <h4 className="text-xl font-bold text-white mb-4">Link-uri Rapide</h4>
                 <div className="space-y-2">
-                  <a href="#menu" className="block hover:text-primary transition-colors">
+                  <a href="/meniu" className="block hover:text-primary transition-colors">
                     Meniu
                   </a>
                   <a href="/locatie" className="block hover:text-primary transition-colors">
