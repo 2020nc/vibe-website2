@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import ThemeToggle from './ThemeToggle';
 
-const NAV_SECTIONS = ['menu', 'features', 'sarbatori', 'footer'];
+const NAV_SECTIONS = ['menu', 'de-ce-vibe', 'features', 'sarbatori', 'footer'];
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -68,6 +68,15 @@ export default function Navigation() {
             style={{ color: activeSection === 'menu' ? undefined : '#111827' }}
           >
             Meniu
+          </a>
+          <a
+            href="/#de-ce-vibe"
+            className={`font-semibold transition-all duration-200 px-3 py-1.5 rounded-full ${
+              activeSection === 'de-ce-vibe' ? 'bg-primary text-white shadow-sm' : 'hover:text-primary'
+            }`}
+            style={{ color: activeSection === 'de-ce-vibe' ? undefined : '#111827' }}
+          >
+            De ce Vibe?
           </a>
           <a
             href="/locatie"

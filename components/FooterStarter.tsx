@@ -128,7 +128,7 @@ export default function FooterStarter() {
                 </Link>
               </li>
               <li>
-                <a href="/#features" className="text-gray-400 hover:text-primary transition-colors duration-200">
+                <a href="/#de-ce-vibe" className="text-gray-400 hover:text-primary transition-colors duration-200">
                   De ce Vibe?
                 </a>
               </li>
