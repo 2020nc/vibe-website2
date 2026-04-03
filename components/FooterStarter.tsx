@@ -67,7 +67,7 @@ export default function FooterStarter() {
           {/* Coloana 1 — Brand */}
           <div>
             <h3 className="text-2xl font-bold text-white mb-3">
-              Vibe <span className="text-primary">Coffee</span>
+              Vibe <span className="text-primary">Caffè</span>
             </h3>
             <p className="text-gray-400 leading-relaxed mb-6">
               Cafea de specialitate într-un ambient modern și relaxant.
@@ -113,9 +113,9 @@ export default function FooterStarter() {
             <h4 className="text-lg font-semibold text-white mb-4">Navigare</h4>
             <ul className="space-y-3">
               <li>
-                <a href="/#menu" className="text-gray-400 hover:text-primary transition-colors duration-200">
+                <Link href="/meniu" className="text-gray-400 hover:text-primary transition-colors duration-200">
                   Meniu
-                </a>
+                </Link>
               </li>
               <li>
                 <Link href="/rezervari" className="text-gray-400 hover:text-primary transition-colors duration-200">
