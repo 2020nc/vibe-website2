@@ -148,6 +148,22 @@ export default function Home() {
         </div>
       </section>
 
+      {/* CTA secundar rezervare */}
+      <section className="bg-teal-600 dark:bg-teal-800 py-16 px-6 text-center">
+        <h2 className="text-2xl font-bold text-white mb-3">
+          Ți-a plăcut ce ai văzut?
+        </h2>
+        <p className="text-teal-100 mb-8 text-base max-w-md mx-auto">
+          Rezervă o masă acum și garantăm locul tău.
+        </p>
+        <a
+          href="/rezervari"
+          className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-bold px-8 py-4 rounded-full text-lg transition-colors duration-200"
+        >
+          Rezervă masă
+        </a>
+      </section>
+
       {/* Locație rapidă SSR */}
       <section className="py-20 px-6 bg-gray-900 text-white">
         <div className="max-w-4xl mx-auto text-center">
