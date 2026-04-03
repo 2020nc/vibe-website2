@@ -188,8 +188,17 @@ export default function FooterStarter() {
         </div>
 
         {/* Bottom bar */}
-        <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-gray-700 text-center text-gray-500 text-sm">
-          © 2026 Vibe Caffè. Construit cu Next.js + Tailwind CSS.
+        <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-gray-700 text-center text-gray-500 text-sm space-y-2">
+          <div>© 2026 Vibe Caffè. Construit cu Next.js + Tailwind CSS.</div>
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
+            <a href="/confidentialitate" className="hover:text-gray-300 transition-colors">Politică confidențialitate</a>
+            <span>|</span>
+            <a href="/cookies" className="hover:text-gray-300 transition-colors">Cookies</a>
+            <span>|</span>
+            <a href="/termeni" className="hover:text-gray-300 transition-colors">Termeni</a>
+            <span>|</span>
+            <a href="mailto:contact@vibecaffe.ro" className="hover:text-gray-300 transition-colors">Contact</a>
+          </div>
         </div>
       </div>
     </footer>

@@ -1,48 +1,231 @@
-'use client';
-
-/**
- * 🏠 HOME PAGE - VERSIUNEA STARTER PENTRU CURSANȚI
- *
- * 💡 FEATURE FLAG pentru testare:
- *    Adaugă ?preview=true în URL ca să vezi meniul de sărbători
- *    indiferent de dată: http://localhost:3000?preview=true
- */
-
 import { Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
 import HeroStarter from '@/components/HeroStarter';
 import FeaturesStarter from '@/components/FeaturesStarter';
 import MenuStarter from '@/components/MenuStarter';
-import HolidayMenu, { getTodayHoliday } from '@/components/HolidayMenu';
 import About from '@/components/About';
 import FooterStarter from '@/components/FooterStarter';
 import Preloader from '@/components/Preloader';
+import { menuData } from '@/lib/menuData';
 
-function PageContent() {
-  const searchParams = useSearchParams();
-  const isPreview = searchParams.get('preview') === 'true';
+export const metadata = {
+  title: 'Vibe Caffè — Cafea de Specialitate în București',
+  description:
+    'Cafea de specialitate, brunch și deserturi în centrul Bucureștiului. ' +
+    'Rezervă masă online. Bld. Regina Elisabeta 30, Sector 5.',
+  openGraph: {
+    title: 'Vibe Caffè — Cafea de Specialitate în București',
+    description:
+      'Cafea de specialitate, brunch și deserturi în centrul Bucureștiului.',
+    url: 'https://vibe-website2.vercel.app',
+    siteName: 'Vibe Caffè',
+    locale: 'ro_RO',
+    type: 'website',
+  },
+};
 
-  const todayHoliday = getTodayHoliday();
-  const showHoliday = !!todayHoliday || isPreview;
-  const holidayLabel = todayHoliday ?? 'Demo Sărbătoare 🎉';
+// Primele 6 produse pentru preview SSR
+const previewItems = [
+  { name: 'Flat White', price: 17 },
+  { name: 'Cappuccino', price: 16 },
+  { name: 'Cold Brew Tonic', price: 22 },
+  { name: 'Cheesecake', price: 22 },
+  { name: 'Croissant cu Unt', price: 14 },
+  { name: 'Brownie', price: 18 },
+];
 
-  return (
-    <>
-      <Preloader />
-      <HeroStarter showHoliday={showHoliday} />
-      <FeaturesStarter />
-      {showHoliday && <HolidayMenu holidayLabel={holidayLabel} />}
-      <MenuStarter />
-      <About />
-      <FooterStarter />
-    </>
-  );
-}
+// Produse sezoniere pentru preview SSR
+const seasonalPreview = [
+  { name: 'Latte de Lavandă', price: 20, desc: 'Espresso, lapte microspumat și sirop de lavandă. Disponibil: aprilie–iunie.' },
+  { name: 'Cold Brew Tonic', price: 22, desc: 'Cold brew, apă tonică și portocală proaspătă. Disponibil: tot sezonul.' },
+  { name: 'Brunch Festiv de Weekend', price: 36, desc: 'Eggs Benedict, granola, fresh și cafea de specialitate. Disponibil: sâmbătă și duminică.' },
+];
 
 export default function Home() {
   return (
-    <Suspense>
-      <PageContent />
-    </Suspense>
+    <>
+      <Preloader />
+
+      {/* Hero SSR */}
+      <section className="relative min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center text-center px-6">
+        <div className="relative z-10 max-w-4xl mx-auto">
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
+            Cafea de specialitate, brunch și un loc în care vrei să revii
+          </h1>
+          <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+            Meniu clar, rezervări rapide și locație ușor de găsit în centrul Bucureștiului.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/meniu" className="px-8 py-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105">
+              Vezi meniul
+            </a>
+            <a href="/rezervari" className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105">
+              Rezervă masă
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Beneficii SSR */}
+      <section id="de-ce-vibe" className="py-20 px-6 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-4">De ce Vibe?</h2>
+          <p className="text-lg text-gray-500 text-center mb-12">Diferențiatori concreți, nu afirmații vagi.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                title: 'Cafea de specialitate',
+                desc: 'Boabe selectate din origini single-origin, preparate după rețete calibrate pentru consistență în fiecare ceașcă.',
+                icon: '☕',
+              },
+              {
+                title: 'Spațiu work-friendly',
+                desc: 'Wi-Fi stabil, prize la fiecare masă și o atmosferă care face munca mai plăcută. Potrivit pentru întâlniri și sesiuni de lucru.',
+                icon: '💻',
+              },
+              {
+                title: 'Brunch & deserturi',
+                desc: 'Meniu de brunch disponibil în fiecare weekend, cu ingrediente proaspete și deserturi de patiserie artizanală.',
+                icon: '🥐',
+              },
+              {
+                title: 'Locație centrală',
+                desc: 'Bld. Regina Elisabeta 30, Sector 5 — ușor de găsit, aproape de centrul Bucureștiului, cu acces facil din mai multe zone.',
+                icon: '📍',
+              },
+            ].map((card) => (
+              <div key={card.title} className="bg-gray-50 rounded-2xl p-6 border border-gray-100 hover:shadow-md transition-shadow">
+                <div className="text-4xl mb-4">{card.icon}</div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{card.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{card.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Preview Meniu SSR */}
+      <section className="py-20 px-6 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-4">Din meniul nostru</h2>
+          <p className="text-lg text-gray-500 text-center mb-12">Cafea de specialitate, brunch și deserturi.</p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10">
+            {previewItems.map((item) => (
+              <div key={item.name} className="bg-white rounded-2xl p-5 shadow-sm flex justify-between items-center">
+                <span className="font-semibold text-gray-900">{item.name}</span>
+                <span className="text-teal-600 font-bold">{item.price} lei</span>
+              </div>
+            ))}
+          </div>
+          <div className="text-center">
+            <a href="/meniu" className="px-8 py-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 inline-block">
+              Vezi meniul complet
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Oferte sezoniere SSR */}
+      <section className="py-20 px-6 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-4">Oferte sezoniere</h2>
+          <p className="text-lg text-gray-500 text-center mb-12">Produse disponibile în această perioadă.</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            {seasonalPreview.map((item) => (
+              <div key={item.name} className="bg-teal-50 border border-teal-100 rounded-2xl p-6">
+                <div className="flex justify-between items-start mb-3">
+                  <h3 className="text-xl font-bold text-gray-900">{item.name}</h3>
+                  <span className="text-teal-600 font-bold whitespace-nowrap ml-2">{item.price} lei</span>
+                </div>
+                <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="text-center">
+            <a href="/sarbatori" className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 inline-block">
+              Vezi toate ofertele sezoniere
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Locație rapidă SSR */}
+      <section className="py-20 px-6 bg-gray-900 text-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-8">Unde ne găsești</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+            <div>
+              <div className="text-3xl mb-3">📍</div>
+              <p className="font-semibold text-lg">Adresă</p>
+              <p className="text-gray-300">Bld. Regina Elisabeta 30, Sector 5, București</p>
+            </div>
+            <div>
+              <div className="text-3xl mb-3">🕐</div>
+              <p className="font-semibold text-lg">Program</p>
+              <p className="text-gray-300">Luni–Vineri 08:00–22:00</p>
+              <p className="text-gray-300">Sâmbătă–Duminică 09:00–23:00</p>
+            </div>
+            <div>
+              <div className="text-3xl mb-3">📞</div>
+              <p className="font-semibold text-lg">Telefon</p>
+              <a href="tel:+40721234567" className="text-teal-400 hover:text-teal-300">+40 721 234 567</a>
+            </div>
+          </div>
+          <a
+            href="https://maps.google.com/?q=Bld.+Regina+Elisabeta+30+Bucuresti"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-8 py-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 inline-block"
+          >
+            Deschide în Google Maps
+          </a>
+        </div>
+      </section>
+
+      {/* Componente existente */}
+      <Suspense>
+        <MenuStarter />
+      </Suspense>
+      <About />
+      <FooterStarter />
+
+      {/* JSON-LD LocalBusiness */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'CafeOrCoffeeShop',
+            name: 'Vibe Caffè',
+            url: 'https://vibe-website2.vercel.app',
+            telephone: '+40721234567',
+            email: 'contact@vibecaffe.ro',
+            address: {
+              '@type': 'PostalAddress',
+              streetAddress: 'Bulevardul Regina Elisabeta 30',
+              addressLocality: 'București',
+              postalCode: '050016',
+              addressCountry: 'RO',
+            },
+            openingHoursSpecification: [
+              {
+                '@type': 'OpeningHoursSpecification',
+                dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                opens: '08:00',
+                closes: '22:00',
+              },
+              {
+                '@type': 'OpeningHoursSpecification',
+                dayOfWeek: ['Saturday', 'Sunday'],
+                opens: '09:00',
+                closes: '23:00',
+              },
+            ],
+            servesCuisine: ['Coffee', 'Brunch', 'Desserts'],
+            priceRange: '$$',
+            menu: 'https://vibe-website2.vercel.app/meniu',
+          }),
+        }}
+      />
+    </>
   );
 }
