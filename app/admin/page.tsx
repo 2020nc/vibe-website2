@@ -702,6 +702,7 @@ function BulkDiscountModal({
 
 /* ─── MAIN PAGE ───────────────────────────────────────────── */
 export default function AdminPage() {
+  const [tenantId, setTenantId] = useState<string | null>(null);
   const [tab, setTab] = useState<'rezervari' | 'meniu' | 'sarbatori' | 'setari'>('rezervari');
 
   /* SCHIMBARE PAROLĂ */
@@ -752,16 +753,25 @@ export default function AdminPage() {
   const [savingPromo, setSavingPromo] = useState(false);
   const [promoMsg, setPromoMsg] = useState('');
 
+  /* ── fetch tenant_id la mount ── */
+  useEffect(() => {
+    fetch('/api/admin/me').then((r) => r.json()).then(({ tenantId: tid }) => {
+      if (tid) setTenantId(tid);
+    });
+  }, []);
+
   /* ── fetch rezervări ── */
   const fetchRezervari = useCallback(async () => {
+    if (!tenantId) return;
     setLoadingRez(true);
     const { data, error } = await getSupabase()
       .from('rezervari')
       .select('*')
+      .eq('tenant_id', tenantId)
       .order('created_at', { ascending: false });
     if (!error && data) setRezervari(data as Rezervare[]);
     setLoadingRez(false);
-  }, []);
+  }, [tenantId]);
 
   /* ── fetch meniu ── */
   const fetchMenu = useCallback(async () => {
@@ -799,7 +809,7 @@ export default function AdminPage() {
     setTimeout(() => setPromoMsg(''), 3000);
   };
 
-  useEffect(() => { fetchRezervari(); }, [fetchRezervari]);
+  useEffect(() => { if (tenantId) fetchRezervari(); }, [tenantId, fetchRezervari]);
   useEffect(() => { if (tab === 'meniu') fetchMenu(); }, [tab, fetchMenu]);
   useEffect(() => { if (tab === 'sarbatori') fetchHoliday(); }, [tab, fetchHoliday]);
 

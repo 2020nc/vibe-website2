@@ -9,8 +9,12 @@ function getSupabase() {
 }
 
 // PATCH /api/menu/bulk — aplică același update la mai multe produse simultan
-// Body: { ids: string[], update: { discount_type?, discount_amount?, available? } }
 export async function PATCH(req: NextRequest) {
+  const tenantId = req.cookies.get('admin_tenant')?.value;
+  if (!tenantId) {
+    return NextResponse.json({ error: 'Neautorizat.' }, { status: 401 });
+  }
+
   const body = await req.json();
   const { ids, update } = body;
 
@@ -22,7 +26,6 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'Lipsește obiectul update.' }, { status: 400 });
   }
 
-  // Permite doar câmpurile sigure pentru bulk update
   const allowed = ['discount_type', 'discount_amount', 'available'];
   const safeUpdate: Record<string, unknown> = {};
   allowed.forEach((key) => {
@@ -36,7 +39,8 @@ export async function PATCH(req: NextRequest) {
   const { error } = await getSupabase()
     .from('menu_items')
     .update(safeUpdate)
-    .in('id', ids);
+    .in('id', ids)
+    .eq('tenant_id', tenantId);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

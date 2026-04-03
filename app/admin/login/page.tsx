@@ -3,21 +3,30 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 export default function AdminLogin() {
+  const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const [error, setError]       = useState('')
+  const [loading, setLoading]   = useState(false)
   const router = useRouter()
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
+    setLoading(true)
+    setError('')
+
     const res = await fetch('/api/admin/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ email, password }),
     })
+
+    setLoading(false)
+
     if (res.ok) {
       router.push('/admin')
     } else {
-      setError('Parolă incorectă.')
+      const { error: msg } = await res.json()
+      setError(msg ?? 'Email sau parolă incorectă.')
     }
   }
 
@@ -30,16 +39,28 @@ export default function AdminLogin() {
           <p className="text-gray-400 text-sm mt-1">Panou de administrare</p>
         </div>
         <input
+          type="email"
+          placeholder="Email admin"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          required
+          className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
+        />
+        <input
           type="password"
-          placeholder="Parolă admin"
+          placeholder="Parolă"
           value={password}
           onChange={e => setPassword(e.target.value)}
+          required
           className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
         />
         {error && <p className="text-red-400 text-sm">{error}</p>}
-        <button type="submit"
-          className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition">
-          Intră în admin
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-lg font-semibold transition"
+        >
+          {loading ? 'Se verifică…' : 'Intră în admin'}
         </button>
         <p className="text-center">
           <a href="/" className="text-gray-500 text-xs hover:text-gray-300">← Înapoi la site</a>

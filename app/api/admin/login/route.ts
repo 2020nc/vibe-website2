@@ -7,30 +7,35 @@ function sha256(text: string): string {
 }
 
 export async function POST(request: Request) {
-  const { password } = await request.json()
+  const { email, password } = await request.json()
+
+  if (!email || !password) {
+    return NextResponse.json({ error: 'Email și parola sunt obligatorii.' }, { status: 400 })
+  }
+
   const hash = sha256(password)
 
-  // Verifică parola din Supabase
   const { data } = await getSupabase()
-    .from('admin_config')
-    .select('password_hash')
-    .eq('id', 1)
+    .from('admins')
+    .select('id, tenant_id, password_hash')
+    .eq('email', email.toLowerCase().trim())
     .single()
 
-  const validHash = data?.password_hash ?? sha256(process.env.ADMIN_SECRET ?? '')
+  if (!data || data.password_hash !== hash) {
+    return NextResponse.json({ error: 'Email sau parolă incorectă.' }, { status: 401 })
+  }
 
-  if (hash !== validHash) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const cookieOpts = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax' as const,
+    maxAge: 60 * 60 * 8,
+    path: '/',
   }
 
   const response = NextResponse.json({ ok: true })
-  response.cookies.set('admin_token', hash, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 8,
-    path: '/',
-  })
+  response.cookies.set('admin_token', hash, cookieOpts)
+  response.cookies.set('admin_tenant', data.tenant_id, cookieOpts)
 
   return response
 }

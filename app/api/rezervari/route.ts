@@ -11,8 +11,12 @@ function getSupabase() {
 }
 
 // PATCH /api/rezervari — schimbă statusul unei rezervări
-// Body: { id: string, status: RezervareStatus }
 export async function PATCH(req: NextRequest) {
+  const tenantId = req.cookies.get('admin_tenant')?.value;
+  if (!tenantId) {
+    return NextResponse.json({ error: 'Neautorizat.' }, { status: 401 });
+  }
+
   const { id, status } = await req.json();
 
   if (!id || !status) {
@@ -27,7 +31,8 @@ export async function PATCH(req: NextRequest) {
   const { error } = await getSupabase()
     .from('rezervari')
     .update({ status })
-    .eq('id', id);
+    .eq('id', id)
+    .eq('tenant_id', tenantId);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -37,8 +42,12 @@ export async function PATCH(req: NextRequest) {
 }
 
 // DELETE /api/rezervari — șterge o rezervare
-// Body: { id: string }
 export async function DELETE(req: NextRequest) {
+  const tenantId = req.cookies.get('admin_tenant')?.value;
+  if (!tenantId) {
+    return NextResponse.json({ error: 'Neautorizat.' }, { status: 401 });
+  }
+
   const { id } = await req.json();
 
   if (!id) {
@@ -48,7 +57,8 @@ export async function DELETE(req: NextRequest) {
   const { error } = await getSupabase()
     .from('rezervari')
     .delete()
-    .eq('id', id);
+    .eq('id', id)
+    .eq('tenant_id', tenantId);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

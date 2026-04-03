@@ -8,14 +8,27 @@ function getSupabase() {
   );
 }
 
+function getTenantId(req: NextRequest): string | null {
+  return req.cookies.get('admin_tenant')?.value ?? null;
+}
+
 // GET /api/menu — returnează toate produsele ordonate
-export async function GET() {
-  const { data, error } = await getSupabase()
+// Dacă există cookie admin_tenant, filtrează după tenant; altfel returnează toate (site public)
+export async function GET(req: NextRequest) {
+  const tenantId = getTenantId(req);
+
+  let query = getSupabase()
     .from('menu_items')
     .select('*')
     .order('category')
     .order('sort_order')
     .order('name');
+
+  if (tenantId) {
+    query = query.eq('tenant_id', tenantId);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -25,8 +38,12 @@ export async function GET() {
 }
 
 // POST /api/menu — adaugă produs nou
-// Body: { name, category, price, description?, image_url?, discount_type?, discount_amount?, sort_order? }
 export async function POST(req: NextRequest) {
+  const tenantId = getTenantId(req);
+  if (!tenantId) {
+    return NextResponse.json({ error: 'Neautorizat.' }, { status: 401 });
+  }
+
   const body = await req.json();
   const { name, category, price } = body;
 
@@ -49,6 +66,7 @@ export async function POST(req: NextRequest) {
       discount_amount: body.discount_amount ?? null,
       sort_order:      body.sort_order      ?? 0,
       available:       body.available       ?? true,
+      tenant_id:       tenantId,
     }])
     .select()
     .single();
@@ -61,8 +79,12 @@ export async function POST(req: NextRequest) {
 }
 
 // PATCH /api/menu — editează un produs
-// Body: { id, ...câmpuri de actualizat }
 export async function PATCH(req: NextRequest) {
+  const tenantId = getTenantId(req);
+  if (!tenantId) {
+    return NextResponse.json({ error: 'Neautorizat.' }, { status: 401 });
+  }
+
   const body = await req.json();
   const { id, ...fields } = body;
 
@@ -70,7 +92,6 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'Lipsește câmpul id.' }, { status: 400 });
   }
 
-  // Permite doar câmpurile valide
   const allowed = ['name', 'category', 'price', 'description', 'image_url',
                    'discount_type', 'discount_amount', 'available', 'sort_order'];
   const update: Record<string, unknown> = {};
@@ -85,7 +106,8 @@ export async function PATCH(req: NextRequest) {
   const { error } = await getSupabase()
     .from('menu_items')
     .update(update)
-    .eq('id', id);
+    .eq('id', id)
+    .eq('tenant_id', tenantId);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -95,8 +117,12 @@ export async function PATCH(req: NextRequest) {
 }
 
 // DELETE /api/menu — șterge un produs
-// Body: { id }
 export async function DELETE(req: NextRequest) {
+  const tenantId = getTenantId(req);
+  if (!tenantId) {
+    return NextResponse.json({ error: 'Neautorizat.' }, { status: 401 });
+  }
+
   const { id } = await req.json();
 
   if (!id) {
@@ -106,7 +132,8 @@ export async function DELETE(req: NextRequest) {
   const { error } = await getSupabase()
     .from('menu_items')
     .delete()
-    .eq('id', id);
+    .eq('id', id)
+    .eq('tenant_id', tenantId);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
