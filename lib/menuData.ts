@@ -4,10 +4,10 @@
 
 export const menuData = {
   Espresso: [
-    { name: 'Espresso', price: 12, description: 'Shot dublu de espresso intens', image: 'https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=600&auto=format&fit=crop' },
+    { name: 'Espresso', price: 12, description: 'Extracție dublă, boabe single-origin prăjite săptămânal. · Variante: ristretto / lungo · 60ml', image: 'https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=600&auto=format&fit=crop' },
     { name: 'Americano', price: 14, description: 'Espresso diluat cu apă caldă', image: 'https://images.unsplash.com/photo-1551030173-122aabc4489c?w=600&auto=format&fit=crop' },
-    { name: 'Cappuccino', price: 16, description: 'Espresso cu lapte spumat', image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&auto=format&fit=crop' },
-    { name: 'Flat White', price: 17, description: 'Microfoam mătăsos peste espresso', image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?w=600&auto=format&fit=crop' },
+    { name: 'Cappuccino', price: 16, description: 'Espresso, lapte și spumă în proporții egale, clasic și consistent. · Variante: vacă / ovăz · 180ml', image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&auto=format&fit=crop' },
+    { name: 'Flat White', price: 17, description: 'Dublu espresso cu lapte microspumat fin, echilibrat și cremos. · Variante: vacă / ovăz / fără lactoză · 180ml', image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?w=600&auto=format&fit=crop' },
     { name: 'Latte', price: 17, description: 'Espresso cu lapte abundant', image: 'https://images.unsplash.com/photo-1561882468-9110e03e0f78?w=600&auto=format&fit=crop' },
   ],
   Specialty: [
@@ -19,11 +19,11 @@ export const menuData = {
     { name: 'Cold Drip', price: 26, description: 'Extracție la rece, 12 ore, aromă intensă', image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&auto=format&fit=crop' },
   ],
   'Cold Brew': [
-    { name: 'Cold Brew Classic', price: 18, description: 'Infuzie la rece 18 ore, smooth și răcoritor', image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&auto=format&fit=crop' },
-    { name: 'Cold Brew Tonic', price: 22, description: 'Cold brew cu apă tonică și portocală', image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&auto=format&fit=crop' },
-    { name: 'Nitro Cold Brew', price: 24, description: 'Cold brew cu azot, textură cremoasă', image: 'https://images.unsplash.com/photo-1592663527359-cf6642f54cff?w=600&auto=format&fit=crop' },
-    { name: 'Iced Latte', price: 19, description: 'Espresso cu lapte rece și gheață', image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&auto=format&fit=crop' },
-    { name: 'Iced Matcha Latte', price: 21, description: 'Matcha japonez cu lapte de ovăz și gheață', image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=600&auto=format&fit=crop' },
+    { name: 'Cold Brew Classic', price: 18, description: 'Infuzie la rece 18 ore, smooth și fără aciditate. · Variante: clasic / lapte de ovăz · 300ml', image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&auto=format&fit=crop' },
+    { name: 'Cold Brew Tonic', price: 22, description: 'Cold brew cu apă tonică și portocală proaspătă, răcoritor și ușor amărui. · Variante: clasic · 350ml', image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&auto=format&fit=crop' },
+    { name: 'Nitro Cold Brew', price: 24, description: 'Cold brew cu azot, textură cremoasă și spumoasă fără lapte. · Variante: doar clasic · 250ml', image: 'https://images.unsplash.com/photo-1592663527359-cf6642f54cff?w=600&auto=format&fit=crop' },
+    { name: 'Iced Latte', price: 19, description: 'Espresso dublu cu lapte rece și gheață, echilibrat și răcoritor. · Variante: vacă / ovăz / migdale · 350ml', image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&auto=format&fit=crop' },
+    { name: 'Iced Matcha Latte', price: 21, description: 'Matcha japonez ceremonial cu lapte de ovăz și gheață. · Variante: ovăz / vacă · 300ml', image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=600&auto=format&fit=crop' },
   ],
   Patiserie: [
     { name: 'Croissant cu Unt', price: 14, description: 'Foietaj franțuzesc, crocant și aromat', image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&auto=format&fit=crop' },
