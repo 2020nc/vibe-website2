@@ -3,7 +3,6 @@ import FeaturesStarter from '@/components/FeaturesStarter';
 import About from '@/components/About';
 import FooterStarter from '@/components/FooterStarter';
 import Preloader from '@/components/Preloader';
-import { menuData } from '@/lib/menuData';
 
 export const metadata = {
   title: 'Vibe Caffè — Cafea de Specialitate în București',
