@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { getSupabase } from '@/lib/supabase';
 import FooterStarter from '@/components/FooterStarter';
 
@@ -33,19 +33,6 @@ export default function RezervariPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
-  const [rezervari, setRezervari] = useState<any[]>([]);
-
-  const fetchRezervari = async () => {
-    const { data } = await getSupabase()
-      .from('rezervari')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (data) setRezervari(data);
-  };
-
-  useEffect(() => {
-    fetchRezervari();
-  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -70,7 +57,6 @@ export default function RezervariPage() {
       setSuccess(true);
       setForm(initialForm);
       setStep(1);
-      fetchRezervari();
     }
   };
 
@@ -317,32 +303,8 @@ export default function RezervariPage() {
         </div>
       </main>
 
-      {/* Lista rezervari */}
-      <section className="max-w-4xl mx-auto px-6 pb-16">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Toate rezervările ({rezervari.length})</h2>
-        <div className="space-y-3">
-          {rezervari.map((r) => (
-            <div key={r.id} className="bg-white rounded-2xl shadow-sm p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-              <div>
-                <p className="font-semibold text-gray-900">{r.nume}</p>
-                <p className="text-sm text-gray-500">{r.email} · {r.telefon}</p>
-              </div>
-              <div className="text-sm text-gray-600">
-                {r.data} la {r.ora} · {r.persoane} {r.persoane === 1 ? 'persoană' : 'persoane'}
-              </div>
-              <span className={`px-3 py-1 rounded-full text-xs font-semibold w-fit ${
-                r.status === 'confirmed' ? 'bg-green-100 text-green-700' :
-                r.status === 'cancelled' ? 'bg-red-100 text-red-700' :
-                'bg-yellow-100 text-yellow-700'
-              }`}>
-                {r.status}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
 
-      <FooterStarter />
+<FooterStarter />
     </>
   );
 }
