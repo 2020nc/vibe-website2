@@ -64,7 +64,7 @@ export default function Features() {
         {/* 📝 TITLU SECȚIUNE */}
         <div className="text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-gray-900 mb-4">
-            De ce <span className="text-primary">Vibe Coffee</span>?
+            De ce <span className="text-primary">Vibe Caffè</span>?
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-600 max-w-2xl mx-auto">
             Experiență unică, ingrediente premium, atmosferă perfectă

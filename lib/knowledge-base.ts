@@ -1,5 +1,5 @@
 /**
- * 📚 KNOWLEDGE BASE - Baza de cunoștințe Vibe Coffee
+ * 📚 KNOWLEDGE BASE - Baza de cunoștințe Vibe Caffè
  *
  * Toate informațiile pe care bot-ul le cunoaște despre:
  * - Produse și meniu
@@ -11,7 +11,7 @@
 export const VIBE_COFFEE_KNOWLEDGE = {
   // 🏢 INFORMAȚII BUSINESS
   business: {
-    name: "Vibe Coffee",
+    name: "Vibe Caffè",
     tagline: "Cafeaua ta preferată, perfect preparată",
     description: "Cafenea de specialitate în inima Bucureștiului",
     founded: "2020",

@@ -186,7 +186,7 @@ export default function Footer() {
           {/* COPYRIGHT */}
           <div className="border-t border-white/10 pt-8 text-center">
             <p className="text-sm">
-              &copy; 2024 Vibe Coffee. Toate drepturile rezervate. | Creat cu ❤️ pentru iubitorii de cafea
+              &copy; 2024 Vibe Caffè. Toate drepturile rezervate. | Creat cu ❤️ pentru iubitorii de cafea
             </p>
           </div>
         </div>

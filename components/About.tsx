@@ -70,7 +70,7 @@ export default function About() {
             </h2>
 
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              Vibe Coffee a început din dorința de a aduce experiența autentică
+              Vibe Caffè a început din dorința de a aduce experiența autentică
               a cafelei de specialitate în inima orașului. Fiecare ceașcă este
               pregătită cu grijă de bariștii noștri experimentați.
             </p>

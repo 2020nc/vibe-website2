@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * 🤖 CHAT WIDGET - Barista Bot pentru Vibe Coffee
+ * 🤖 CHAT WIDGET - Barista Bot pentru Vibe Caffè
  *
  * Componenta principală a chatbot-ului:
  * - Floating button (colț dreapta jos)

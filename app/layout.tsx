@@ -25,15 +25,20 @@ const inter = Inter({
  * Pentru cursanți: Metadata = informații pentru Google și social media
  */
 export const metadata: Metadata = {
-  title: "Vibe Coffee - Cafea de Specialitate în București",
+  metadataBase: new URL("https://vibe-website-rho.vercel.app"),
+  title: {
+    default: "Vibe Caffè - Cafea de Specialitate în București",
+    template: "%s | Vibe Caffè",
+  },
   description: "Descoperă aromele autentice ale cafelei de specialitate într-un ambient modern și prietenos. Boabe proaspăt prăjite, bariști experimentați, WiFi gratuit.",
-  keywords: ["cafenea bucuresti", "cafea specialitate", "coffee shop", "vibe coffee"],
-  authors: [{ name: "Vibe Coffee Team" }],
+  keywords: ["cafenea bucuresti", "cafea specialitate", "coffee shop", "vibe caffe"],
+  authors: [{ name: "Vibe Caffè Team" }],
   openGraph: {
-    title: "Vibe Coffee - Cafea de Specialitate",
-    description: "Locul perfect pentru cafeaua ta zilnică",
+    title: "Vibe Caffè - Cafea de Specialitate în București",
+    description: "Cafea de specialitate, brunch și deserturi în centrul Bucureștiului. Bld. Regina Elisabeta 30.",
     type: "website",
     locale: "ro_RO",
+    siteName: "Vibe Caffè",
   },
   robots: {
     index: true,

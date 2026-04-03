@@ -967,7 +967,7 @@ export default function AdminPage() {
             <span className="text-2xl font-bold text-teal-500">Vibe Caffè</span>
             <span className="px-2 py-0.5 bg-teal-100 text-teal-700 text-xs font-semibold rounded-full">Admin</span>
           </div>
-          <a href="/" className="text-gray-600 hover:text-teal-500 transition-colors text-sm">← Înapoi acasă</a>
+          <a href="/" className="text-gray-600 hover:text-teal-500 transition-colors text-sm">← Site public</a>
         </div>
       </nav>
 

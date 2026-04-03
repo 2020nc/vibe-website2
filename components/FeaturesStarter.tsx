@@ -66,7 +66,7 @@ export default function FeaturesStarter() {
         {/* Titlu secțiune */}
         <div className="text-center mb-12">
           <h2 className="text-5xl font-bold text-gray-900 mb-4">
-            De ce <span className="text-amber-600">Vibe Coffee</span>?
+            De ce <span className="text-amber-600">Vibe Caffè</span>?
           </h2>
           <p className="text-lg text-gray-600">Experiență unică, ingrediente premium, atmosferă perfectă</p>
         </div>

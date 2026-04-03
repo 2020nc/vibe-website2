@@ -58,7 +58,7 @@ export default function Navigation() {
           </svg>
           <span className="font-bold text-xl transition-all duration-300" style={{ color: '#111827', fontFamily: 'var(--font-playfair)' }}
           >
-            Vibe Coffee
+            Vibe Caffè
           </span>
         </Link>
 

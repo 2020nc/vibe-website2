@@ -72,7 +72,7 @@ export default function LocatiePage() {
 
         <div className="relative z-10 text-center px-6">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-4" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.6)' }}>
-            Vizitează <span className="text-secondary">Vibe Coffee</span>
+            Vizitează <span className="text-secondary">Vibe Caffè</span>
           </h1>
           <p className="text-xl md:text-2xl text-white max-w-2xl mx-auto" style={{ textShadow: '0 2px 6px rgba(0,0,0,0.6)' }}>
             Un loc special unde cafeaua întâlnește confortul
@@ -193,7 +193,7 @@ export default function LocatiePage() {
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Locația Vibe Coffee — Bld. Regina Elisabeta 30, București"
+                  title="Locația Vibe Caffè — Bld. Regina Elisabeta 30, București"
                 />
               </div>
             </div>
