@@ -43,7 +43,13 @@ export default async function MeniuPage() {
       .order('name');
 
     if (data && data.length > 0) {
-      initialItems = data;
+      const seen = new Set<string>();
+      initialItems = data.filter((item) => {
+        const key = `${item.category}__${item.name}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
     }
   } catch {
     // folosim fallback-ul
