@@ -38,11 +38,12 @@ function calcFinalPrice(item: MenuItem): number {
   return Math.round((item.price - item.discount_amount) * 100) / 100;
 }
 
-function discountLabel(item: MenuItem): string | null {
+function discountLabel(item: MenuItem, currency: 'RON' | 'EUR' | 'USD', curs: { EUR: number; USD: number } | null): string | null {
   if (!item.discount_type || !item.discount_amount) return null;
-  return item.discount_type === 'percent'
-    ? `-${item.discount_amount}%`
-    : `-${item.discount_amount} RON`;
+  if (item.discount_type === 'percent') return `-${item.discount_amount}%`;
+  if (currency === 'EUR' && curs) return `-${(item.discount_amount / curs.EUR).toFixed(2)} €`;
+  if (currency === 'USD' && curs) return `-${(item.discount_amount / curs.USD).toFixed(2)} $`;
+  return `-${item.discount_amount} RON`;
 }
 
 type Currency = 'RON' | 'EUR' | 'USD';
@@ -283,7 +284,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
             >
               {tabItems.map((item) => {
                 const finalPrice  = calcFinalPrice(item);
-                const badge       = discountLabel(item);
+                const badge       = discountLabel(item, currency, curs);
                 const hasDiscount = badge !== null;
                 const isOpen      = openCard === item.id;
                 const extra       = addOnTotal(item.id);
