@@ -3,6 +3,7 @@ import FeaturesStarter from '@/components/FeaturesStarter';
 import About from '@/components/About';
 import FooterStarter from '@/components/FooterStarter';
 import Preloader from '@/components/Preloader';
+import ReviewBar from '@/components/ReviewBar';
 
 export const metadata = {
   title: 'Vibe Caffè — Cafea de Specialitate în București',
@@ -61,6 +62,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <ReviewBar />
 
       {/* Beneficii SSR */}
       <section id="de-ce-vibe" className="py-20 px-6 bg-white">
