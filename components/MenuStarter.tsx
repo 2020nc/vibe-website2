@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import CoffeeLoader from '@/components/CoffeeLoader';
 
 /**
  * Personalizari disponibile pentru orice produs
@@ -60,6 +61,27 @@ interface PromoConfig {
   message: string;
 }
 
+function LazyProductImage({ src, alt }: { src: string; alt: string }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <div className="w-full h-full bg-gray-50">
+      {!loaded && (
+        <div className="w-full h-full flex items-center justify-center bg-gray-100">
+          <CoffeeLoader size={40} />
+        </div>
+      )}
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        onLoad={() => setLoaded(true)}
+        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+        className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${loaded ? 'block' : 'hidden'}`}
+      />
+    </div>
+  );
+}
+
 type ColCount = 3 | 4 | 5;
 
 const COL_CLASSES: Record<ColCount, string> = {
@@ -68,10 +90,10 @@ const COL_CLASSES: Record<ColCount, string> = {
   5: 'grid-cols-1 md:grid-cols-3 lg:grid-cols-5',
 };
 
-export default function MenuStarter() {
-  const [items, setItems]         = useState<MenuItem[]>([]);
-  const [loading, setLoading]     = useState(true);
-  const [activeTab, setActiveTab] = useState('');
+export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[] }) {
+  const [items, setItems]         = useState<MenuItem[]>(initialItems ?? []);
+  const [loading, setLoading]     = useState(!initialItems);
+  const [activeTab, setActiveTab] = useState(initialItems?.[0]?.category ?? '');
   const [visible, setVisible]     = useState(true);
   const [cols, setCols]           = useState<ColCount>(3);
   const [promo, setPromo]         = useState<PromoConfig | null>(null);
@@ -106,6 +128,19 @@ export default function MenuStarter() {
   }
 
   useEffect(() => {
+    // Dacă avem date server-side, setăm tab-ul activ și fetchuim doar promo/curs
+    if (initialItems && initialItems.length > 0) {
+      setActiveTab(initialItems[0].category);
+      Promise.all([
+        fetch('/api/promo').then((r) => r.json()).catch(() => ({ data: null })),
+        fetch('/api/curs').then((r) => r.json()).catch(() => ({ data: null })),
+      ]).then(([promoRes, cursRes]) => {
+        if (promoRes.data) setPromo(promoRes.data as PromoConfig);
+        setCurs(cursRes.data ?? { EUR: 4.97, USD: 4.56, updatedAt: '' });
+      });
+      return;
+    }
+
     Promise.all([
       fetch('/api/menu').then((r) => r.json()),
       fetch('/api/promo').then((r) => r.json()).catch(() => ({ data: null })),
@@ -118,6 +153,7 @@ export default function MenuStarter() {
       // Dacă BNR nu răspunde, folosim rate de fallback
       setCurs(cursRes.data ?? { EUR: 4.97, USD: 4.56, updatedAt: '' });
     }).finally(() => setLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function toDisplayPrice(ron: number): string {
@@ -143,11 +179,10 @@ export default function MenuStarter() {
     <section id="menu" className="py-20 px-6 bg-white">
       <div className="max-w-7xl mx-auto">
 
-        {/* Loading */}
+        {/* Loading — spinner discret fără text, doar când nu există date server-side */}
         {loading && (
           <div className="text-center py-20 text-gray-400">
-            <div className="inline-block w-8 h-8 border-4 border-amber-200 border-t-amber-600 rounded-full animate-spin mb-4" />
-            <p>Se încarcă meniul...</p>
+            <div className="inline-block w-8 h-8 border-4 border-amber-200 border-t-amber-600 rounded-full animate-spin" />
           </div>
         )}
 
@@ -250,21 +285,14 @@ export default function MenuStarter() {
                     key={item.id}
                     className="group bg-gray-50 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300"
                   >
-                    {/* Imagine */}
+                    {/* Imagine cu CoffeeLoader placeholder */}
                     <div className="relative overflow-hidden rounded-xl mx-3 mt-3" style={{ aspectRatio: '4/3' }}>
                       {hasDiscount && (
                         <div className="absolute top-2 left-2 z-10 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow">
                           {badge}
                         </div>
                       )}
-                      <img
-                        src={item.image_url ?? ''}
-                        alt={item.name}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = 'none';
-                        }}
-                      />
+                      <LazyProductImage src={item.image_url ?? ''} alt={item.name} />
                     </div>
 
                     {/* Text + buton personalizare */}

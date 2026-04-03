@@ -1,4 +1,7 @@
+import { getSupabase } from '@/lib/supabase';
 import MenuStarter from '@/components/MenuStarter';
+
+export const revalidate = 3600;
 
 export const metadata = {
   title: 'Meniu & Prețuri',
@@ -11,7 +14,41 @@ export const metadata = {
   },
 };
 
-export default function MeniuPage() {
+const menuFallback = [
+  { id: 'f1',  name: 'Espresso',         price: 12, category: 'Espresso',  description: 'Shot dublu de espresso intens',               image_url: 'https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=600&auto=format&fit=crop', discount_type: null, discount_amount: null, available: true, sort_order: 1 },
+  { id: 'f2',  name: 'Americano',         price: 14, category: 'Espresso',  description: 'Espresso diluat cu apă caldă',                image_url: 'https://images.unsplash.com/photo-1551030173-122aabc4489c?w=600&auto=format&fit=crop', discount_type: null, discount_amount: null, available: true, sort_order: 2 },
+  { id: 'f3',  name: 'Cappuccino',        price: 16, category: 'Espresso',  description: 'Espresso cu lapte spumat',                    image_url: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&auto=format&fit=crop', discount_type: null, discount_amount: null, available: true, sort_order: 3 },
+  { id: 'f4',  name: 'Flat White',        price: 17, category: 'Espresso',  description: 'Microfoam mătăsos peste espresso',            image_url: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?w=600&auto=format&fit=crop', discount_type: null, discount_amount: null, available: true, sort_order: 4 },
+  { id: 'f5',  name: 'Latte',             price: 17, category: 'Espresso',  description: 'Espresso cu lapte abundant',                  image_url: 'https://images.unsplash.com/photo-1561882468-9110e03e0f78?w=600&auto=format&fit=crop', discount_type: null, discount_amount: null, available: true, sort_order: 5 },
+  { id: 'f6',  name: 'V60 Pour Over',     price: 22, category: 'Specialty', description: 'Filtru manual, aromă curată și complexă',     image_url: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&auto=format&fit=crop', discount_type: null, discount_amount: null, available: true, sort_order: 1 },
+  { id: 'f7',  name: 'AeroPress',         price: 20, category: 'Specialty', description: 'Extracție sub presiune, corp plin',           image_url: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&auto=format&fit=crop', discount_type: null, discount_amount: null, available: true, sort_order: 2 },
+  { id: 'f8',  name: 'Cold Brew Classic', price: 18, category: 'Cold Brew', description: 'Infuzie la rece 18 ore, smooth și răcoritor',  image_url: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&auto=format&fit=crop', discount_type: null, discount_amount: null, available: true, sort_order: 1 },
+  { id: 'f9',  name: 'Cold Brew Tonic',   price: 22, category: 'Cold Brew', description: 'Cold brew cu apă tonică și portocală',        image_url: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&auto=format&fit=crop', discount_type: null, discount_amount: null, available: true, sort_order: 2 },
+  { id: 'f10', name: 'Croissant cu Unt',  price: 14, category: 'Patiserie', description: 'Foietaj franțuzesc, crocant și aromat',       image_url: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&auto=format&fit=crop', discount_type: null, discount_amount: null, available: true, sort_order: 1 },
+  { id: 'f11', name: 'Cheesecake',        price: 22, category: 'Patiserie', description: 'Cremă de brânză pe blat de biscuite',         image_url: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=600&auto=format&fit=crop', discount_type: null, discount_amount: null, available: true, sort_order: 2 },
+  { id: 'f12', name: 'Brownie',           price: 18, category: 'Patiserie', description: 'Ciocolată neagră intensă, nucă pecane',       image_url: 'https://images.unsplash.com/photo-1564355808539-22fda35bed7e?w=600&auto=format&fit=crop', discount_type: null, discount_amount: null, available: true, sort_order: 3 },
+];
+
+export default async function MeniuPage() {
+  let initialItems = menuFallback;
+
+  try {
+    const supabase = getSupabase();
+    const { data } = await supabase
+      .from('menu_items')
+      .select('*')
+      .eq('available', true)
+      .order('category')
+      .order('sort_order')
+      .order('name');
+
+    if (data && data.length > 0) {
+      initialItems = data;
+    }
+  } catch {
+    // folosim fallback-ul
+  }
+
   return (
     <main className="min-h-screen bg-white">
       {/* Header */}
@@ -22,8 +59,8 @@ export default function MeniuPage() {
         </p>
       </div>
 
-      {/* Meniu interactiv cu poze */}
-      <MenuStarter />
+      {/* Meniu interactiv — conținut SSR-at cu date server-side */}
+      <MenuStarter initialItems={initialItems} />
 
       {/* CTA */}
       <div className="text-center py-12 px-6 bg-white border-t border-gray-100">
