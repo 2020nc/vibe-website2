@@ -132,6 +132,11 @@ export default function FooterStarter() {
                   De ce Vibe?
                 </a>
               </li>
+              <li>
+                <Link href="/sarbatori" className="text-gray-400 hover:text-primary transition-colors duration-200">
+                  Oferte Sărbători
+                </Link>
+              </li>
             </ul>
 
             <h4 className="text-lg font-semibold text-white mt-8 mb-3">Contact</h4>

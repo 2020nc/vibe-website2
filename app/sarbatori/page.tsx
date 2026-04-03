@@ -1,3 +1,5 @@
+import FooterStarter from '@/components/FooterStarter';
+
 export const metadata = {
   title: 'Oferte Sezoniere & Sărbători | Vibe Caffè București',
   description:
@@ -42,6 +44,7 @@ const offers = [
 
 export default function SarbatoriPage() {
   return (
+    <>
     <main className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-gray-900 text-white py-20 px-6 text-center">
@@ -88,5 +91,7 @@ export default function SarbatoriPage() {
         </div>
       </div>
     </main>
+    <FooterStarter />
+    </>
   );
 }
