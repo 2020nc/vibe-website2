@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import CoffeeLoader from '@/components/CoffeeLoader';
 
 /**
@@ -63,20 +63,29 @@ interface PromoConfig {
 
 function LazyProductImage({ src, alt }: { src: string; alt: string }) {
   const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    // Dacă imaginea e deja în cache și s-a încărcat înainte de a atașa onLoad
+    if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
+      setLoaded(true);
+    }
+  }, []);
+
   return (
-    <div className="w-full h-full bg-gray-50">
+    <div className="relative w-full h-full bg-gray-100">
       {!loaded && (
-        <div className="w-full h-full flex items-center justify-center bg-gray-100">
+        <div className="absolute inset-0 flex items-center justify-center">
           <CoffeeLoader size={40} />
         </div>
       )}
       <img
+        ref={imgRef}
         src={src}
         alt={alt}
-        loading="lazy"
         onLoad={() => setLoaded(true)}
         onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-        className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${loaded ? 'block' : 'hidden'}`}
+        className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 ${loaded ? 'opacity-100' : 'opacity-0'}`}
       />
     </div>
   );
