@@ -11,10 +11,14 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Locație & Program | Vibe Caffè București',
+  title: 'Locație & Program',
   description:
     'Găsește-ne la Bld. Regina Elisabeta 30, Sector 5, București. ' +
     'Program: Luni–Vineri 08:00–22:00, Weekend 09:00–23:00. Tel: +40 721 234 567.',
+  openGraph: {
+    title: 'Locație & Program | Vibe Caffè',
+    description: 'Bld. Regina Elisabeta 30, Sector 5, București. Program zilnic 08:00–23:00.',
+  },
 };
 
 export default function LocatiePage() {
@@ -266,6 +270,41 @@ export default function LocatiePage() {
           </div>
         </div>
       </section>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'CafeOrCoffeeShop',
+            name: 'Vibe Caffè',
+            url: 'https://vibe-website-rho.vercel.app',
+            telephone: '+40721234567',
+            address: {
+              '@type': 'PostalAddress',
+              streetAddress: 'Bulevardul Regina Elisabeta 30',
+              addressLocality: 'București',
+              postalCode: '050016',
+              addressCountry: 'RO',
+            },
+            openingHoursSpecification: [
+              {
+                '@type': 'OpeningHoursSpecification',
+                dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                opens: '08:00',
+                closes: '22:00',
+              },
+              {
+                '@type': 'OpeningHoursSpecification',
+                dayOfWeek: ['Saturday', 'Sunday'],
+                opens: '09:00',
+                closes: '23:00',
+              },
+            ],
+            hasMap: 'https://maps.google.com/?q=Bulevardul+Regina+Elisabeta+30+Bucuresti',
+          }),
+        }}
+      />
     </div>
   );
 }

@@ -1,10 +1,14 @@
 import MenuStarter from '@/components/MenuStarter';
 
 export const metadata = {
-  title: 'Meniu & Prețuri | Vibe Caffè București',
+  title: 'Meniu & Prețuri',
   description:
     'Meniu complet cu prețuri: cafea de specialitate, brunch, deserturi și ' +
     'produse sezoniere. Vibe Caffè, Bld. Regina Elisabeta 30, București.',
+  openGraph: {
+    title: 'Meniu & Prețuri | Vibe Caffè',
+    description: 'Cafea de specialitate, brunch și deserturi. Prețuri actualizate, filtre pe categorii.',
+  },
 };
 
 export default function MeniuPage() {
