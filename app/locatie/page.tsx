@@ -10,6 +10,13 @@
 
 import Link from 'next/link';
 
+export const metadata = {
+  title: 'Locație & Program | Vibe Caffè București',
+  description:
+    'Găsește-ne la Bld. Regina Elisabeta 30, Sector 5, București. ' +
+    'Program: Luni–Vineri 08:00–22:00, Weekend 09:00–23:00. Tel: +40 721 234 567.',
+};
+
 export default function LocatiePage() {
   /**
    * 🖼️ GALERIE IMAGINI
@@ -117,6 +124,46 @@ export default function LocatiePage() {
                     Telefon: <a href="tel:+40721234567" className="text-primary hover:underline">+40 721 234 567</a><br />
                     Email: <a href="mailto:hello@vibecoffee.ro" className="text-primary hover:underline">hello@vibecoffee.ro</a>
                   </p>
+                </div>
+
+                {/* CTA-uri grupate */}
+                <div className="flex flex-col gap-3">
+                  <a
+                    href="https://maps.google.com/?q=Bld.+Regina+Elisabeta+30+Bucuresti"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-full text-center transition-all duration-300 hover:scale-105"
+                  >
+                    Deschide în Google Maps
+                  </a>
+                  <a
+                    href="tel:+40721234567"
+                    className="w-full py-3 bg-gray-900 hover:bg-gray-700 text-white font-semibold rounded-full text-center transition-all duration-300 hover:scale-105"
+                  >
+                    Sună acum
+                  </a>
+                  <Link
+                    href="/rezervari"
+                    className="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-full text-center transition-all duration-300 hover:scale-105"
+                  >
+                    Rezervă masă
+                  </Link>
+                </div>
+
+                {/* Mini-FAQ */}
+                <div className="space-y-4 pt-2">
+                  <div>
+                    <p className="font-semibold text-gray-900">Este necesară rezervarea?</p>
+                    <p className="text-gray-600 text-sm">Recomandat pentru weekend și sărbători. În timpul săptămânii găsești loc și fără rezervare.</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Există parcare în zonă?</p>
+                    <p className="text-gray-600 text-sm">Parcare disponibilă pe stradă și în parcarea Unirii la 5 minute pe jos.</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Care sunt intervalele aglomerate?</p>
+                    <p className="text-gray-600 text-sm">Sâmbătă și duminică 10:00–13:00 (brunch). Vineri seara 18:00–21:00.</p>
+                  </div>
                 </div>
 
                 <div>
