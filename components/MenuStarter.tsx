@@ -143,14 +143,6 @@ export default function MenuStarter() {
     <section id="menu" className="py-20 px-6 bg-white">
       <div className="max-w-7xl mx-auto">
 
-        {/* Titlu */}
-        <div className="text-center mb-12">
-          <h2 className="text-5xl font-bold text-gray-900 mb-4">
-            Meniul <span className="text-amber-600">Nostru</span>
-          </h2>
-          <p className="text-lg text-gray-600">Preparate cu pasiune, servite cu zâmbetul</p>
-        </div>
-
         {/* Loading */}
         {loading && (
           <div className="text-center py-20 text-gray-400">

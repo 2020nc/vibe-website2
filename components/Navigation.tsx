@@ -6,14 +6,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import ThemeToggle from './ThemeToggle';
 
 const NAV_SECTIONS = ['menu', 'de-ce-vibe', 'features', 'sarbatori', 'footer'];
 
 export default function Navigation() {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
+
+  if (pathname?.startsWith('/admin')) return null;
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -61,11 +65,9 @@ export default function Navigation() {
         {/* Menu Links */}
         <div className="hidden md:flex items-center gap-6">
           <a
-            href="#menu"
-            className={`font-semibold transition-all duration-200 px-3 py-1.5 rounded-full ${
-              activeSection === 'menu' ? 'bg-primary text-white shadow-sm' : 'hover:text-primary'
-            }`}
-            style={{ color: activeSection === 'menu' ? undefined : '#111827' }}
+            href="/meniu"
+            className="font-semibold transition-all duration-200 px-3 py-1.5 rounded-full hover:text-primary"
+            style={{ color: '#111827' }}
           >
             Meniu
           </a>

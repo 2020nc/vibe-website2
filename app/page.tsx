@@ -1,7 +1,5 @@
-import { Suspense } from 'react';
 import HeroStarter from '@/components/HeroStarter';
 import FeaturesStarter from '@/components/FeaturesStarter';
-import MenuStarter from '@/components/MenuStarter';
 import About from '@/components/About';
 import FooterStarter from '@/components/FooterStarter';
 import Preloader from '@/components/Preloader';
@@ -181,10 +179,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Componente existente */}
-      <Suspense>
-        <MenuStarter />
-      </Suspense>
       <About />
       <FooterStarter />
 

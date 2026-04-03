@@ -25,7 +25,10 @@ export default function AdminLogin() {
     <div className="min-h-screen flex items-center justify-center bg-gray-950">
       <form onSubmit={handleLogin}
         className="bg-gray-900 p-8 rounded-2xl shadow-xl w-full max-w-sm space-y-4">
-        <h1 className="text-white text-2xl font-bold text-center">Admin Vibe</h1>
+        <div className="text-center mb-2">
+          <span className="text-white text-2xl font-bold">Vibe Caffè</span>
+          <p className="text-gray-400 text-sm mt-1">Panou de administrare</p>
+        </div>
         <input
           type="password"
           placeholder="Parolă admin"
@@ -38,6 +41,9 @@ export default function AdminLogin() {
           className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold transition">
           Intră în admin
         </button>
+        <p className="text-center">
+          <a href="/" className="text-gray-500 text-xs hover:text-gray-300">← Înapoi la site</a>
+        </p>
       </form>
     </div>
   )
