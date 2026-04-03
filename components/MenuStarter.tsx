@@ -28,7 +28,15 @@ interface MenuItem {
   discount_amount: number | null;
   available: boolean;
   sort_order: number;
+  tag?: string | null;
 }
+
+const TAG_STYLES: Record<string, string> = {
+  'Bestseller': 'bg-amber-100 text-amber-800',
+  'Sezonier':   'bg-green-100 text-green-800',
+  'Signature':  'bg-teal-100 text-teal-800',
+  'Staff Pick': 'bg-orange-100 text-orange-700',
+};
 
 function calcFinalPrice(item: MenuItem): number {
   if (!item.discount_type || !item.discount_amount) return item.price;
@@ -300,6 +308,11 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                       {hasDiscount && (
                         <div className="absolute top-2 left-2 z-10 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow">
                           {badge}
+                        </div>
+                      )}
+                      {item.tag && TAG_STYLES[item.tag] && (
+                        <div className={`absolute top-2 right-2 z-10 text-xs font-bold px-2 py-1 rounded-full shadow ${TAG_STYLES[item.tag]}`}>
+                          {item.tag}
                         </div>
                       )}
                       <LazyProductImage src={item.image_url ?? ''} alt={item.name} />
