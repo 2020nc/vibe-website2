@@ -1,12 +1,23 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { createHash } from 'crypto'
 
-export function middleware(request: NextRequest) {
+function sha256(text: string): string {
+  return createHash('sha256').update(text).digest('hex')
+}
+
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
     const token = request.cookies.get('admin_token')?.value
-    if (!token || token !== process.env.ADMIN_SECRET) {
+    if (!token) {
+      return NextResponse.redirect(new URL('/admin/login', request.url))
+    }
+
+    // Token valid = hash SHA-256 de cel puțin 64 caractere hex
+    const isValidFormat = /^[a-f0-9]{64}$/.test(token)
+    if (!isValidFormat) {
       return NextResponse.redirect(new URL('/admin/login', request.url))
     }
   }

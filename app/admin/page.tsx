@@ -702,7 +702,14 @@ function BulkDiscountModal({
 
 /* ─── MAIN PAGE ───────────────────────────────────────────── */
 export default function AdminPage() {
-  const [tab, setTab] = useState<'rezervari' | 'meniu' | 'sarbatori'>('rezervari');
+  const [tab, setTab] = useState<'rezervari' | 'meniu' | 'sarbatori' | 'setari'>('rezervari');
+
+  /* SCHIMBARE PAROLĂ */
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passMsg, setPassMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
+  const [savingPass, setSavingPass] = useState(false);
 
   /* REZERVĂRI */
   const [rezervari, setRezervari] = useState<Rezervare[]>([]);
@@ -974,7 +981,7 @@ export default function AdminPage() {
       <main className="max-w-7xl mx-auto px-6 pt-28 pb-16">
         {/* ── Tabs ── */}
         <div className="flex flex-wrap gap-2 mb-8">
-          {(['rezervari', 'meniu', 'sarbatori'] as const).map((t) => (
+          {(['rezervari', 'meniu', 'sarbatori', 'setari'] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -982,11 +989,13 @@ export default function AdminPage() {
                 tab === t
                   ? t === 'sarbatori'
                     ? 'bg-rose-500 text-white shadow-sm'
+                    : t === 'setari'
+                    ? 'bg-gray-700 text-white shadow-sm'
                     : 'bg-teal-500 text-white shadow-sm'
                   : 'bg-white text-gray-600 border border-gray-200 hover:border-teal-300 hover:text-teal-600'
               }`}
             >
-              {t === 'rezervari' ? 'Rezervări' : t === 'meniu' ? 'Meniu' : '🎉 Sărbători'}
+              {t === 'rezervari' ? 'Rezervări' : t === 'meniu' ? 'Meniu' : t === 'sarbatori' ? '🎉 Sărbători' : '⚙️ Setări'}
             </button>
           ))}
         </div>
@@ -1705,6 +1714,90 @@ export default function AdminPage() {
             </>
           );
         })()}
+
+        {/* ════════════════════ TAB SETĂRI ════════════════════ */}
+        {tab === 'setari' && (
+          <div className="max-w-md mx-auto">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">Schimbă parola de admin</h2>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setPassMsg(null);
+                if (newPassword !== confirmPassword) {
+                  setPassMsg({ type: 'err', text: 'Parola nouă nu coincide cu confirmarea.' });
+                  return;
+                }
+                if (newPassword.length < 6) {
+                  setPassMsg({ type: 'err', text: 'Parola nouă trebuie să aibă minim 6 caractere.' });
+                  return;
+                }
+                setSavingPass(true);
+                const res = await fetch('/api/admin/change-password', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ oldPassword, newPassword }),
+                });
+                const data = await res.json();
+                setSavingPass(false);
+                if (res.ok) {
+                  setPassMsg({ type: 'ok', text: 'Parola a fost schimbată cu succes!' });
+                  setOldPassword('');
+                  setNewPassword('');
+                  setConfirmPassword('');
+                } else {
+                  setPassMsg({ type: 'err', text: data.error ?? 'Eroare necunoscută.' });
+                }
+              }}
+              className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-5"
+            >
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Parola curentă</label>
+                <input
+                  type="password"
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}
+                  required
+                  placeholder="••••••••"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Parola nouă</label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                  placeholder="Minim 6 caractere"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Confirmă parola nouă</label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  placeholder="Repetă parola nouă"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
+                />
+              </div>
+              {passMsg && (
+                <p className={`text-sm font-medium ${passMsg.type === 'ok' ? 'text-teal-600' : 'text-red-500'}`}>
+                  {passMsg.text}
+                </p>
+              )}
+              <button
+                type="submit"
+                disabled={savingPass}
+                className="w-full py-3 bg-gray-800 hover:bg-gray-700 disabled:opacity-50 text-white font-semibold rounded-xl transition-all"
+              >
+                {savingPass ? 'Se salvează…' : 'Schimbă parola'}
+              </button>
+            </form>
+          </div>
+        )}
       </main>
 
       {/* Modals */}
