@@ -25,7 +25,14 @@ const { createPdf } = require('C:/Users/Admin/.claude/pdf-utils/createPdf.js');
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_DIR = path.resolve(__dirname, '..');
-const SESSIONS_DIR = 'C:/Users/Admin/.claude/projects/k--Video-Prelucrat-Vibe-Coding-Proiect-01';
+
+// Derivă automat SESSIONS_DIR din PROJECT_DIR
+// ex: "k:/Video-Prelucrat/Vibe Coding/Proiect_02" → "k--Video-Prelucrat-Vibe-Coding-Proiect-02"
+const projectSlug = PROJECT_DIR
+  .replace(/\\/g, '/')
+  .replace(/^([a-zA-Z]):\//, (_, d) => d.toLowerCase() + '--')
+  .replace(/[\/ _]/g, '-');
+const SESSIONS_DIR = `C:/Users/Admin/.claude/projects/${projectSlug}`;
 const OUTPUT_DIR = path.join(PROJECT_DIR, 'docs');
 
 // ─── Găsește sesiunea ────────────────────────────────────────────────────────
