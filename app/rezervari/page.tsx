@@ -85,18 +85,46 @@ export default function RezervariPage() {
             <p className="text-lg text-gray-600">Completează formularul și te confirmăm în cel mai scurt timp.</p>
           </div>
 
+          {/* Info / Reguli */}
+          <div className="mb-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center text-sm">
+            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+              <div className="text-2xl mb-1">🕗</div>
+              <p className="font-semibold text-gray-800">Program</p>
+              <p className="text-gray-500">Lun–Dum: 08:00–22:00</p>
+            </div>
+            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+              <div className="text-2xl mb-1">✅</div>
+              <p className="font-semibold text-gray-800">Confirmare</p>
+              <p className="text-gray-500">Răspundem în max. 2 ore</p>
+            </div>
+            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+              <div className="text-2xl mb-1">❌</div>
+              <p className="font-semibold text-gray-800">Anulare</p>
+              <p className="text-gray-500">Gratis cu 24h înainte</p>
+            </div>
+          </div>
+
           {/* Success */}
           {success && (
-            <div className="mb-8 p-6 bg-teal-50 border border-teal-200 rounded-2xl text-center">
-              <div className="text-4xl mb-3">☕</div>
-              <h2 className="text-xl font-bold text-teal-700 mb-2">Rezervare trimisă!</h2>
-              <p className="text-teal-600">Te vom contacta în curând pentru confirmare.</p>
-              <button
-                onClick={resetForm}
-                className="mt-4 px-6 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-full transition-colors"
-              >
-                Rezervare nouă
-              </button>
+            <div className="mb-8 p-8 bg-teal-50 border border-teal-200 rounded-2xl text-center">
+              <div className="text-5xl mb-4">☕</div>
+              <h2 className="text-2xl font-bold text-teal-700 mb-2">Rezervare trimisă cu succes!</h2>
+              <p className="text-teal-600 mb-1">Te vom contacta în maxim 2 ore pentru confirmare.</p>
+              <p className="text-sm text-teal-500 mb-6">Verifică și dosarul Spam dacă nu primești email.</p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <button
+                  onClick={resetForm}
+                  className="px-6 py-2.5 bg-teal-500 hover:bg-teal-600 text-white rounded-full transition-colors font-semibold"
+                >
+                  Rezervare nouă
+                </button>
+                <a
+                  href="/"
+                  className="px-6 py-2.5 bg-white border border-teal-300 text-teal-600 hover:bg-teal-50 rounded-full transition-colors font-semibold"
+                >
+                  Înapoi acasă
+                </a>
+              </div>
             </div>
           )}
 
