@@ -107,6 +107,21 @@ html {
   --color-foreground: var(--foreground);
   --font-heading: var(--font-heading);
   --font-body: var(--font-inter);
+
+  /* 🎨 Paleta Espresso / Crem / Oliv */
+  --color-espresso-50: #FAF6F1;
+  --color-espresso-100: #F0E6D3;
+  --color-espresso-500: #6B3A2A;
+  --color-espresso-800: #3B1F0A;
+  --color-espresso-900: #1E0F05;
+
+  --color-crem-50: #FFFDF8;
+  --color-crem-100: #F5EDD6;
+  --color-crem-200: #EDD9A3;
+
+  --color-oliv-400: #8A9E5A;
+  --color-oliv-600: #6B7C4A;
+  --color-oliv-800: #4A5733;
 }
 
 /* 📝 TIPOGRAFIE MODERNĂ */

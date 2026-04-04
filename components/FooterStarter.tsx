@@ -70,7 +70,7 @@ export default function FooterStarter() {
             <h3 className="text-2xl font-bold text-white mb-3">
               Vibe <span className="text-primary">Caffè</span>
             </h3>
-            <p className="text-gray-400 leading-relaxed mb-6">
+            <p className="text-gray-300 leading-relaxed mb-6">
               Cafea de specialitate într-un ambient modern și relaxant.
               Te așteptăm la Bld. Regina Elisabeta 30, București.
             </p>
@@ -114,34 +114,34 @@ export default function FooterStarter() {
             <h4 className="text-lg font-semibold text-white mb-4">Navigare</h4>
             <ul className="space-y-3">
               <li>
-                <Link href="/meniu" className="text-gray-400 hover:text-primary transition-colors duration-200">
+                <Link href="/meniu" className="text-gray-300 hover:text-primary transition-colors duration-200">
                   Meniu
                 </Link>
               </li>
               <li>
-                <Link href="/rezervari" className="text-gray-400 hover:text-primary transition-colors duration-200">
+                <Link href="/rezervari" className="text-gray-300 hover:text-primary transition-colors duration-200">
                   Rezervări
                 </Link>
               </li>
               <li>
-                <Link href="/locatie" className="text-gray-400 hover:text-primary transition-colors duration-200">
+                <Link href="/locatie" className="text-gray-300 hover:text-primary transition-colors duration-200">
                   Locație
                 </Link>
               </li>
               <li>
-                <a href="/#de-ce-vibe" className="text-gray-400 hover:text-primary transition-colors duration-200">
+                <a href="/#de-ce-vibe" className="text-gray-300 hover:text-primary transition-colors duration-200">
                   De ce Vibe?
                 </a>
               </li>
               <li>
-                <Link href="/sarbatori" className="text-gray-400 hover:text-primary transition-colors duration-200">
+                <Link href="/sarbatori" className="text-gray-300 hover:text-primary transition-colors duration-200">
                   Oferte Sărbători
                 </Link>
               </li>
             </ul>
 
             <h4 className="text-lg font-semibold text-white mt-8 mb-3">Contact</h4>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-gray-300 text-sm leading-relaxed">
               Bld. Regina Elisabeta, Nr. 30<br />
               Sector 5, București<br />
               <a href="tel:+40721234567" className="hover:text-primary transition-colors">+40 721 234 567</a>
@@ -151,7 +151,7 @@ export default function FooterStarter() {
           {/* Coloana 3 — Newsletter */}
           <div>
             <h4 className="text-lg font-semibold text-white mb-2">Newsletter</h4>
-            <p className="text-gray-400 text-sm mb-4">
+            <p className="text-gray-300 text-sm mb-4">
               Abonează-te pentru oferte exclusive, noutăți despre meniu și evenimente speciale.
             </p>
 

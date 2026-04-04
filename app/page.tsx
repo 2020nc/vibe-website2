@@ -48,17 +48,17 @@ export default function Home() {
       {/* Hero SSR */}
       <section className="relative min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center text-center px-6">
         <div className="relative z-10 max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 font-[family-name:var(--font-playfair)]">
             Cafea bună. Oameni buni. Un loc al tău.
           </h1>
-          <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-200 mb-10 max-w-2xl mx-auto">
             Meniu clar, rezervări rapide și locație ușor de găsit în centrul Bucureștiului.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/meniu" className="px-8 py-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105">
+            <a href="/meniu" className="px-8 py-4 bg-espresso-800 hover:bg-espresso-900 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105">
               Vezi meniul
             </a>
-            <a href="/rezervari" className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105">
+            <a href="/rezervari" className="px-8 py-4 bg-oliv-600 hover:bg-oliv-800 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105">
               Rezervă masă
             </a>
           </div>
@@ -72,7 +72,7 @@ export default function Home() {
       {/* Beneficii SSR */}
       <section id="de-ce-vibe" className="py-20 px-6 bg-white animate-on-scroll">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-4">De ce Vibe?</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-4 font-[family-name:var(--font-playfair)]">De ce Vibe?</h2>
           <p className="text-lg text-gray-500 text-center mb-12">Diferențiatori concreți, nu afirmații vagi.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
@@ -110,7 +110,7 @@ export default function Home() {
       {/* Preview Meniu SSR */}
       <section className="py-20 px-6 bg-gray-50 animate-on-scroll">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-4">Din meniul nostru</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-4 font-[family-name:var(--font-playfair)]">Din meniul nostru</h2>
           <p className="text-lg text-gray-500 text-center mb-12">Cafea bună. Oameni buni. Un loc al tău.</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10">
             {previewItems.map((item) => (
@@ -130,7 +130,7 @@ export default function Home() {
             ))}
           </div>
           <div className="text-center">
-            <a href="/meniu" className="px-8 py-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 inline-block">
+            <a href="/meniu" className="px-8 py-4 bg-espresso-800 hover:bg-espresso-900 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 inline-block">
               Vezi meniul complet
             </a>
           </div>
@@ -140,7 +140,7 @@ export default function Home() {
       {/* Oferte sezoniere SSR */}
       <section className="py-20 px-6 bg-white animate-on-scroll">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-4">Oferte sezoniere</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-4 font-[family-name:var(--font-playfair)]">Oferte sezoniere</h2>
           <p className="text-lg text-gray-500 text-center mb-12">Produse disponibile în această perioadă.</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
             {seasonalPreview.map((item) => (
@@ -163,7 +163,7 @@ export default function Home() {
             ))}
           </div>
           <div className="text-center">
-            <a href="/sarbatori" className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 inline-block">
+            <a href="/sarbatori" className="px-8 py-4 bg-oliv-600 hover:bg-oliv-800 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 inline-block">
               Vezi toate ofertele sezoniere
             </a>
           </div>
@@ -171,16 +171,16 @@ export default function Home() {
       </section>
 
       {/* CTA secundar rezervare */}
-      <section className="bg-teal-600 dark:bg-teal-800 py-16 px-6 text-center">
-        <h2 className="text-2xl font-bold text-white mb-3">
+      <section className="bg-espresso-800 dark:bg-espresso-900 py-16 px-6 text-center">
+        <h2 className="text-2xl font-bold text-white mb-3 font-[family-name:var(--font-playfair)]">
           Ți-a plăcut ce ai văzut?
         </h2>
-        <p className="text-teal-100 mb-8 text-base max-w-md mx-auto">
+        <p className="text-crem-100 mb-8 text-base max-w-md mx-auto">
           Rezervă o masă acum și garantăm locul tău.
         </p>
         <a
           href="/rezervari"
-          className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-bold px-8 py-4 rounded-full text-lg transition-colors duration-200"
+          className="inline-block bg-oliv-600 hover:bg-oliv-800 text-white font-bold px-8 py-4 rounded-full text-lg transition-colors duration-200"
         >
           Rezervă masă
         </a>
@@ -189,18 +189,18 @@ export default function Home() {
       {/* Locație rapidă SSR */}
       <section className="py-20 px-6 bg-gray-900 text-white animate-on-scroll">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8">Unde ne găsești</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-8 font-[family-name:var(--font-playfair)]">Unde ne găsești</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
             <div>
               <div className="text-3xl mb-3">📍</div>
               <p className="font-semibold text-lg">Adresă</p>
-              <p className="text-gray-300">Bld. Regina Elisabeta 30, Sector 5, București</p>
+              <p className="text-gray-200">Bld. Regina Elisabeta 30, Sector 5, București</p>
             </div>
             <div>
               <div className="text-3xl mb-3">🕐</div>
               <p className="font-semibold text-lg">Program</p>
-              <p className="text-gray-300">Luni–Vineri 08:00–22:00</p>
-              <p className="text-gray-300">Sâmbătă–Duminică 09:00–23:00</p>
+              <p className="text-gray-200">Luni–Vineri 08:00–22:00</p>
+              <p className="text-gray-200">Sâmbătă–Duminică 09:00–23:00</p>
             </div>
             <div>
               <div className="text-3xl mb-3">📞</div>
@@ -212,7 +212,7 @@ export default function Home() {
             href="https://maps.google.com/?q=Bld.+Regina+Elisabeta+30+Bucuresti"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-8 py-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 inline-block"
+            className="px-8 py-4 bg-espresso-800 hover:bg-espresso-900 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 inline-block"
           >
             Deschide în Google Maps
           </a>

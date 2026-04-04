@@ -45,6 +45,7 @@ export default function RezervariPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [currentStep, setCurrentStep] = useState(1);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -91,6 +92,35 @@ export default function RezervariPage() {
           </div>
 
 
+          {/* Stepper vizual */}
+          {!success && (
+            <div className="flex items-center justify-center mb-8 max-w-md mx-auto">
+              {[
+                { step: 1, label: 'Alege data & ora' },
+                { step: 2, label: 'Detaliile tale' },
+                { step: 3, label: 'Confirmare' },
+              ].map(({ step, label }, i) => (
+                <div key={step} className="flex items-center flex-1">
+                  <div className="flex flex-col items-center">
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-300 ${
+                        currentStep > step
+                          ? 'bg-green-600 text-white'
+                          : currentStep === step
+                          ? 'bg-amber-800 text-white'
+                          : 'bg-gray-200 text-gray-500'
+                      }`}
+                    >
+                      {currentStep > step ? '✓' : step}
+                    </div>
+                    <span className="text-xs text-center mt-1 text-gray-500 w-20">{label}</span>
+                  </div>
+                  {i < 2 && <div className="flex-1 h-px bg-gray-300 mx-2 mb-5" />}
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Success */}
           {success && (
             <div className="p-8 bg-teal-50 border border-teal-200 rounded-2xl text-center">
@@ -114,169 +144,134 @@ export default function RezervariPage() {
             </div>
           )}
 
-          {/* Layout 2 coloane */}
+          {/* Formular cu pași */}
           {!success && (
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-6 items-start">
+            <form onSubmit={handleSubmit}>
 
-              {/* ── COLOANA STÂNGA — Dată + Oră + Ticket ── */}
-              <div className="bg-white rounded-3xl shadow-lg p-8 space-y-6">
-
-                {/* Data */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">📅 Data *</label>
-                  <input
-                    type="date"
-                    name="data"
-                    value={form.data}
-                    onChange={handleChange}
-                    required
-                    min={new Date().toISOString().split('T')[0]}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-lg"
-                  />
-                </div>
-
-                {/* Ora */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-3">🕐 Ora *</label>
-                  <div className="grid grid-cols-8 gap-1">
-                    {getOre(form.data).map(h => (
-                      <button
-                        key={h}
-                        type="button"
-                        onClick={() => setForm(prev => ({ ...prev, ora: h }))}
-                        className={`py-1.5 rounded-md font-medium text-xs transition-all duration-200 ${
-                          form.ora === h
-                            ? 'bg-teal-500 text-white ring-1 ring-teal-300 scale-105'
-                            : 'bg-gray-100 text-gray-600 hover:bg-teal-50 hover:text-teal-600'
-                        }`}
-                      >
-                        {h}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Ticket */}
-                {form.data && form.ora ? (
-                  <div className="rounded-2xl overflow-hidden border-2 border-teal-500">
-                    {/* Header ticket */}
-                    <div className="bg-teal-500 px-5 py-3 flex items-center gap-2">
-                      <span className="text-white text-lg">☕</span>
-                      <span className="text-white font-bold tracking-wide uppercase text-sm">Vibe Caffè — Rezervare</span>
-                    </div>
-                    {/* Corp ticket */}
-                    <div className="bg-teal-50 grid grid-cols-2 divide-x divide-teal-200">
-                      <div className="px-5 py-4">
-                        <p className="text-xs text-teal-500 font-bold uppercase tracking-widest mb-1">📅 Data</p>
-                        <p className="text-teal-900 font-bold text-base leading-snug capitalize">
-                          {formatData(form.data)}
-                        </p>
-                      </div>
-                      <div className="px-5 py-4">
-                        <p className="text-xs text-teal-500 font-bold uppercase tracking-widest mb-1">🕐 Ora</p>
-                        <p className="text-teal-900 font-bold text-3xl">{form.ora}</p>
-                      </div>
-                    </div>
-                    {/* Linie perforată */}
-                    <div className="border-t-2 border-dashed border-teal-300 mx-4" />
-                    <div className="bg-teal-50 px-5 py-2 text-center">
-                      <p className="text-xs text-teal-400">Poți modifica oricând înainte de trimitere</p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="rounded-2xl border-2 border-dashed border-gray-200 px-5 py-8 text-center text-gray-400">
-                    <p className="text-3xl mb-2">🎫</p>
-                    <p className="text-sm">Alege data și ora pentru a vedea rezumatul rezervării</p>
-                  </div>
-                )}
-              </div>
-
-              {/* ── COLOANA DREAPTA — Date personale + Submit ── */}
-              <div className="bg-white rounded-3xl shadow-lg p-6 space-y-3">
-
-                <h2 className="text-lg font-bold text-gray-800 mb-1">Datele tale</h2>
-
-                <div className="grid grid-cols-2 gap-3">
+              {/* ── PAS 1: Dată + Oră ── */}
+              {currentStep === 1 && (
+                <div className="max-w-lg mx-auto bg-white rounded-3xl shadow-lg p-8 space-y-6">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Nume complet *</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">📅 Data *</label>
                     <input
-                      type="text"
-                      name="nume"
-                      value={form.nume}
+                      type="date"
+                      name="data"
+                      value={form.data}
                       onChange={handleChange}
-                      required
-                      placeholder="Ion Popescu"
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
+                      min={new Date().toISOString().split('T')[0]}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-lg"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Email *</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      required
-                      placeholder="ion@email.com"
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Telefon *</label>
-                    <input
-                      type="tel"
-                      name="telefon"
-                      value={form.telefon}
-                      onChange={handleChange}
-                      required
-                      placeholder="07xx xxx xxx"
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Număr persoane *</label>
-                    <select
-                      name="persoane"
-                      value={form.persoane}
-                      onChange={handleChange}
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition bg-white"
-                    >
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
-                        <option key={n} value={n}>{n} {n === 1 ? 'persoană' : 'persoane'}</option>
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">🕐 Ora *</label>
+                    <div className="grid grid-cols-8 gap-1">
+                      {getOre(form.data).map(h => (
+                        <button
+                          key={h}
+                          type="button"
+                          onClick={() => setForm(prev => ({ ...prev, ora: h }))}
+                          className={`py-1.5 rounded-md font-medium text-xs transition-all duration-200 ${
+                            form.ora === h
+                              ? 'bg-teal-500 text-white ring-1 ring-teal-300 scale-105'
+                              : 'bg-gray-100 text-gray-600 hover:bg-teal-50 hover:text-teal-600'
+                          }`}
+                        >
+                          {h}
+                        </button>
                       ))}
-                      <option value={15}>Grup 11-15</option>
-                      <option value={20}>Grup 16-20</option>
-                    </select>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={!form.data || !form.ora}
+                    onClick={() => setCurrentStep(2)}
+                    className="w-full py-3 bg-amber-800 hover:bg-amber-900 disabled:bg-gray-200 disabled:text-gray-400 text-white font-bold rounded-xl transition-all duration-300"
+                  >
+                    Continuă →
+                  </button>
+                </div>
+              )}
+
+              {/* ── PAS 2: Detalii personale ── */}
+              {currentStep === 2 && (
+                <div className="max-w-lg mx-auto bg-white rounded-3xl shadow-lg p-8 space-y-4">
+                  <h2 className="text-lg font-bold text-gray-800 mb-1">Detaliile tale</h2>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-1">Nume complet *</label>
+                      <input type="text" name="nume" value={form.nume} onChange={handleChange} required placeholder="Ion Popescu"
+                        className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-1">Email *</label>
+                      <input type="email" name="email" value={form.email} onChange={handleChange} required placeholder="ion@email.com"
+                        className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-1">Telefon *</label>
+                      <input type="tel" name="telefon" value={form.telefon} onChange={handleChange} required placeholder="07xx xxx xxx"
+                        className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-1">Număr persoane *</label>
+                      <select name="persoane" value={form.persoane} onChange={handleChange}
+                        className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition bg-white">
+                        {[1,2,3,4,5,6,7,8,9,10].map(n => <option key={n} value={n}>{n} {n === 1 ? 'persoană' : 'persoane'}</option>)}
+                        <option value={15}>Grup 11-15</option>
+                        <option value={20}>Grup 16-20</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Mesaj / Cerințe speciale</label>
+                    <textarea name="mesaj" value={form.mesaj} onChange={handleChange} rows={2}
+                      placeholder="Ex: aniversare, loc la fereastră, alergii..."
+                      className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition resize-none" />
+                  </div>
+                  <div className="flex gap-3">
+                    <button type="button" onClick={() => setCurrentStep(1)}
+                      className="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-all">
+                      ← Înapoi
+                    </button>
+                    <button type="button"
+                      disabled={!form.nume || !form.email || !form.telefon}
+                      onClick={() => setCurrentStep(3)}
+                      className="flex-1 py-3 bg-amber-800 hover:bg-amber-900 disabled:bg-gray-200 disabled:text-gray-400 text-white font-bold rounded-xl transition-all">
+                      Continuă →
+                    </button>
                   </div>
                 </div>
+              )}
 
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Mesaj / Cerințe speciale</label>
-                  <textarea
-                    name="mesaj"
-                    value={form.mesaj}
-                    onChange={handleChange}
-                    rows={2}
-                    placeholder="Ex: aniversare, loc la fereastră, alergii..."
-                    className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition resize-none"
-                  />
+              {/* ── PAS 3: Confirmare ── */}
+              {currentStep === 3 && (
+                <div className="max-w-lg mx-auto bg-white rounded-3xl shadow-lg p-8 space-y-4">
+                  <h2 className="text-xl font-bold text-gray-900 mb-4 text-center">Sumar rezervare</h2>
+                  <div className="bg-gray-50 rounded-2xl p-5 space-y-3 text-sm">
+                    <div className="flex justify-between"><span className="text-gray-500">Data</span><span className="font-semibold capitalize">{formatData(form.data)}</span></div>
+                    <div className="flex justify-between"><span className="text-gray-500">Ora</span><span className="font-semibold">{form.ora}</span></div>
+                    <div className="flex justify-between"><span className="text-gray-500">Persoane</span><span className="font-semibold">{form.persoane}</span></div>
+                    <div className="border-t pt-3 flex justify-between"><span className="text-gray-500">Nume</span><span className="font-semibold">{form.nume}</span></div>
+                    <div className="flex justify-between"><span className="text-gray-500">Email</span><span className="font-semibold">{form.email}</span></div>
+                    <div className="flex justify-between"><span className="text-gray-500">Telefon</span><span className="font-semibold">{form.telefon}</span></div>
+                    {form.mesaj && <div className="flex justify-between"><span className="text-gray-500">Mesaj</span><span className="font-semibold text-right max-w-[60%]">{form.mesaj}</span></div>}
+                  </div>
+                  {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+                  <div className="flex gap-3">
+                    <button type="button" onClick={() => setCurrentStep(2)}
+                      className="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-all">
+                      ← Înapoi
+                    </button>
+                    <button type="submit" disabled={loading}
+                      className="flex-1 py-3 bg-teal-500 hover:bg-teal-600 disabled:bg-teal-300 text-white font-bold rounded-xl transition-all">
+                      {loading ? 'Se trimite...' : 'Confirmă ☕'}
+                    </button>
+                  </div>
+                  <p className="text-xs text-gray-400 text-center">
+                    <a href="/confidentialitate" className="underline hover:text-gray-600">Confidențialitate</a>
+                  </p>
                 </div>
-
-                {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-3 bg-teal-500 hover:bg-teal-600 disabled:bg-teal-300 text-white font-bold text-base rounded-xl transition-all duration-300 hover:scale-[1.02]"
-                >
-                  {loading ? 'Se trimite...' : 'Rezervă acum ☕'}
-                </button>
-
-                <p className="text-xs text-gray-400 text-center">
-                  <a href="/confidentialitate" className="underline hover:text-gray-600">Confidențialitate</a>
-                </p>
-
-              </div>
+              )}
 
             </form>
           )}
