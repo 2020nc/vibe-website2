@@ -131,7 +131,7 @@ export default function LocatiePage() {
                 </div>
 
                 {/* CTA-uri grupate */}
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3 pt-2">
                   <a
                     href="https://maps.google.com/?q=Bld.+Regina+Elisabeta+30+Bucuresti"
                     target="_blank"
@@ -172,12 +172,12 @@ export default function LocatiePage() {
 
                 <div>
                   <h3 className="text-xl font-semibold text-primary mb-2">Facilități</h3>
-                  <div className="flex flex-wrap gap-2">
-                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">📶 WiFi Gratuit</span>
-                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">🔌 Prize la fiecare masă</span>
-                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">♿ Acces persoane cu dizabilități</span>
-                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">🅿️ Parcare gratuită</span>
-                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">🐕 Pet-friendly</span>
+                  <div className="flex flex-col gap-2">
+                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">📶 WiFi Gratuit</span>
+                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">🔌 Prize la fiecare masă</span>
+                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">♿ Acces persoane cu dizabilități</span>
+                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">🅿️ Parcare gratuită</span>
+                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">🐕 Pet-friendly</span>
                   </div>
                 </div>
               </div>
@@ -236,10 +236,6 @@ export default function LocatiePage() {
                     </p>
                   </div>
 
-                  {/* Badge număr */}
-                  <div className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center font-bold text-primary">
-                    {index + 1}
-                  </div>
                 </div>
               ))}
             </div>

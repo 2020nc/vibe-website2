@@ -100,6 +100,9 @@ const staticOffers = [
 export default async function SarbatoriPage() {
   const { items, cfg } = await getHolidayData();
   const hasHoliday = cfg !== null && items.length > 0;
+  const staticOffersFiltered = hasHoliday
+    ? staticOffers.filter(o => !items.some(i => i.name.toLowerCase() === o.title.toLowerCase()))
+    : staticOffers;
 
   return (
     <>
@@ -200,7 +203,7 @@ export default async function SarbatoriPage() {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {staticOffers.map((offer) => (
+            {staticOffersFiltered.map((offer) => (
               <div
                 key={offer.title}
                 className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-shadow group"

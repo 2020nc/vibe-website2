@@ -87,7 +87,7 @@ export default function RezervariPage() {
           {/* Titlu compact */}
           <div className="text-center mb-6">
             <h1 className="text-3xl font-bold text-gray-900 mb-1">Rezervă o masă</h1>
-            <p className="text-sm text-gray-500">⏱ Confirmare în max. 2 ore · L–V 07–22 · S–D 08–23</p>
+            <p className="text-sm text-gray-500">L–V 07:00–22:00 · S–D 08:00–23:00</p>
           </div>
 
 
@@ -273,7 +273,7 @@ export default function RezervariPage() {
                 </button>
 
                 <p className="text-xs text-gray-400 text-center">
-                  ⏱ Max. 2 ore · L–V 07–22 · S–D 08–23 · <a href="/confidentialitate" className="underline hover:text-gray-600">Confidențialitate</a>
+                  <a href="/confidentialitate" className="underline hover:text-gray-600">Confidențialitate</a>
                 </p>
 
               </div>
