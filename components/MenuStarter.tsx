@@ -327,7 +327,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                 return (
                   <div
                     key={item.id}
-                    className="group bg-gray-50 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300"
+                    className="group cursor-pointer bg-gray-50 rounded-2xl overflow-hidden transition-transform duration-300 hover:-translate-y-1.5 hover:shadow-xl"
                   >
                     {/* Imagine cu CoffeeLoader placeholder */}
                     <div className="relative overflow-hidden rounded-xl mx-3 mt-3" style={{ aspectRatio: '4/3' }}>
@@ -368,6 +368,10 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                       >
                         <span>{isOpen ? '▲' : '▼'}</span>
                         Personalizează comanda
+                      </button>
+
+                      <button className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 mt-3 w-full py-2 text-sm font-medium bg-amber-800 text-white rounded-lg">
+                        Adaugă la comandă
                       </button>
                     </div>
 

@@ -188,17 +188,27 @@ export default function LocatiePage() {
               <h2 className="text-3xl font-bold text-foreground mb-6 flex items-center gap-3">
                 Hartă
               </h2>
-              <div className="w-full h-[400px] rounded-2xl overflow-hidden">
+              <div className="w-full rounded-2xl overflow-hidden">
                 <iframe
-                  src="https://maps.google.com/maps?q=Bulevardul+Regina+Elisabeta+30+Sector+5+Bucuresti+Romania&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2848.844!2d26.0921!3d44.4321!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40b1ff4770adb5b3%3A0xa0f5c3e6e!2sBulevardul+Regina+Elisabeta+30!5e0!3m2!1sro!2sro!4v1"
                   width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
+                  height="420"
+                  style={{ border: 0, borderRadius: '12px' }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Locația Vibe Caffè — Bld. Regina Elisabeta 30, București"
+                  title="Locatia Vibe Caffe pe harta"
                 />
+              </div>
+              <div className="mt-4">
+                <a
+                  href="https://maps.google.com/?q=Bulevardul+Regina+Elisabeta+30+Bucuresti"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-full text-center transition-all duration-300 hover:scale-105 block"
+                >
+                  Deschide în Google Maps
+                </a>
               </div>
             </div>
           </div>
