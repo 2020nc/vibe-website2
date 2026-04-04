@@ -20,7 +20,7 @@ const { createPdf } = require('C:/Users/Admin/.claude/pdf-utils/createPdf.js');
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUTPUT_DIR = path.resolve(__dirname, '../docs');
 
-const DATE = '2026-04-04 (actualizat sesiunea 2)';
+const DATE = '2026-04-04 (editia finala — Sesiunea 5 Bloc E)';
 const STUDENT = '2020nc';
 const SITE_URL = 'vibe-website2.vercel.app';
 const REPO_URL = 'github.com/2020nc/vibe-website2';
@@ -730,6 +730,33 @@ const children = [
     ]
   ),
 
+  space(),
+  h2('Sesiunea 2026-04-04 S3 — UX polish + Admin controls'),
+  table(
+    ['Task', 'Descriere', 'Commit'],
+    [
+      ['Preloader', 'Sters textul "Se prepara cafeaua...", animatia cupei ramane', '953eaed'],
+      ['/sarbatori', 'Rescrisa cu date live Supabase: holiday_config + menu_items cu preturi reduse', '953eaed'],
+      ['menu-settings API', 'Endpoint nou GET/PATCH pentru toggleuri de afisare meniu', '5f41cea'],
+      ['Admin Setari', 'Toggle valuta (RON/EUR/USD) + toggle coloane — controleaza /meniu', '5f41cea'],
+      ['Copywriting', '"brunch" eliminat din toate formularile → "Cafea buna. Oameni buni. Un loc al tau."', '5f41cea'],
+      ['ScrollAnimations', 'Intersection Observer scroll + contor animat rating (4.9) si recenzii (340+)', 'c9f0fe0'],
+    ]
+  ),
+
+  space(),
+  h2('Sesiunea 2026-04-04 S5 Bloc E — Redesign Vizual'),
+  table(
+    ['Modificare', 'Descriere', 'Commit'],
+    [
+      ['M10', 'Stepper vizual 3 pasi pe /rezervari: Data+Ora → Detalii → Confirmare', '5a6ec11'],
+      ['M11', 'Contrast WCAG AA: text-gray-400 → text-gray-300 in footer (bg-gray-800)', '5a6ec11'],
+      ['M12 P1', 'Font Playfair Display via next/font/google, variabila --font-playfair pe h1/h2', '5a6ec11'],
+      ['M12 P2', 'Paleta espresso/crem/oliv in @theme inline CSS (Tailwind 4 — fara tailwind.config.ts)', '5a6ec11'],
+      ['M12 P3', 'Butoane CTA homepage: teal → espresso-800, orange → oliv-600', '5a6ec11'],
+    ]
+  ),
+
   // ══════════════════════════════════════════════
   // 12. DECIZII TEHNICE SI MOTIVATII
   // ══════════════════════════════════════════════
@@ -749,6 +776,15 @@ const children = [
 
   h2('12.5 De ce ReviewBar este Server Component (nu Client)?'),
   p('Testimonialele sunt date statice — nu se schimba cu interactiunea utilizatorului. Un Server Component inseamna ca datele sunt in HTML-ul initial (crawlat de Google) si nu necesita JS pe client (performanta mai buna).'),
+
+  h2('12.6 De ce culorile custom sunt in globals.css si nu in tailwind.config.ts? (Tailwind 4)'),
+  p('Tailwind CSS 4 a eliminat fisierul tailwind.config.js/ts. Configurarea temei (culori, fonturi, spatieri) se face acum direct in CSS prin directiva @theme inline. Aceasta abordare elimina un nivel de abstractie si face configurarea mai transparenta — CSS ramane singura sursa de adevar pentru design tokens.'),
+  code('/* Tailwind 4 — globals.css */'),
+  code('@theme inline { --color-espresso-800: #3B1F0A; }'),
+  p('Tailwind genereaza automat clasele utilitare (bg-espresso-800, text-espresso-800, hover:bg-espresso-900) din variabilele CSS definite in @theme.'),
+
+  h2('12.7 De ce Stepper (wizard) in loc de formular unic pe /rezervari?'),
+  p('Formularul de rezervare are 7 campuri. Un formular unic aglomerat poate descuraja utilizatorul (efect "wall of inputs"). Wizard-ul cu 3 pasi reduce cognitive load: utilizatorul vede maximum 2 campuri per pas si vede progresul vizual. Studiile UX arata ca formularele multi-pas au rate de completare mai bune pentru formulare complexe.'),
 
   // ══════════════════════════════════════════════
   // 13. CONCLUZIE
@@ -923,6 +959,22 @@ const pdfLines = [
   { text: `Repository: https://${REPO_URL}`, size: 12, color: [13, 148, 136], align: 'center' },
 ];
 
-createPdf(pdfLines, pdfPath);
-console.log('PDF generat:', pdfPath);
-console.log('Gata! Documentatia tehnica v2.0 a fost generata.');
+// Render pdf lines
+for (const line of pdfLines) {
+  if (!line.text) { pdfDoc.moveDown(0.4); continue; }
+  const color = line.color
+    ? (Array.isArray(line.color) ? `rgb(${line.color.join(',')})` : line.color)
+    : DARK;
+  pdfDoc
+    .font(line.bold ? 'Bold' : 'Regular')
+    .fontSize(line.size || 11)
+    .fillColor(color)
+    .text(line.text, { align: line.align || 'left', width: LW })
+    .moveDown(0.2);
+}
+
+pdfDoc.end();
+pdfOut.on('finish', () => {
+  console.log('PDF generat:', pdfPath);
+  console.log('Gata! Documentatia tehnica v2.0 a fost generata.');
+});
