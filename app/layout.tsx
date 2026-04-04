@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Vibe Caffè Team" }],
   openGraph: {
     title: "Vibe Caffè - Cafea de Specialitate în București",
-    description: "Cafea de specialitate, brunch și deserturi în centrul Bucureștiului. Bld. Regina Elisabeta 30.",
+    description: "Cafea bună. Oameni buni. Un loc al tău în centrul Bucureștiului. Bld. Regina Elisabeta 30.",
     type: "website",
     locale: "ro_RO",
     siteName: "Vibe Caffè",

@@ -6,11 +6,11 @@ export const revalidate = 3600;
 export const metadata = {
   title: 'Meniu & Prețuri',
   description:
-    'Meniu complet cu prețuri: cafea de specialitate, brunch, deserturi și ' +
+    'Meniu complet cu prețuri: cafea de specialitate, deserturi și ' +
     'produse sezoniere. Vibe Caffè, Bld. Regina Elisabeta 30, București.',
   openGraph: {
     title: 'Meniu & Prețuri | Vibe Caffè',
-    description: 'Cafea de specialitate, brunch și deserturi. Prețuri actualizate, filtre pe categorii.',
+    description: 'Cafea bună. Oameni buni. Un loc al tău. Prețuri actualizate, filtre pe categorii.',
   },
 };
 
@@ -64,7 +64,7 @@ export default async function MeniuPage() {
       <div className="bg-gray-900 text-white py-20 px-6 text-center">
         <h1 className="text-4xl md:text-6xl font-bold mb-4">Meniu Vibe Caffè</h1>
         <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-          Cafea de specialitate, brunch și deserturi în centrul Bucureștiului
+          Cafea bună. Oameni buni. Un loc al tău.
         </p>
       </div>
 

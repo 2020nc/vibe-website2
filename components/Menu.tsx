@@ -1,6 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+
+type Currency = 'RON' | 'EUR';
+type Columns = 1 | 2 | 3;
 
 /**
  * ☕ MENU SECTION - Meniul cafenelei cu produse, prețuri, imagini
@@ -9,6 +12,57 @@ import { useState, useEffect } from 'react';
 
 export default function Menu() {
   const [activeCategory, setActiveCategory] = useState('Espresso');
+
+  /* ── Setări afișare (din admin) ── */
+  const [showCurrencyToggle, setShowCurrencyToggle] = useState(false);
+  const [showColumnToggle, setShowColumnToggle] = useState(false);
+
+  /* ── Valută ── */
+  const [currency, setCurrency] = useState<Currency>('RON');
+  const [eurRate, setEurRate] = useState<number | null>(null);
+
+  /* ── Coloane ── */
+  const [columns, setColumns] = useState<Columns>(3);
+
+  const fetchSettings = useCallback(async () => {
+    try {
+      const res = await fetch('/api/menu-settings');
+      const { data } = await res.json();
+      if (data) {
+        setShowCurrencyToggle(data.show_currency_toggle);
+        setShowColumnToggle(data.show_column_toggle);
+      }
+    } catch { /* silently ignore */ }
+  }, []);
+
+  const fetchCurs = useCallback(async () => {
+    try {
+      const res = await fetch('/api/curs');
+      const { data } = await res.json();
+      if (data?.EUR) setEurRate(data.EUR);
+    } catch { /* silently ignore */ }
+  }, []);
+
+  useEffect(() => {
+    fetchSettings();
+  }, [fetchSettings]);
+
+  useEffect(() => {
+    if (showCurrencyToggle) fetchCurs();
+  }, [showCurrencyToggle, fetchCurs]);
+
+  function formatPrice(priceRON: number): string {
+    if (currency === 'EUR' && eurRate) {
+      return `${(priceRON / eurRate).toFixed(2)} €`;
+    }
+    return `${priceRON} lei`;
+  }
+
+  const colClass: Record<Columns, string> = {
+    1: 'grid-cols-1',
+    2: 'grid-cols-1 md:grid-cols-2',
+    3: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
+  };
   /**
    * 📋 DATE MENIU - Array cu toate produsele
    * Fiecare obiect conține: nume, preț, descriere, ingrediente, imagine, categorie
@@ -359,6 +413,46 @@ export default function Menu() {
           </p>
         </div>
 
+        {/* TOOLBAR VALUTĂ + COLOANE (controlat din admin) */}
+        {(showCurrencyToggle || showColumnToggle) && (
+          <div className="flex flex-wrap items-center justify-end gap-3 mb-8">
+            {showCurrencyToggle && (
+              <div className="flex rounded-full border border-gray-200 dark:border-gray-700 overflow-hidden">
+                {(['RON', 'EUR'] as Currency[]).map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => setCurrency(c)}
+                    className={`px-4 py-2 text-sm font-semibold transition-colors ${
+                      currency === c
+                        ? 'bg-primary text-white'
+                        : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
+            )}
+            {showColumnToggle && (
+              <div className="flex rounded-full border border-gray-200 dark:border-gray-700 overflow-hidden">
+                {([1, 2, 3] as Columns[]).map((n) => (
+                  <button
+                    key={n}
+                    onClick={() => setColumns(n)}
+                    className={`px-4 py-2 text-sm font-semibold transition-colors ${
+                      columns === n
+                        ? 'bg-primary text-white'
+                        : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    {n} col
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* 📌 TAB-URI STICKY CU INDICATOR PILL ANIMAT */}
         <div className="sticky top-20 z-40 mb-12 -mx-6 px-6 py-4 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-md">
           <div className="max-w-7xl mx-auto">
@@ -394,7 +488,7 @@ export default function Menu() {
             </h3>
 
             {/* GRID PRODUSE */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className={`grid ${colClass[columns]} gap-6`}>
               {menuItems
                 .filter((item) => item.category === category)
                 .map((item, index) => (
@@ -437,7 +531,7 @@ export default function Menu() {
                           {item.name}
                         </h4>
                         <span className="text-2xl font-bold text-secondary">
-                          {item.price} lei
+                          {formatPrice(item.price)}
                         </span>
                       </div>
 

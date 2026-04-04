@@ -8,12 +8,12 @@ import ReviewBar from '@/components/ReviewBar';
 export const metadata = {
   title: 'Vibe Caffè — Cafea de Specialitate în București',
   description:
-    'Cafea de specialitate, brunch și deserturi în centrul Bucureștiului. ' +
+    'Cafea bună. Oameni buni. Un loc al tău în centrul Bucureștiului. ' +
     'Rezervă masă online. Bld. Regina Elisabeta 30, Sector 5.',
   openGraph: {
     title: 'Vibe Caffè — Cafea de Specialitate în București',
     description:
-      'Cafea de specialitate, brunch și deserturi în centrul Bucureștiului.',
+      'Cafea bună. Oameni buni. Un loc al tău în centrul Bucureștiului.',
     url: 'https://vibe-website2.vercel.app',
     siteName: 'Vibe Caffè',
     locale: 'ro_RO',
@@ -47,7 +47,7 @@ export default function Home() {
       <section className="relative min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center text-center px-6">
         <div className="relative z-10 max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
-            Cafea de specialitate, brunch și un loc în care vrei să revii
+            Cafea bună. Oameni buni. Un loc al tău.
           </h1>
           <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
             Meniu clar, rezervări rapide și locație ușor de găsit în centrul Bucureștiului.
@@ -83,8 +83,8 @@ export default function Home() {
                 icon: '💻',
               },
               {
-                title: 'Brunch & deserturi',
-                desc: 'Meniu de brunch disponibil în fiecare weekend, cu ingrediente proaspete și deserturi de patiserie artizanală.',
+                title: 'Weekend & deserturi',
+                desc: 'Meniu special disponibil în fiecare weekend, cu ingrediente proaspete și deserturi de patiserie artizanală.',
                 icon: '🥐',
               },
               {
@@ -107,7 +107,7 @@ export default function Home() {
       <section className="py-20 px-6 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-4">Din meniul nostru</h2>
-          <p className="text-lg text-gray-500 text-center mb-12">Cafea de specialitate, brunch și deserturi.</p>
+          <p className="text-lg text-gray-500 text-center mb-12">Cafea bună. Oameni buni. Un loc al tău.</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10">
             {previewItems.map((item) => (
               <div key={item.name} className="bg-white rounded-2xl shadow-sm overflow-hidden group">

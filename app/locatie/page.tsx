@@ -166,7 +166,7 @@ export default function LocatiePage() {
                   </div>
                   <div>
                     <p className="font-semibold text-gray-900">Care sunt intervalele aglomerate?</p>
-                    <p className="text-gray-600 text-sm">Sâmbătă și duminică 10:00–13:00 (brunch). Vineri seara 18:00–21:00.</p>
+                    <p className="text-gray-600 text-sm">Sâmbătă și duminică 10:00–13:00 (weekend). Vineri seara 18:00–21:00.</p>
                   </div>
                 </div>
 

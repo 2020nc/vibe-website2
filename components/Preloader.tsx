@@ -58,7 +58,6 @@ export default function Preloader() {
           <path d="M75 28 Q72 18 75 10 Q78 2 75 -5" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" className="steam steam-3" />
         </svg>
 
-        <p className="preloader-text">Se prepară cafeaua...</p>
       </div>
 
       <style>{`
@@ -106,19 +105,6 @@ export default function Preloader() {
           0%   { opacity: 0; stroke-dashoffset: 30; }
           30%  { opacity: 1; }
           100% { opacity: 0; stroke-dashoffset: 0; }
-        }
-
-        /* Text */
-        .preloader-text {
-          color: rgba(255,255,255,0.7);
-          font-size: 16px;
-          letter-spacing: 0.1em;
-          animation: textPulse 1.5s ease-in-out 0.5s infinite alternate;
-        }
-
-        @keyframes textPulse {
-          from { opacity: 0.4; }
-          to   { opacity: 1; }
         }
 
         /* Fade out overlay */

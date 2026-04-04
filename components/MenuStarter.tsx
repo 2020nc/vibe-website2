@@ -131,6 +131,10 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
   const [openCard, setOpenCard]   = useState<string | null>(null);
   const [selected, setSelected]   = useState<Record<string, Set<string>>>({});
 
+  // Setări afișare din admin
+  const [showCurrencyToggle, setShowCurrencyToggle] = useState(false);
+  const [showColumnToggle, setShowColumnToggle]     = useState(false);
+
   // Citește preferința din localStorage la mount
   useEffect(() => {
     const saved = localStorage.getItem('menu_cols');
@@ -156,6 +160,14 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
   }
 
   useEffect(() => {
+    // Fetch setări afișare din admin
+    fetch('/api/menu-settings').then((r) => r.json()).then(({ data }) => {
+      if (data) {
+        setShowCurrencyToggle(data.show_currency_toggle);
+        setShowColumnToggle(data.show_column_toggle);
+      }
+    }).catch(() => {});
+
     // Dacă avem date server-side, setăm tab-ul activ și fetchuim doar promo/curs
     if (initialItems && initialItems.length > 0) {
       setActiveTab(initialItems[0].category);
@@ -248,52 +260,56 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
               ))}
             </div>
 
-            {/* Toggle coloane + valută */}
-            <div className="flex flex-wrap justify-between items-center gap-3 mb-6">
-              {/* Valută — vizibil oricând dacă avem curs */}
-              {true ? (
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-400 font-medium">Preț în:</span>
-                  {(['RON', 'EUR', 'USD'] as Currency[]).map((c) => (
-                    <button
-                      key={c}
-                      onClick={() => setCurrency(c)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                        currency === c
-                          ? 'bg-amber-600 text-white shadow-sm'
-                          : 'bg-gray-100 text-gray-500 hover:bg-amber-100 hover:text-amber-700'
-                      }`}
-                    >
-                      {c}
-                    </button>
-                  ))}
-                  {curs && (
-                    <span className="text-xs text-gray-400 ml-1">
-                      1€={curs.EUR.toFixed(2)} RON · 1$={curs.USD.toFixed(2)} RON
-                      {!curs.updatedAt && <span className="text-amber-400"> (estimativ)</span>}
-                    </span>
-                  )}
-                </div>
-              ) : <div />}
+            {/* Toggle coloane + valută — controlate din admin */}
+            {(showCurrencyToggle || showColumnToggle) && (
+              <div className="flex flex-wrap justify-between items-center gap-3 mb-6">
+                {/* Valută */}
+                {showCurrencyToggle ? (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-400 font-medium">Preț în:</span>
+                    {(['RON', 'EUR', 'USD'] as Currency[]).map((c) => (
+                      <button
+                        key={c}
+                        onClick={() => setCurrency(c)}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                          currency === c
+                            ? 'bg-amber-600 text-white shadow-sm'
+                            : 'bg-gray-100 text-gray-500 hover:bg-amber-100 hover:text-amber-700'
+                        }`}
+                      >
+                        {c}
+                      </button>
+                    ))}
+                    {curs && (
+                      <span className="text-xs text-gray-400 ml-1">
+                        1€={curs.EUR.toFixed(2)} RON · 1$={curs.USD.toFixed(2)} RON
+                        {!curs.updatedAt && <span className="text-amber-400"> (estimativ)</span>}
+                      </span>
+                    )}
+                  </div>
+                ) : <div />}
 
-              {/* Coloane — vizibil doar pe desktop */}
-              <div className="hidden md:flex items-center gap-2">
-                <span className="text-xs text-gray-400 font-medium mr-1">Coloane:</span>
-                {([3, 4, 5] as ColCount[]).map((n) => (
-                  <button
-                    key={n}
-                    onClick={() => changeCols(n)}
-                    className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
-                      cols === n
-                        ? 'bg-amber-600 text-white shadow-sm'
-                        : 'bg-gray-100 text-gray-500 hover:bg-amber-100 hover:text-amber-700'
-                    }`}
-                  >
-                    {n}
-                  </button>
-                ))}
+                {/* Coloane — vizibil doar pe desktop */}
+                {showColumnToggle && (
+                  <div className="hidden md:flex items-center gap-2">
+                    <span className="text-xs text-gray-400 font-medium mr-1">Coloane:</span>
+                    {([3, 4, 5] as ColCount[]).map((n) => (
+                      <button
+                        key={n}
+                        onClick={() => changeCols(n)}
+                        className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
+                          cols === n
+                            ? 'bg-amber-600 text-white shadow-sm'
+                            : 'bg-gray-100 text-gray-500 hover:bg-amber-100 hover:text-amber-700'
+                        }`}
+                      >
+                        {n}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
+            )}
 
             {/* Grid produse */}
             <div

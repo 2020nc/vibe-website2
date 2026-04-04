@@ -753,6 +753,11 @@ export default function AdminPage() {
   const [savingPromo, setSavingPromo] = useState(false);
   const [promoMsg, setPromoMsg] = useState('');
 
+  /* SETĂRI AFIȘARE MENIU */
+  const [menuSettings, setMenuSettings] = useState({ show_currency_toggle: false, show_column_toggle: false });
+  const [savingMenuSettings, setSavingMenuSettings] = useState(false);
+  const [menuSettingsMsg, setMenuSettingsMsg] = useState('');
+
   /* ── fetch tenant_id la mount ── */
   useEffect(() => {
     fetch('/api/admin/me').then((r) => r.json()).then(({ tenantId: tid }) => {
@@ -809,9 +814,31 @@ export default function AdminPage() {
     setTimeout(() => setPromoMsg(''), 3000);
   };
 
+  /* ── fetch menu display settings ── */
+  const fetchMenuSettings = useCallback(async () => {
+    const res = await fetch('/api/menu-settings');
+    const { data } = await res.json();
+    if (data) setMenuSettings(data);
+  }, []);
+
+  const saveMenuSettings = async (patch: Partial<typeof menuSettings>) => {
+    const next = { ...menuSettings, ...patch };
+    setMenuSettings(next);
+    setSavingMenuSettings(true); setMenuSettingsMsg('');
+    const res = await fetch('/api/menu-settings', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(patch),
+    });
+    setMenuSettingsMsg(res.ok ? 'Salvat!' : 'Eroare la salvare.');
+    setSavingMenuSettings(false);
+    setTimeout(() => setMenuSettingsMsg(''), 3000);
+  };
+
   useEffect(() => { if (tenantId) fetchRezervari(); }, [tenantId, fetchRezervari]);
   useEffect(() => { if (tab === 'meniu') fetchMenu(); }, [tab, fetchMenu]);
   useEffect(() => { if (tab === 'sarbatori') fetchHoliday(); }, [tab, fetchHoliday]);
+  useEffect(() => { if (tab === 'setari') fetchMenuSettings(); }, [tab, fetchMenuSettings]);
 
   /* ── rezervări actions ── */
   const updateStatus = async (id: string, status: Status) => {
@@ -1806,6 +1833,65 @@ export default function AdminPage() {
                 {savingPass ? 'Se salvează…' : 'Schimbă parola'}
               </button>
             </form>
+
+            {/* SETĂRI AFIȘARE MENIU */}
+            <div className="mt-10">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">Afișare meniu public</h2>
+              <p className="text-sm text-gray-500 mb-6">
+                Activează sau dezactivează funcționalități vizibile pe pagina de meniu.
+              </p>
+
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-6">
+
+                {/* Toggle valută */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-gray-800">Buton conversie valută (RON / EUR)</p>
+                    <p className="text-sm text-gray-500">Cursul BNR se actualizează automat o dată pe zi.</p>
+                  </div>
+                  <button
+                    onClick={() => saveMenuSettings({ show_currency_toggle: !menuSettings.show_currency_toggle })}
+                    disabled={savingMenuSettings}
+                    className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-300 focus:outline-none ${
+                      menuSettings.show_currency_toggle ? 'bg-teal-500' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform duration-300 ${
+                        menuSettings.show_currency_toggle ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {/* Toggle coloane */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-gray-800">Selector număr coloane (1 / 2 / 3)</p>
+                    <p className="text-sm text-gray-500">Permite vizitatorilor să aleagă cum văd cardurile.</p>
+                  </div>
+                  <button
+                    onClick={() => saveMenuSettings({ show_column_toggle: !menuSettings.show_column_toggle })}
+                    disabled={savingMenuSettings}
+                    className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-300 focus:outline-none ${
+                      menuSettings.show_column_toggle ? 'bg-teal-500' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform duration-300 ${
+                        menuSettings.show_column_toggle ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {menuSettingsMsg && (
+                  <p className={`text-sm font-semibold ${menuSettingsMsg === 'Salvat!' ? 'text-teal-600' : 'text-red-500'}`}>
+                    {menuSettingsMsg}
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </main>
