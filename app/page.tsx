@@ -4,6 +4,7 @@ import About from '@/components/About';
 import FooterStarter from '@/components/FooterStarter';
 import Preloader from '@/components/Preloader';
 import ReviewBar from '@/components/ReviewBar';
+import ScrollAnimations from '@/components/ScrollAnimations';
 
 export const metadata = {
   title: 'Vibe Caffè — Cafea de Specialitate în București',
@@ -64,10 +65,12 @@ export default function Home() {
         </div>
       </section>
 
+      <ScrollAnimations />
+
       <ReviewBar />
 
       {/* Beneficii SSR */}
-      <section id="de-ce-vibe" className="py-20 px-6 bg-white">
+      <section id="de-ce-vibe" className="py-20 px-6 bg-white animate-on-scroll">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-4">De ce Vibe?</h2>
           <p className="text-lg text-gray-500 text-center mb-12">Diferențiatori concreți, nu afirmații vagi.</p>
@@ -105,7 +108,7 @@ export default function Home() {
       </section>
 
       {/* Preview Meniu SSR */}
-      <section className="py-20 px-6 bg-gray-50">
+      <section className="py-20 px-6 bg-gray-50 animate-on-scroll">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-4">Din meniul nostru</h2>
           <p className="text-lg text-gray-500 text-center mb-12">Cafea bună. Oameni buni. Un loc al tău.</p>
@@ -135,7 +138,7 @@ export default function Home() {
       </section>
 
       {/* Oferte sezoniere SSR */}
-      <section className="py-20 px-6 bg-white">
+      <section className="py-20 px-6 bg-white animate-on-scroll">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-4">Oferte sezoniere</h2>
           <p className="text-lg text-gray-500 text-center mb-12">Produse disponibile în această perioadă.</p>
@@ -184,7 +187,7 @@ export default function Home() {
       </section>
 
       {/* Locație rapidă SSR */}
-      <section className="py-20 px-6 bg-gray-900 text-white">
+      <section className="py-20 px-6 bg-gray-900 text-white animate-on-scroll">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">Unde ne găsești</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
@@ -216,7 +219,9 @@ export default function Home() {
         </div>
       </section>
 
-      <About />
+      <div className="animate-on-scroll">
+        <About />
+      </div>
       <FooterStarter />
 
       {/* JSON-LD LocalBusiness */}

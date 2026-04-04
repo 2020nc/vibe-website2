@@ -356,3 +356,15 @@ html.lenis-smooth {
 [data-theme='dark'] .features-card {
   background-color: #374151 !important; /* gray-700 */
 }
+
+/* Animații scroll — Intersection Observer */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease,
+              transform 0.65s ease;
+}
+.animate-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}

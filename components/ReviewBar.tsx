@@ -20,9 +20,9 @@ export default function ReviewBar() {
         {/* Rating agregat */}
         <div className="text-center mb-10">
           <p className="text-4xl font-bold" style={{ color: 'var(--primary, #14B8A6)' }}>
-            ⭐ 4.9 / 5
+            ⭐ <span data-rating>4.9</span> / 5
           </p>
-          <p className="text-sm text-slate-500 mt-1">bazat pe 340+ recenzii Google</p>
+          <p className="text-sm text-slate-500 mt-1">bazat pe <span data-reviews>340+</span> recenzii Google</p>
         </div>
 
         {/* Review snippets */}
