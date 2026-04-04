@@ -11,10 +11,10 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Locație & Program',
+  title: 'Locație & Program — Vibe Caffè București',
   description:
-    'Găsește-ne la Bld. Regina Elisabeta 30, Sector 5, București. ' +
-    'Program: Luni–Vineri 08:00–22:00, Weekend 09:00–23:00. Tel: +40 721 234 567.',
+    'Găsește-ne la Bld. Regina Elisabeta 30, Sector 5. ' +
+    'Program Lu-Vi 08:00-22:00, Weekend 09:00-23:00.',
   openGraph: {
     title: 'Locație & Program | Vibe Caffè',
     description: 'Bld. Regina Elisabeta 30, Sector 5, București. Program zilnic 08:00–23:00.',

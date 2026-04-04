@@ -16,6 +16,7 @@ export const metadata = {
       'Cafea bună. Oameni buni. Un loc al tău în centrul Bucureștiului.',
     url: 'https://vibe-website2.vercel.app',
     siteName: 'Vibe Caffè',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Interiorul Vibe Caffè' }],
     locale: 'ro_RO',
     type: 'website',
   },
