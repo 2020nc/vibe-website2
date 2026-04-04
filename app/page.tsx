@@ -23,19 +23,19 @@ export const metadata = {
 
 // Primele 6 produse pentru preview SSR
 const previewItems = [
-  { name: 'Flat White', price: 17, image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?w=600&auto=format&fit=crop' },
-  { name: 'Cappuccino', price: 16, image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&auto=format&fit=crop' },
-  { name: 'Cold Brew Tonic', price: 22, image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&auto=format&fit=crop' },
-  { name: 'Cheesecake', price: 22, image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=600&auto=format&fit=crop' },
-  { name: 'Croissant cu Unt', price: 14, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&auto=format&fit=crop' },
-  { name: 'Brownie', price: 18, image: 'https://images.unsplash.com/photo-1564355808539-22fda35bed7e?w=600&auto=format&fit=crop' },
+  { name: 'Flat White', price: 17, alt: 'Flat White servit în ceașcă albă pe farfurioară de lemn, 17 lei', image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?w=600&auto=format&fit=crop' },
+  { name: 'Cappuccino', price: 16, alt: 'Cappuccino cu spumă de lapte cremoasă, 16 lei', image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&auto=format&fit=crop' },
+  { name: 'Cold Brew Tonic', price: 22, alt: 'Cold Brew Tonic cu portocală și gheață, 22 lei', image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&auto=format&fit=crop' },
+  { name: 'Cheesecake', price: 22, alt: 'Felie de Cheesecake New York cu sos de fructe, 22 lei', image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=600&auto=format&fit=crop' },
+  { name: 'Croissant cu Unt', price: 14, alt: 'Croissant cu unt proaspăt, crocant, 14 lei', image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&auto=format&fit=crop' },
+  { name: 'Brownie', price: 18, alt: 'Brownie cu ciocolată neagră și nuci, 18 lei', image: 'https://images.unsplash.com/photo-1564355808539-22fda35bed7e?w=600&auto=format&fit=crop' },
 ];
 
 // Produse sezoniere pentru preview SSR
 const seasonalPreview = [
-  { name: 'Latte de Lavandă', price: 20, desc: 'Espresso, lapte microspumat și sirop de lavandă. Disponibil: aprilie–iunie.', image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&auto=format&fit=crop' },
-  { name: 'Cold Brew Tonic', price: 22, desc: 'Cold brew, apă tonică și portocală proaspătă. Disponibil: tot sezonul.', image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&auto=format&fit=crop' },
-  { name: 'Brunch Festiv de Weekend', price: 36, desc: 'Eggs Benedict, granola, fresh și cafea de specialitate. Disponibil: sâmbătă și duminică.', image: 'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=600&auto=format&fit=crop' },
+  { name: 'Latte de Lavandă', price: 20, alt: 'Latte de Lavandă cu sirop artizanal, 20 lei', desc: 'Espresso, lapte microspumat și sirop de lavandă. Disponibil: aprilie–iunie.', image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&auto=format&fit=crop' },
+  { name: 'Cold Brew Tonic', price: 22, alt: 'Cold Brew Tonic cu portocală și gheață, 22 lei', desc: 'Cold brew, apă tonică și portocală proaspătă. Disponibil: tot sezonul.', image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&auto=format&fit=crop' },
+  { name: 'Brunch Festiv de Weekend', price: 36, alt: 'Brunch Festiv de Weekend cu Eggs Benedict, granola și cafea de specialitate, 36 lei', desc: 'Eggs Benedict, granola, fresh și cafea de specialitate. Disponibil: sâmbătă și duminică.', image: 'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=600&auto=format&fit=crop' },
 ];
 
 export default function Home() {
@@ -114,7 +114,7 @@ export default function Home() {
                 <div className="h-40 overflow-hidden bg-gray-100">
                   <img
                     src={item.image}
-                    alt={item.name}
+                    alt={item.alt}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                 </div>
@@ -144,7 +144,7 @@ export default function Home() {
                 <div className="h-48 overflow-hidden bg-gray-100">
                   <img
                     src={item.image}
-                    alt={item.name}
+                    alt={item.alt}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                 </div>

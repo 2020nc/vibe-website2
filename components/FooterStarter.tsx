@@ -36,6 +36,7 @@ export default function FooterStarter() {
       } else if (res.ok) {
         setStatus('success');
         setEmail('');
+        setTimeout(() => setStatus('idle'), 5000);
       } else {
         setStatus('error');
       }
@@ -175,8 +176,8 @@ export default function FooterStarter() {
 
             {/* Feedback */}
             {status === 'success' && (
-              <p className="mt-3 text-green-400 text-sm">
-                Te-ai abonat cu succes! Bine ai venit în comunitatea Vibe.
+              <p className="mt-3 text-green-700 text-sm py-3 px-4 bg-green-50 rounded-xl leading-relaxed">
+                Bun venit în familia Vibe! Prima ta ofertă exclusivă ajunge în inbox în mai puțin de 5 minute. Cafeaua te așteaptă!
               </p>
             )}
             {status === 'duplicate' && (

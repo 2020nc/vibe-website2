@@ -79,47 +79,18 @@ export default function About() {
             </h2>
 
             <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              Vibe Caffè a început din dorința de a aduce experiența autentică
-              a cafelei de specialitate în inima orașului. Fiecare ceașcă este
-              pregătită cu grijă de bariștii noștri experimentați.
+              Am deschis Vibe Caffè cu o singură regulă: nicio ceașcă nu pleacă
+              la masă dacă nu am fi bucuroși s-o bem noi înșine. De atunci,
+              Andreea M. ne-a dat 5 stele de 3 ori, Mihai T. vine în fiecare
+              dimineață de marți și Raluca D. și-a scris teza de doctorat la
+              masa din colțul din dreapta.
             </p>
 
-            <p className="text-lg text-gray-700 mb-6 leading-relaxed">
+            <p className="text-lg text-gray-700 mb-8 leading-relaxed">
               Colaborăm direct cu plantații din America de Sud și Africa,
-              selectând doar cele mai bune boabe, prăjite la perfecție pentru a
-              scoate în evidență notele unice de aromă.
+              selectând doar cele mai bune boabe, prăjite săptămânal în micul
+              nostru atelier din București.
             </p>
-
-            {/* LISTA cu stagger animation */}
-            <ul className="space-y-3 mb-8">
-              {[
-                'Boabe proaspăt prăjite săptămânal',
-                'Bariști certificați internațional',
-                'Produse locale și sustenabile',
-                'WiFi gratuit & loc de muncă',
-              ].map((item, index) => (
-                <li
-                  key={index}
-                  className={`flex items-center text-gray-700 transition-all duration-500 ${
-                    isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
-                  }`}
-                  style={{ transitionDelay: `${400 + index * 100}ms` }}
-                >
-                  <svg
-                    className="w-5 h-5 text-primary mr-3 flex-shrink-0"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  {item}
-                </li>
-              ))}
-            </ul>
 
             <a
               href="/rezervari"
