@@ -15,6 +15,7 @@ const offers = [
     available: 'Disponibil: sâmbătă și duminică',
     ctaLabel: 'Rezervă loc',
     ctaHref: '/rezervari',
+    image: 'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=800&auto=format&fit=crop',
   },
   {
     title: 'Coffee Tonic cu Portocală',
@@ -23,6 +24,7 @@ const offers = [
     available: 'Disponibil: tot sezonul',
     ctaLabel: 'Vezi meniul',
     ctaHref: '/meniu',
+    image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=800&auto=format&fit=crop',
   },
   {
     title: 'Latte de Lavandă',
@@ -31,6 +33,7 @@ const offers = [
     available: 'Disponibil: aprilie–iunie',
     ctaLabel: 'Comandă acum',
     ctaHref: '/rezervari',
+    image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=800&auto=format&fit=crop',
   },
   {
     title: 'Pachet Cadou Vibe',
@@ -39,6 +42,7 @@ const offers = [
     available: 'Disponibil: la cerere',
     ctaLabel: 'Contactează-ne',
     ctaHref: 'tel:+40721234567',
+    image: 'https://images.unsplash.com/photo-1607920591413-4ec007e70023?w=800&auto=format&fit=crop',
   },
 ];
 
@@ -62,20 +66,29 @@ export default function SarbatoriPage() {
           {offers.map((offer) => (
             <div
               key={offer.title}
-              className="bg-white rounded-2xl shadow-sm p-8 flex flex-col justify-between hover:shadow-md transition-shadow"
+              className="bg-white rounded-2xl shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-shadow group"
             >
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-3">{offer.title}</h2>
-                <p className="text-gray-600 mb-2">{offer.description}</p>
-                <p className="text-teal-600 font-bold text-xl mb-1">{offer.price}</p>
-                <p className="text-gray-400 text-sm mb-6">{offer.available}</p>
+              <div className="h-56 overflow-hidden bg-gray-100">
+                <img
+                  src={offer.image}
+                  alt={offer.title}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                />
               </div>
-              <a
-                href={offer.ctaHref}
-                className="px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 inline-block text-center"
-              >
-                {offer.ctaLabel}
-              </a>
+              <div className="p-8 flex flex-col flex-1 justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-3">{offer.title}</h2>
+                  <p className="text-gray-600 mb-2">{offer.description}</p>
+                  <p className="text-teal-600 font-bold text-xl mb-1">{offer.price}</p>
+                  <p className="text-gray-400 text-sm mb-6">{offer.available}</p>
+                </div>
+                <a
+                  href={offer.ctaHref}
+                  className="px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 inline-block text-center"
+                >
+                  {offer.ctaLabel}
+                </a>
+              </div>
             </div>
           ))}
         </div>

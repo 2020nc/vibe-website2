@@ -50,6 +50,15 @@ export default function About() {
                   transform: `translateY(${parallaxOffset}px)`,
                   transition: 'transform 0.1s ease-out'
                 }}
+                onError={(e) => {
+                  const img = e.target as HTMLImageElement;
+                  img.style.display = 'none';
+                  const parent = img.parentElement;
+                  if (parent) {
+                    parent.style.cssText += 'display:flex;align-items:center;justify-content:center;min-height:400px;background:linear-gradient(135deg,#fef3c7,#fed7aa)';
+                    parent.innerHTML = '<span style="font-size:5rem">☕</span>';
+                  }
+                }}
               />
             </div>
           </div>

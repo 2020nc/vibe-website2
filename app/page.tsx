@@ -23,19 +23,19 @@ export const metadata = {
 
 // Primele 6 produse pentru preview SSR
 const previewItems = [
-  { name: 'Flat White', price: 17 },
-  { name: 'Cappuccino', price: 16 },
-  { name: 'Cold Brew Tonic', price: 22 },
-  { name: 'Cheesecake', price: 22 },
-  { name: 'Croissant cu Unt', price: 14 },
-  { name: 'Brownie', price: 18 },
+  { name: 'Flat White', price: 17, image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?w=600&auto=format&fit=crop' },
+  { name: 'Cappuccino', price: 16, image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&auto=format&fit=crop' },
+  { name: 'Cold Brew Tonic', price: 22, image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&auto=format&fit=crop' },
+  { name: 'Cheesecake', price: 22, image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=600&auto=format&fit=crop' },
+  { name: 'Croissant cu Unt', price: 14, image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&auto=format&fit=crop' },
+  { name: 'Brownie', price: 18, image: 'https://images.unsplash.com/photo-1564355808539-22fda35bed7e?w=600&auto=format&fit=crop' },
 ];
 
 // Produse sezoniere pentru preview SSR
 const seasonalPreview = [
-  { name: 'Latte de Lavandă', price: 20, desc: 'Espresso, lapte microspumat și sirop de lavandă. Disponibil: aprilie–iunie.' },
-  { name: 'Cold Brew Tonic', price: 22, desc: 'Cold brew, apă tonică și portocală proaspătă. Disponibil: tot sezonul.' },
-  { name: 'Brunch Festiv de Weekend', price: 36, desc: 'Eggs Benedict, granola, fresh și cafea de specialitate. Disponibil: sâmbătă și duminică.' },
+  { name: 'Latte de Lavandă', price: 20, desc: 'Espresso, lapte microspumat și sirop de lavandă. Disponibil: aprilie–iunie.', image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&auto=format&fit=crop' },
+  { name: 'Cold Brew Tonic', price: 22, desc: 'Cold brew, apă tonică și portocală proaspătă. Disponibil: tot sezonul.', image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&auto=format&fit=crop' },
+  { name: 'Brunch Festiv de Weekend', price: 36, desc: 'Eggs Benedict, granola, fresh și cafea de specialitate. Disponibil: sâmbătă și duminică.', image: 'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=600&auto=format&fit=crop' },
 ];
 
 export default function Home() {
@@ -110,9 +110,18 @@ export default function Home() {
           <p className="text-lg text-gray-500 text-center mb-12">Cafea de specialitate, brunch și deserturi.</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10">
             {previewItems.map((item) => (
-              <div key={item.name} className="bg-white rounded-2xl p-5 shadow-sm flex justify-between items-center">
-                <span className="font-semibold text-gray-900">{item.name}</span>
-                <span className="text-teal-600 font-bold">{item.price} lei</span>
+              <div key={item.name} className="bg-white rounded-2xl shadow-sm overflow-hidden group">
+                <div className="h-40 overflow-hidden bg-gray-100">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                </div>
+                <div className="p-4 flex justify-between items-center">
+                  <span className="font-semibold text-gray-900">{item.name}</span>
+                  <span className="text-teal-600 font-bold">{item.price} lei</span>
+                </div>
               </div>
             ))}
           </div>
@@ -131,12 +140,21 @@ export default function Home() {
           <p className="text-lg text-gray-500 text-center mb-12">Produse disponibile în această perioadă.</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
             {seasonalPreview.map((item) => (
-              <div key={item.name} className="bg-teal-50 border border-teal-100 rounded-2xl p-6">
-                <div className="flex justify-between items-start mb-3">
-                  <h3 className="text-xl font-bold text-gray-900">{item.name}</h3>
-                  <span className="text-teal-600 font-bold whitespace-nowrap ml-2">{item.price} lei</span>
+              <div key={item.name} className="bg-white rounded-2xl shadow-sm overflow-hidden border border-teal-100 group">
+                <div className="h-48 overflow-hidden bg-gray-100">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
                 </div>
-                <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="text-xl font-bold text-gray-900">{item.name}</h3>
+                    <span className="text-teal-600 font-bold whitespace-nowrap ml-2">{item.price} lei</span>
+                  </div>
+                  <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
+                </div>
               </div>
             ))}
           </div>

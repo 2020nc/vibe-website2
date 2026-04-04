@@ -141,7 +141,17 @@ function HolidayCard({
           src={item.image_url ?? ''}
           alt={item.name}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+          onError={(e) => {
+            const img = e.target as HTMLImageElement;
+            img.style.display = 'none';
+            const parent = img.parentElement;
+            if (parent && !parent.querySelector('.img-fallback')) {
+              const fb = document.createElement('div');
+              fb.className = 'img-fallback absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-amber-50 to-orange-100';
+              fb.innerHTML = '<span style="font-size:3rem">☕</span><span style="font-size:0.75rem;color:#9ca3af;margin-top:0.5rem">Fără imagine</span>';
+              parent.appendChild(fb);
+            }
+          }}
         />
       </div>
 

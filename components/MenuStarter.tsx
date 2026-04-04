@@ -93,7 +93,17 @@ function LazyProductImage({ src, alt }: { src: string; alt: string }) {
         src={src}
         alt={alt}
         onLoad={() => setLoaded(true)}
-        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+        onError={(e) => {
+          const img = e.target as HTMLImageElement;
+          img.style.display = 'none';
+          const parent = img.parentElement;
+          if (parent && !parent.querySelector('.img-fallback')) {
+            const fb = document.createElement('div');
+            fb.className = 'img-fallback absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-amber-50 to-orange-100';
+            fb.innerHTML = '<span style="font-size:3rem">☕</span><span style="font-size:0.75rem;color:#9ca3af;margin-top:0.5rem">Fără imagine</span>';
+            parent.appendChild(fb);
+          }
+        }}
         className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 ${loaded ? 'opacity-100' : 'opacity-0'}`}
       />
     </div>
