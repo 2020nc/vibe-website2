@@ -91,12 +91,18 @@ export default function Navigation() {
           {/* DARK MODE TOGGLE */}
           <ThemeToggle />
 
-          <a
-            href="/rezervari"
-            className="px-6 py-3 rounded-full font-semibold transition-all duration-300 bg-primary text-white hover:bg-primary-dark"
-          >
-            Rezervă Masă
-          </a>
+          <div className="flex flex-col items-center gap-1">
+            <a
+              href="/rezervari"
+              className="px-6 py-3 rounded-full font-semibold transition-all duration-300 bg-primary text-white hover:bg-primary-dark"
+            >
+              Rezervă Masă
+            </a>
+            <div className="flex gap-2">
+              <a href="tel:+40721234567" className="text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-100 text-orange-600 hover:bg-orange-200 transition-colors">📞 Sună</a>
+              <a href="https://wa.me/40721234567" target="_blank" rel="noopener noreferrer" className="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-700 hover:bg-green-200 transition-colors">💬 WhatsApp</a>
+            </div>
+          </div>
         </div>
 
         {/* Mobile Menu Button */}

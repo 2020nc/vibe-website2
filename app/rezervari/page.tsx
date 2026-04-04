@@ -84,13 +84,10 @@ export default function RezervariPage() {
       <main className="min-h-screen bg-gray-50 pt-24 pb-16 px-6">
         <div className="max-w-6xl mx-auto">
 
-          {/* Titlu */}
-          <div className="text-center mb-10">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Rezervă o masă</h1>
-            <p className="text-lg text-gray-600">
-              Completează formularul și te confirmăm în cel mult 2 ore.<br className="hidden sm:block" />
-              (Luni–Vineri 07:00–22:00, Sâmbătă–Duminică 08:00–23:00).
-            </p>
+          {/* Titlu compact */}
+          <div className="text-center mb-6">
+            <h1 className="text-3xl font-bold text-gray-900 mb-1">Rezervă o masă</h1>
+            <p className="text-sm text-gray-500">⏱ Confirmare în max. 2 ore · L–V 07–22 · S–D 08–23</p>
           </div>
 
 
@@ -276,8 +273,7 @@ export default function RezervariPage() {
                 </button>
 
                 <p className="text-xs text-gray-400 text-center">
-                  Prin trimiterea acestui formular ești de acord cu{' '}
-                  <a href="/confidentialitate" className="underline hover:text-gray-600">Politica de confidențialitate</a>.
+                  ⏱ Max. 2 ore · L–V 07–22 · S–D 08–23 · <a href="/confidentialitate" className="underline hover:text-gray-600">Confidențialitate</a>
                 </p>
 
               </div>
