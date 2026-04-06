@@ -285,7 +285,7 @@ export default function RezervariPage() {
 
           {/* Info compactă jos */}
           <div className="mt-6 flex flex-wrap justify-center gap-6 text-sm text-gray-500">
-            <span>👥 Până la 8 persoane per rezervare</span>
+            <span>👥 Până la 20 persoane per rezervare</span>
             <span>✅ Confirmare prin telefon sau email în 2 ore</span>
             <span>❌ Anulare gratuită cu cel puțin 2 ore înainte</span>
           </div>
