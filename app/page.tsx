@@ -5,6 +5,7 @@ import FooterStarter from '@/components/FooterStarter';
 import Preloader from '@/components/Preloader';
 import ReviewBar from '@/components/ReviewBar';
 import ScrollAnimations from '@/components/ScrollAnimations';
+import DayAtVibe from '@/components/DayAtVibe';
 
 export const metadata = {
   title: 'Vibe Caffè — Cafea de Specialitate în București',
@@ -68,6 +69,8 @@ export default function Home() {
       <ScrollAnimations />
 
       <ReviewBar />
+
+      <DayAtVibe />
 
       {/* Beneficii SSR */}
       <section id="de-ce-vibe" className="py-20 px-6 bg-white animate-on-scroll">
