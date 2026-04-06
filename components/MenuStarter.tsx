@@ -31,11 +31,20 @@ interface MenuItem {
   tag?: string | null;
 }
 
+const TAG_TRADUCERI: Record<string, string> = {
+  'Bestseller': 'Cel mai vândut',
+  'Sezonier':   'Sezonier',
+  'Signature':  'Specialitatea casei',
+  'Staff Pick': 'Alegerea echipei',
+  'New':        'Nou',
+};
+
 const TAG_STYLES: Record<string, string> = {
   'Bestseller': 'bg-amber-100 text-amber-800',
   'Sezonier':   'bg-green-100 text-green-800',
   'Signature':  'bg-teal-100 text-teal-800',
   'Staff Pick': 'bg-orange-100 text-orange-700',
+  'New':        'bg-blue-100 text-blue-800',
 };
 
 function calcFinalPrice(item: MenuItem): number {
@@ -338,7 +347,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                       )}
                       {item.tag && TAG_STYLES[item.tag] && (
                         <div className={`absolute top-2 right-2 z-10 text-xs font-bold px-2 py-1 rounded-full shadow ${TAG_STYLES[item.tag]}`}>
-                          {item.tag}
+                          {TAG_TRADUCERI[item.tag] ?? item.tag}
                         </div>
                       )}
                       <LazyProductImage src={item.image_url ?? ''} alt={item.name} />
