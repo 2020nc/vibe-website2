@@ -31,6 +31,17 @@ interface MenuItem {
   tag?: string | null;
 }
 
+const CATEGORIE_TRADUCERI: Record<string, string> = {
+  'Specialty':  'Specialitate',
+  'Cold Brew':  'Cold Brew',
+  'Espresso':   'Espresso',
+  'Patiserie':  'Patiserie',
+  'Vegan':      'Vegan',
+  'Cold':       'Rece',
+  'Alternative':'Alternative',
+  'Pastry':     'Patiserie',
+};
+
 const TAG_TRADUCERI: Record<string, string> = {
   'Bestseller': 'Cel mai vândut',
   'Sezonier':   'Sezonier',
@@ -264,7 +275,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800'
                   }`}
                 >
-                  {cat}
+                  {CATEGORIE_TRADUCERI[cat] ?? cat}
                 </button>
               ))}
             </div>
