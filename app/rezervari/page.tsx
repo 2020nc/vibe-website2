@@ -58,9 +58,16 @@ export default function RezervariPage() {
     setLoading(true);
     setError('');
 
+    const tenantId = process.env.NEXT_PUBLIC_TENANT_ID;
+    if (!tenantId) {
+      setError('Eroare de configurare. Contactați administratorul.');
+      setLoading(false);
+      return;
+    }
+
     const { error: supabaseError } = await getSupabase()
       .from('rezervari')
-      .insert([{ ...form, status: 'în așteptare' }]);
+      .insert([{ ...form, status: 'în așteptare', tenant_id: tenantId }]);
 
     setLoading(false);
 
