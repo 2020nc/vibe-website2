@@ -37,22 +37,18 @@ export default async function MeniuPage() {
 
   try {
     const supabase = getSupabase();
+    const tenantId = process.env.NEXT_PUBLIC_TENANT_ID!;
     const { data } = await supabase
       .from('menu_items')
       .select('*')
       .eq('available', true)
+      .eq('tenant_id', tenantId)
       .order('category')
       .order('sort_order')
       .order('name');
 
     if (data && data.length > 0) {
-      const seen = new Set<string>();
-      initialItems = data.filter((item) => {
-        const key = `${item.category}__${item.name}`;
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-      });
+      initialItems = data;
     }
   } catch {
     // folosim fallback-ul

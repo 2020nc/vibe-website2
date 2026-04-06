@@ -24,8 +24,9 @@ export async function GET(req: NextRequest) {
     .order('sort_order')
     .order('name');
 
-  if (tenantId) {
-    query = query.eq('tenant_id', tenantId);
+  const effectiveTenantId = tenantId ?? process.env.NEXT_PUBLIC_TENANT_ID ?? null;
+  if (effectiveTenantId) {
+    query = query.eq('tenant_id', effectiveTenantId);
   }
 
   const { data, error } = await query;
