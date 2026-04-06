@@ -44,8 +44,9 @@ async function getHolidayData(): Promise<{ items: MenuItem[]; cfg: HolidayConfig
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     );
 
+    const tenantId = process.env.NEXT_PUBLIC_TENANT_ID!;
     const [menuRes, holidayRes] = await Promise.all([
-      supabase.from('menu_items').select('*').eq('available', true).order('category').order('sort_order'),
+      supabase.from('menu_items').select('*').eq('available', true).eq('tenant_id', tenantId).order('category').order('sort_order'),
       supabase.from('holiday_config').select('*').eq('id', 1).single(),
     ]);
 
