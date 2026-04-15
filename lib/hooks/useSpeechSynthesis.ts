@@ -7,6 +7,12 @@ function normalizeSpeechText(text: string) {
     .replace(/\*\*([^*]+)\*\*/g, '$1')
     .replace(/\*([^*]+)\*/g, '$1')
     .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/\bhey\b/gi, 'Salut')
+    .replace(/\bhello\b/gi, 'Salut')
+    .replace(/\bhi\b/gi, 'Salut')
+    .replace(/\bokay\b/gi, 'Bine')
+    .replace(/\bok\b/gi, 'Bine')
+    .replace(/\bwow\b/gi, 'Uau')
     .replace(/[\u{1F300}-\u{1FAFF}]/gu, ' ')
     .replace(/[\u{2600}-\u{27BF}]/gu, ' ')
     .replace(/[•→⇒★☆◆◇▪▫⬤◦]/g, ' ')
@@ -32,6 +38,8 @@ function normalizeSpeechText(text: string) {
     .replace(/(\d+)\s*h\b/gi, '$1 ore')
     .replace(/\bL-V\b/gi, 'Luni până Vineri')
     .replace(/\bS-D\b/gi, 'Sâmbătă până Duminică')
+    .replace(/\s*([!?])\s*/g, '$1 ')
+    .replace(/\s*([,:;])\s*/g, '$1 ')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -85,18 +93,9 @@ export function useSpeechSynthesis() {
         (voice) => voice.lang.startsWith('ro') && /female|woman|andra|ioana|diana/i.test(voice.name)
       );
       const anyRo = voices.find((voice) => voice.lang.startsWith('ro'));
-      const femaleEn = voices.find(
-        (voice) =>
-          voice.lang.startsWith('en') &&
-          /female|woman|samantha|karen|moira|victoria|fiona/i.test(voice.name)
-      );
-
-      const selectedVoice = femaleRo ?? anyRo ?? femaleEn ?? null;
+      const selectedVoice = femaleRo ?? anyRo ?? null;
       if (selectedVoice) {
         utterance.voice = selectedVoice;
-        if (!selectedVoice.lang.startsWith('ro')) {
-          utterance.lang = selectedVoice.lang;
-        }
       }
 
       utterance.onstart = () => setIsSpeaking(true);

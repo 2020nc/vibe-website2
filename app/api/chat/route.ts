@@ -1,7 +1,7 @@
-/**
- * 🤖 CHAT API ROUTE - Anthropic Claude Integration
+﻿/**
+ * CHAT API ROUTE - Anthropic Claude Integration
  *
- * Endpoint pentru conversații cu Barista Bot
+ * Endpoint pentru conversatii cu Barista Bot
  * POST /api/chat
  * Body: { message: string, conversationHistory?: Message[] }
  */
@@ -10,20 +10,24 @@ import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { KNOWLEDGE_BASE } from '@/lib/knowledge-base';
 
-// Inițializare Anthropic client
 function getAnthropic() {
   return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 }
 
-// 📚 SYSTEM PROMPT - din knowledge-base.ts (personalitate + date cafenea)
-const SYSTEM_PROMPT = KNOWLEDGE_BASE;
+const SYSTEM_PROMPT = `${KNOWLEDGE_BASE}
 
-// 🎯 QUICK REPLIES CONTEXTUALE
+== STIL DE LIMBA ==
+- Scrie exclusiv in romana naturala.
+- Nu folosi formule sau interjectii in engleza precum: Hey, Hi, Hello, Okay, Wow.
+- Nu folosi emoji in raspunsuri.
+- Respecta punctuatia naturala a frazelor si nu adauga cuvinte decorative inutile.
+`;
+
 function generateQuickReplies(userMessage: string, botResponse: string): string[] {
   const lower = (userMessage + ' ' + botResponse).toLowerCase();
 
-  if (lower.includes('rezerv') || lower.includes('masă')) {
-    return ['Câte persoane?', 'Deschide formularul', 'Văd meniul'];
+  if (lower.includes('rezerv') || lower.includes('masa')) {
+    return ['Cate persoane?', 'Deschide formularul', 'Vad meniul'];
   }
   if (lower.includes('vegan') || lower.includes('plant')) {
     return ['Oat Milk Latte', 'Almond Cappuccino', 'Cold Brew', 'Tot meniul'];
@@ -38,16 +42,15 @@ function generateQuickReplies(userMessage: string, botResponse: string): string[
     return ['Cold Brew', 'Iced Latte', 'Nitro Cold Brew'];
   }
   if (lower.includes('meniu') || lower.includes('categor')) {
-    return ['☕ Espresso', '🌱 Vegan', '❄️ Cold', '🥐 Patiserie'];
+    return ['Espresso', 'Vegan', 'Cold', 'Patiserie'];
   }
   if (lower.includes('program') || lower.includes('unde') || lower.includes('adres')) {
-    return ['Fac o rezervare', 'Văd meniul', 'Pet-friendly?'];
+    return ['Fac o rezervare', 'Vad meniul', 'Pet-friendly?'];
   }
 
-  return ['Vreau cafea', 'Fac o rezervare', 'Văd meniul', 'Info locație'];
+  return ['Vreau cafea', 'Fac o rezervare', 'Vad meniul', 'Info locatie'];
 }
 
-// 🚀 POST HANDLER
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -65,29 +68,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Construim istoricul — ultimele 6 mesaje ca context
-    const history = conversationHistory
-      .slice(-6)
-      .map((msg: { sender: string; text: string }) => ({
-        role: msg.sender === 'user' ? ('user' as const) : ('assistant' as const),
-        content: msg.text,
-      }));
+    const history = conversationHistory.slice(-6).map((msg: { sender: string; text: string }) => ({
+      role: msg.sender === 'user' ? ('user' as const) : ('assistant' as const),
+      content: msg.text,
+    }));
 
-    // API Call către Claude
     const response = await getAnthropic().messages.create({
       model: process.env.ANTHROPIC_MODEL?.trim() || 'claude-sonnet-4-20250514',
       max_tokens: 300,
       system: SYSTEM_PROMPT,
-      messages: [
-        ...history,
-        { role: 'user', content: trimmedMessage },
-      ],
+      messages: [...history, { role: 'user', content: trimmedMessage }],
     });
 
     const botResponse =
       response.content[0]?.type === 'text'
         ? response.content[0].text
-        : 'Scuze, nu am înțeles. Poți repeta?';
+        : 'Scuze, nu am inteles. Poti repeta?';
 
     const quickReplies = generateQuickReplies(trimmedMessage, botResponse);
 
@@ -109,7 +105,7 @@ export async function POST(request: NextRequest) {
 
     if (error.status === 401) {
       return NextResponse.json(
-        { error: 'Invalid ANTHROPIC_API_KEY. Verifică .env.local' },
+        { error: 'Invalid ANTHROPIC_API_KEY. Verifica .env.local' },
         { status: 401 }
       );
     }
@@ -118,7 +114,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Anthropic request invalid',
-          details: error?.message || 'Verifică modelul și payload-ul trimis',
+          details: error?.message || 'Verifica modelul si payload-ul trimis',
         },
         { status: 400 }
       );
