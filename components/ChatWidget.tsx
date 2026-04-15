@@ -13,6 +13,23 @@
 
 import { useState, useRef, useEffect } from 'react';
 
+// Randeaza markdown simplu: **bold**, *italic*, \n => <br>
+function renderMarkdown(text: string) {
+  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|\n)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith('*') && part.endsWith('*')) {
+      return <em key={i}>{part.slice(1, -1)}</em>;
+    }
+    if (part === '\n') {
+      return <br key={i} />;
+    }
+    return <span key={i}>{part}</span>;
+  });
+}
+
 interface Message {
   id: string;
   text: string;
@@ -99,7 +116,7 @@ export default function ChatWidget() {
       // Fallback error message
       const errorMessage: Message = {
         id: Date.now().toString(),
-        text: 'Oops! 😅 Am avut o problemă tehnică. Poți încerca din nou sau sună-ne direct la 0721 234 567.',
+        text: 'Ups, ceva nu a mers. Încearcă din nou! 😊',
         sender: 'bot',
         timestamp: new Date(),
         quickReplies: ['Încearcă din nou', 'Vezi meniul', 'Contact'],
@@ -168,7 +185,7 @@ export default function ChatWidget() {
                         : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-bl-none shadow-sm'
                     }`}
                   >
-                    <p className="text-sm whitespace-pre-line">{message.text}</p>
+                    <p className="text-sm leading-relaxed">{renderMarkdown(message.text)}</p>
                   </div>
                 </div>
 
@@ -234,7 +251,9 @@ export default function ChatWidget() {
       {/* 🔘 FLOATING BUTTON */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-16 h-16 bg-gradient-to-br from-[#14B8A6] to-[#0D9488] text-white rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center text-3xl"
+        className={`w-16 h-16 bg-gradient-to-br from-[#14B8A6] to-[#0D9488] text-white rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center text-3xl ${
+          !isOpen ? 'animate-pulse' : ''
+        }`}
       >
         {isOpen ? (
           <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server'
-import { createHash } from 'crypto'
 import { getSupabase } from '@/lib/supabase'
 
-function sha256(text: string): string {
-  return createHash('sha256').update(text).digest('hex')
+async function sha256(text: string): Promise<string> {
+  const msgBuffer = new TextEncoder().encode(text)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
 }
 
 export async function POST(request: Request) {
@@ -13,7 +15,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Email și parola sunt obligatorii.' }, { status: 400 })
   }
 
-  const hash = sha256(password)
+  const hash = await sha256(password)
 
   const { data } = await getSupabase()
     .from('admins')

@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server'
-import { createHash } from 'crypto'
 import { getSupabase } from '@/lib/supabase'
 import { NextRequest } from 'next/server'
 
-function sha256(text: string): string {
-  return createHash('sha256').update(text).digest('hex')
+async function sha256(text: string): Promise<string> {
+  const msgBuffer = new TextEncoder().encode(text)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
 }
 
 export async function POST(request: NextRequest) {
@@ -21,7 +23,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Parola nouă trebuie să aibă minim 6 caractere.' }, { status: 400 })
   }
 
-  const oldHash = sha256(oldPassword)
+  const oldHash = await sha256(oldPassword)
 
   const { data } = await getSupabase()
     .from('admins')
@@ -34,7 +36,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Parola veche este incorectă.' }, { status: 400 })
   }
 
-  const newHash = sha256(newPassword)
+  const newHash = await sha256(newPassword)
 
   await getSupabase()
     .from('admins')

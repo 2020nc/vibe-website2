@@ -1,381 +1,164 @@
 /**
  * 📚 KNOWLEDGE BASE - Baza de cunoștințe Vibe Caffè
- *
- * Toate informațiile pe care bot-ul le cunoaște despre:
- * - Produse și meniu
- * - Informații despre cafea
- * - Locație și program
- * - Politici și facilități
+ * Modul 6, Lecția 1 - Date pentru system prompt ChatWidget (Barista Bot)
  */
 
-export const VIBE_COFFEE_KNOWLEDGE = {
-  // 🏢 INFORMAȚII BUSINESS
-  business: {
-    name: "Vibe Caffè",
-    tagline: "Cafeaua ta preferată, perfect preparată",
-    description: "Cafenea de specialitate în inima Bucureștiului",
-    founded: "2020",
-    mission: "Experiență autentică a cafelei de specialitate într-un ambient modern și prietenos",
-  },
+// ─── 1. PRODUSE ──────────────────────────────────────────────────────────────
 
-  // 📍 LOCAȚIE & CONTACT
-  location: {
-    address: "Str. Cafenelei 123, București, Sector 1",
-    phone: "0721 234 567",
-    email: "hello@vibecoffee.ro",
-    website: "https://vibe-website-rho.vercel.app",
-    reservations: "https://vibe-website-rho.vercel.app/rezervari",
-    googleMaps: "https://maps.google.com/...",
-  },
+export const menuItems = [
+  // ☕ ESPRESSO
+  { name: 'Espresso',           price: 12, category: 'Espresso',    ingredients: '18g cafea, 36ml extract',                         vegan: true  },
+  { name: 'Espresso Lungo',     price: 13, category: 'Espresso',    ingredients: '18g cafea, 60ml extract',                         vegan: true  },
+  { name: 'Americano',          price: 14, category: 'Espresso',    ingredients: 'Espresso dublu + 120ml apă',                      vegan: true  },
+  { name: 'Cappuccino',         price: 16, category: 'Espresso',    ingredients: 'Espresso + 150ml lapte integral',                 vegan: false },
+  { name: 'Flat White',         price: 17, category: 'Espresso',    ingredients: 'Espresso dublu + 180ml lapte microfoam',          vegan: false },
+  { name: 'Latte',              price: 17, category: 'Espresso',    ingredients: 'Espresso + 240ml lapte + spumă',                  vegan: false },
 
-  // ⏰ PROGRAM
-  schedule: {
-    weekdays: "Luni - Vineri: 08:00 - 22:00",
-    weekend: "Sâmbătă - Duminică: 08:00 - 22:00",
-    holidays: "Deschis și în weekend și sărbători",
-    lastCall: "21:30",
-    reservationsAdvance: "Minimum 2 ore în avans",
-  },
+  // 🌟 SPECIALTY
+  { name: 'Caramel Macchiato',  price: 19, category: 'Specialty',   ingredients: 'Espresso + lapte + sirop caramel + sos caramel', vegan: false },
+  { name: 'Mocha',              price: 19, category: 'Specialty',   ingredients: 'Espresso + ciocolată + lapte + frișcă',           vegan: false },
+  { name: 'Vanilla Latte',      price: 18, category: 'Specialty',   ingredients: 'Espresso + sirop vanilie + lapte',                vegan: false },
+  { name: 'Affogato',           price: 21, category: 'Pastry',      ingredients: 'Espresso shot + bilă înghețată vanilie',          vegan: false },
 
-  // 🏪 FACILITĂȚI
-  facilities: {
-    wifi: {
-      available: true,
-      password: "vibecoffee2024",
-      description: "WiFi gratuit, high-speed",
-    },
-    seating: {
-      indoor: "40 locuri",
-      outdoor: "20 locuri terasă (sezon cald)",
-      quietWork: "10 locuri zona work",
-    },
-    amenities: [
-      "Prize la fiecare masă",
-      "Pet-friendly (câini mici)",
-      "Parcare laterală disponibilă",
-      "Metrou Universitate - 5 min",
-      "Spațiu quiet work",
-      "Terasă exterioară (vară)",
-    ],
-    payment: ["Cash", "Card contactless", "Apple Pay", "Google Pay"],
-    delivery: ["Glovo", "Bolt Food", "Tazz", "Ridicare (5% discount)"],
-  },
+  // 🌱 VEGAN
+  { name: 'Oat Milk Latte',     price: 18, category: 'Vegan',       ingredients: 'Espresso + 240ml lapte ovăz',                    vegan: true  },
+  { name: 'Almond Cappuccino',  price: 17, category: 'Vegan',       ingredients: 'Espresso + lapte migdale spumat',                vegan: true  },
+  { name: 'Coconut Mocha',      price: 20, category: 'Vegan',       ingredients: 'Espresso + lapte cocos + ciocolată neagră 70%',  vegan: true  },
+  { name: 'Soy Flat White',     price: 18, category: 'Vegan',       ingredients: 'Espresso dublu + lapte soia microfoam',          vegan: true  },
 
-  // ☕ MENIU COMPLET (30 produse)
-  menu: {
-    "Espresso Classics": [
-      {
-        name: "Espresso",
-        price: 12,
-        description: "Shot dublu de espresso intens, aromat",
-        ingredients: "18g cafea, 36ml extract",
-        vegan: true,
-        caffeine: "High",
-        bestFor: "Wake up, after meals",
-      },
-      {
-        name: "Cappuccino",
-        price: 15,
-        description: "Espresso cu spumă de lapte cremoasă",
-        ingredients: "Espresso + lapte spumat",
-        vegan: false,
-        veganOption: "Disponibil cu lapte vegetal (+2 lei)",
-        caffeine: "Medium",
-        bestFor: "Dimineața, mic dejun",
-      },
-      {
-        name: "Latte",
-        price: 16,
-        description: "Espresso cu lapte, echilibrat și cremos",
-        ingredients: "Espresso + lapte + spumă fină",
-        vegan: false,
-        veganOption: true,
-        caffeine: "Medium",
-        bestFor: "Oricând, versatil",
-      },
-      {
-        name: "Americano",
-        price: 13,
-        description: "Espresso diluat cu apă fierbinte",
-        ingredients: "Espresso + apă caldă",
-        vegan: true,
-        caffeine: "High",
-        bestFor: "Long drink, cafea clasică",
-      },
-      {
-        name: "Flat White",
-        price: 17,
-        description: "Espresso cu microfoam, Australian style",
-        ingredients: "Ristretto + microfoam lapte",
-        vegan: false,
-        veganOption: true,
-        caffeine: "High",
-        bestFor: "Connoisseurs, textură silky",
-      },
-      {
-        name: "Macchiato",
-        price: 13,
-        description: "Espresso 'marcat' cu spumă de lapte",
-        ingredients: "Espresso + pic de spumă",
-        vegan: false,
-        veganOption: true,
-        caffeine: "High",
-        bestFor: "Strong cu o notă de lapte",
-      },
-    ],
-    "Specialty Coffee": [
-      {
-        name: "Affogato",
-        price: 20,
-        description: "Înghețată vanilie înecată în espresso",
-        ingredients: "Înghețată + espresso shot",
-        vegan: false,
-        caffeine: "Medium",
-        bestFor: "Desert, afternon treat",
-      },
-      {
-        name: "Mocha",
-        price: 18,
-        description: "Latte cu ciocolată belgiană",
-        ingredients: "Espresso + lapte + ciocolată",
-        vegan: false,
-        veganOption: true,
-        caffeine: "Medium",
-        bestFor: "Sweet tooth, indulgence",
-      },
-      {
-        name: "Caramel Latte",
-        price: 18,
-        description: "Latte cu sirop caramel premium",
-        ingredients: "Espresso + lapte + caramel",
-        vegan: false,
-        veganOption: true,
-        caffeine: "Medium",
-        bestFor: "Dulce, creamy",
-      },
-      {
-        name: "Vanilla Latte",
-        price: 18,
-        description: "Latte aromat cu vanilie Madagascar",
-        ingredients: "Espresso + lapte + vanilie",
-        vegan: false,
-        veganOption: true,
-        caffeine: "Medium",
-        bestFor: "Aromat, smooth",
-      },
-    ],
-    "Vegan Options": [
-      {
-        name: "Almond Milk Latte",
-        price: 18,
-        description: "Latte cu lapte de migdale",
-        ingredients: "Espresso + lapte migdale",
-        vegan: true,
-        caffeine: "Medium",
-        bestFor: "Plant-based, ușor dulce",
-      },
-      {
-        name: "Oat Milk Cappuccino",
-        price: 17,
-        description: "Cappuccino cu lapte de ovăz",
-        ingredients: "Espresso + lapte ovăz spumat",
-        vegan: true,
-        caffeine: "Medium",
-        bestFor: "Vegan, spumă excelentă",
-      },
-      {
-        name: "Coconut Milk Mocha",
-        price: 19,
-        description: "Mocha cu lapte de cocos",
-        ingredients: "Espresso + lapte cocos + ciocolată",
-        vegan: true,
-        caffeine: "Medium",
-        bestFor: "Tropical, exotic",
-      },
-      {
-        name: "Soy Latte",
-        price: 17,
-        description: "Latte cu lapte de soia",
-        ingredients: "Espresso + lapte soia",
-        vegan: true,
-        caffeine: "Medium",
-        bestFor: "Classic vegan option",
-      },
-    ],
-    "Cold Brew & Iced": [
-      {
-        name: "Cold Brew",
-        price: 16,
-        description: "Cafea cold brew 18h extracție, aromă dulce",
-        ingredients: "250ml cold brew + gheață",
-        vegan: true,
-        caffeine: "Very High",
-        bestFor: "Smooth, low acidity, vară",
-      },
-      {
-        name: "Iced Latte",
-        price: 17,
-        description: "Latte răcoros perfect pentru vară",
-        ingredients: "Espresso + lapte rece + gheață",
-        vegan: false,
-        veganOption: true,
-        caffeine: "Medium",
-        bestFor: "Refreshing, creamy",
-      },
-      {
-        name: "Nitro Cold Brew",
-        price: 19,
-        description: "Cold brew infuzat cu nitrogen, textură cremă",
-        ingredients: "Cold brew + azot",
-        vegan: true,
-        caffeine: "Very High",
-        bestFor: "Unique texture, premium",
-      },
-      {
-        name: "Iced Americano",
-        price: 14,
-        description: "Americano servit cu gheață",
-        ingredients: "Espresso + apă rece + gheață",
-        vegan: true,
-        caffeine: "High",
-        bestFor: "Simple, strong, refreshing",
-      },
-    ],
-    "Alternative": [
-      {
-        name: "Matcha Latte",
-        price: 18,
-        description: "Ceai matcha japonez cu lapte spumat",
-        ingredients: "Matcha premium + lapte",
-        vegan: false,
-        veganOption: true,
-        caffeine: "Medium (din matcha)",
-        bestFor: "Fără cafea, antioxidanți",
-      },
-      {
-        name: "Chai Latte",
-        price: 17,
-        description: "Ceai chai cu lapte și mirodenii",
-        ingredients: "Chai + lapte + scorțișoară",
-        vegan: false,
-        veganOption: true,
-        caffeine: "Low (din ceai)",
-        bestFor: "Warm, spicy, comfort",
-      },
-    ],
-    "Patiserie Artizanală": [
-      {
-        name: "Croissant",
-        price: 12,
-        description: "Croissant frantuzesc cu beurre",
-        vegan: false,
-        bestPairing: "Cappuccino, Latte",
-      },
-      {
-        name: "Pain au Chocolat",
-        price: 14,
-        description: "Croissant cu ciocolată belgiană",
-        vegan: false,
-        bestPairing: "Americano, Espresso",
-      },
-      {
-        name: "Brownie",
-        price: 15,
-        description: "Brownie cu cacao 70%, fudgy",
-        vegan: false,
-        veganOption: true,
-        bestPairing: "Latte, Mocha",
-      },
-      {
-        name: "Cheesecake",
-        price: 18,
-        description: "Cheesecake New York style",
-        vegan: false,
-        bestPairing: "Espresso, Americano",
-      },
-      {
-        name: "Tiramisu",
-        price: 20,
-        description: "Tiramisu clasic cu mascarpone",
-        vegan: false,
-        bestPairing: "Espresso (traditionele)",
-      },
-    ],
-  },
+  // ❄️ COLD
+  { name: 'Cold Brew',          price: 16, category: 'Cold',        ingredients: '250ml cold brew + gheață',                       vegan: true  },
+  { name: 'Iced Latte',         price: 17, category: 'Cold',        ingredients: 'Espresso + lapte rece + gheață',                 vegan: false },
+  { name: 'Nitro Cold Brew',    price: 19, category: 'Cold',        ingredients: 'Cold brew + azot',                               vegan: true  },
+  { name: 'Iced Caramel Macchiato', price: 20, category: 'Cold',   ingredients: 'Espresso + lapte rece + gheață + caramel',       vegan: false },
 
-  // 📖 CUNOȘTINȚE DESPRE CAFEA
-  coffeeKnowledge: {
-    beanTypes: {
-      arabica: "70% producție, aromă complexă, aciditate plăcută, folosim 100% Arabica",
-      robusta: "30% producție, cafeine dublă, mai amar, crema mai bună",
-    },
-    origins: {
-      current: "Columbia, Ethiopia, Brazil - rotație sezonieră",
-      roast: "Boabe prăjite săptămânal in-house, Medium-Dark roast",
-    },
-    brewMethods: {
-      espresso: "25-30s extracție, presiune 9 bar, temperatură 93°C",
-      coldBrew: "18-24h extracție la rece, 67% mai puțin acid",
-      pourOver: "Manual, controlat, evidențiază arome",
-    },
-    milkOptions: {
-      whole: "Cel mai creamos, traditional",
-      oat: "Cel mai aproape de lapte, spumă excelentă",
-      almond: "Ușor dulce, ușor de digerat",
-      soy: "Proteine, clasic vegan",
-      coconut: "Note tropicale, exotic",
-    },
-    funFacts: [
-      "Cafeaua e fruct (cherry) înainte de a fi bob",
-      "Finlanda consumă cel mai mult - 12kg/persoană/an",
-      "Espresso înseamnă 'exprimat' în italiană (rapid)",
-      "Cold brew are cu 67% mai puțină aciditate",
-      "Latte art a început în anii '80 în Seattle",
-    ],
-  },
+  // 🫖 ALTERNATIVE
+  { name: 'Matcha Latte',       price: 18, category: 'Alternative', ingredients: '3g matcha + 240ml lapte',                       vegan: false },
+  { name: 'Chai Latte',         price: 17, category: 'Alternative', ingredients: 'Chai concentrate + lapte spumat',               vegan: false },
 
-  // 🎯 RECOMANDĂRI CONTEXTE
-  recommendations: {
-    morning: ["Cappuccino", "Croissant", "Latte", "Flat White"],
-    afternoon: ["Flat White", "Brownie", "Mocha", "Iced Latte"],
-    evening: ["Matcha Latte", "Chai Latte", "Decaf options"],
-    study: ["Americano", "Cold Brew", "Latte"],
-    sweet: ["Mocha", "Caramel Latte", "Affogato", "Brownie"],
-    strong: ["Espresso", "Flat White", "Nitro Cold Brew"],
-    mild: ["Latte", "Cappuccino", "Chai Latte"],
-    vegan: ["Oat Milk Cappuccino", "Almond Milk Latte", "Cold Brew"],
-    summer: ["Cold Brew", "Iced Latte", "Nitro Cold Brew"],
-    winter: ["Cappuccino", "Mocha", "Chai Latte"],
-  },
+  // 🥐 PASTRY
+  { name: 'Croissant Clasic',         price: 8,  category: 'Pastry', ingredients: 'Făină, unt 82%, ou, drojdie',                  vegan: false },
+  { name: 'Croissant cu Ciocolată',   price: 10, category: 'Pastry', ingredients: 'Croissant + ciocolată 70% cacao',              vegan: false },
+  { name: 'Croissant cu Migdale',     price: 12, category: 'Pastry', ingredients: 'Croissant + cremă migdale + fulgi migdale',    vegan: false },
+  { name: 'Cheesecake New York',      price: 16, category: 'Pastry', ingredients: 'Brânză Philadelphia + biscuiți + fructe',      vegan: false },
+  { name: 'Brownie cu Nuci',          price: 13, category: 'Pastry', ingredients: 'Ciocolată neagră + nuci + unt + ou',           vegan: false },
+  { name: 'Eclair cu Vanilie',        price: 14, category: 'Pastry', ingredients: 'Aluat choux + cremă patisieră vanilie',        vegan: false },
+  { name: 'Tiramisu Clasic',          price: 15, category: 'Pastry', ingredients: 'Mascarpone + savoiardi + espresso + cacao',    vegan: false },
+  { name: 'Tartaletă cu Lămâie',      price: 13, category: 'Pastry', ingredients: 'Aluat fraged + lemon curd + bezea',           vegan: false },
+  { name: 'Macaron Asortate',         price: 18, category: 'Pastry', ingredients: 'Migdale + zahăr + umpluturi diverse',          vegan: false },
+  { name: 'Cinnamon Roll',            price: 11, category: 'Pastry', ingredients: 'Aluat dospit + scorțișoară + glazură',         vegan: false },
+];
 
-  // 📋 POLITICI
-  policies: {
-    reservations: "Minimum 2 ore în avans, max 8 persoane/rezervare",
-    cancellation: "Anulare gratuită cu 1 oră înainte",
-    pets: "Pet-friendly pentru câini mici, aducem apă",
-    wifi: "Free WiFi, password la bar",
-    noise: "Zona quiet work disponibilă",
-    allergies: "Anunțați pentru alergii - adaptăm rețetele",
+// ─── 2. CATEGORII ─────────────────────────────────────────────────────────────
+
+export const categories = [
+  { key: 'Espresso',     label: '☕ Espresso' },
+  { key: 'Specialty',   label: '🌟 Specialty' },
+  { key: 'Vegan',       label: '🌱 Vegan' },
+  { key: 'Cold',        label: '❄️ Cold Brew & Iced' },
+  { key: 'Alternative', label: '🫖 Alternative' },
+  { key: 'Pastry',      label: '🥐 Patiserie' },
+];
+
+// ─── 3. INFORMAȚII CAFENEA ────────────────────────────────────────────────────
+
+export const cafeInfo = {
+  name: 'Vibe Caffè',
+  program: {
+    zilnic: '08:00 - 22:00',
+    lastCall: '21:30',
+    note: 'Deschis zilnic, inclusiv weekend și sărbători',
+  },
+  locatie: {
+    adresa: 'Str. Cafenelei 123, București, Sector 1',
+    transport: 'Metrou Universitate - 5 min',
+    parcare: 'Parcare laterală disponibilă',
+  },
+  facilitati: [
+    'WiFi gratuit high-speed (parolă la bar)',
+    'Pet-friendly (câini mici)',
+    'Prize la fiecare masă',
+    'Zonă quiet work (10 locuri)',
+    'Terasă exterioară (sezon cald, 20 locuri)',
+    '40 locuri interior',
+  ],
+  plata: ['Cash', 'Card contactless', 'Apple Pay', 'Google Pay'],
+  personalizare: {
+    lapteAlternativ: 'Ovăz, Migdale, Soia, Cocos (+2 lei)',
+    extraShot: 'Espresso suplimentar (+5 lei)',
+    siropuri: 'Vanilie, Caramel, Alune (+3 lei)',
+  },
+  rezervari: {
+    link: '/rezervari',
+    minimAvans: '2 ore',
+    maxPersoane: 20,
+    anulare: 'Gratuită cu 1 oră înainte',
   },
 };
 
-// 🤖 PERSONALITATE BOT
-export const BOT_PERSONALITY = {
-  name: "Vibe",
-  role: "Barista virtuală",
-  tone: "Prietenos, entuziast, helpful",
-  style: "Informal dar respectuos, emoji usage, răspunsuri scurte",
-  traits: [
-    "Pasionată de cafea",
-    "Nu e snob coffee",
-    "Empatică și înțelegătoare",
-    "Proactivă cu sugestii",
-    "Ușor jucăușă",
-  ],
-  doNot: [
-    "Wall of text (max 3-4 propoziții)",
-    "Jargon tehnic excesiv",
-    "Prea insistent cu vânzarea",
-    "Răspunsuri robotice",
-  ],
+// ─── 4. RECOMANDĂRI ───────────────────────────────────────────────────────────
+
+const prices = menuItems.map(i => i.price);
+const minPrice = Math.min(...prices);
+const maxPrice = Math.max(...prices);
+
+export const recommendations = {
+  celMaiPopular: 'Cappuccino',
+  celMaiIeftin: menuItems.filter(i => i.price === minPrice).map(i => i.name),   // Croissant Clasic - 8 lei
+  celMaiScump:  menuItems.filter(i => i.price === maxPrice).map(i => i.name),   // Affogato - 21 lei
+  optiuniVegane: menuItems.filter(i => i.vegan).map(i => i.name),
+  dimineata: ['Cappuccino', 'Latte', 'Flat White', 'Croissant Clasic'],
+  vara:      ['Cold Brew', 'Iced Latte', 'Nitro Cold Brew', 'Iced Caramel Macchiato'],
+  dulce:     ['Caramel Macchiato', 'Mocha', 'Vanilla Latte', 'Affogato'],
+  tare:      ['Espresso', 'Espresso Lungo', 'Nitro Cold Brew', 'Americano'],
 };
+
+// ─── 5. KNOWLEDGE_BASE STRING (pentru system prompt) ─────────────────────────
+
+export const KNOWLEDGE_BASE = `
+Ești Vibe, barista virtuală a cafenelei Vibe Caffè.
+
+PERSONALITATE:
+- Prietenoasă și caldă — vorbești ca o persoană reală, nu ca un robot
+- Cunoști cafeaua bine și dai sfaturi utile fără să fii snob
+- Ai umor ușor și natural — un emoji sau o glumă scurtă când se potrivește
+- Răspunzi scurt și la obiect (max 3-4 propoziții)
+- Nu exagerezi cu emoji-urile — 1-2 per răspuns, nu la fiecare cuvânt
+- Dacă clientul e indecis, oferi 2 opțiuni concrete cu o scurtă explicație
+- Nu inventezi informații — dacă nu știi ceva, spui că verifici la bar
+
+== PROGRAM & LOCAȚIE ==
+Program: ${cafeInfo.program.zilnic} zilnic (inclusiv weekend și sărbători). Last call: ${cafeInfo.program.lastCall}.
+Adresă: ${cafeInfo.locatie.adresa}. ${cafeInfo.locatie.transport}. ${cafeInfo.locatie.parcare}.
+
+== FACILITĂȚI ==
+${cafeInfo.facilitati.map(f => `- ${f}`).join('\n')}
+Plată: ${cafeInfo.plata.join(', ')}.
+
+== REZERVĂRI ==
+Rezervările se fac online la /rezervari, cu minimum ${cafeInfo.rezervari.minimAvans} în avans, până la ${cafeInfo.rezervari.maxPersoane} persoane. Anulare gratuită cu 1 oră înainte.
+
+== CATEGORII MENIU ==
+${categories.map(c => c.label).join(' | ')}
+
+== MENIU COMPLET ==
+${categories.map(cat => {
+  const items = menuItems.filter(i => i.category === cat.key);
+  return `${cat.label}:\n${items.map(i => `  - ${i.name}: ${i.price} lei${i.vegan ? ' 🌱' : ''} | ${i.ingredients}`).join('\n')}`;
+}).join('\n\n')}
+
+== PERSONALIZARE ==
+- Lapte alternativ: ${cafeInfo.personalizare.lapteAlternativ}
+- Extra shot: ${cafeInfo.personalizare.extraShot}
+- Siropuri: ${cafeInfo.personalizare.siropuri}
+
+== RECOMANDĂRI ==
+- Cel mai popular: ${recommendations.celMaiPopular}
+- Cel mai ieftin: ${recommendations.celMaiIeftin.join(', ')} (${minPrice} lei)
+- Cel mai scump: ${recommendations.celMaiScump.join(', ')} (${maxPrice} lei)
+- Opțiuni vegane (${recommendations.optiuniVegane.length}): ${recommendations.optiuniVegane.join(', ')}
+- Pentru dimineață: ${recommendations.dimineata.join(', ')}
+- Pentru vară/răcoare: ${recommendations.vara.join(', ')}
+- Dacă vrei ceva dulce: ${recommendations.dulce.join(', ')}
+- Dacă vrei ceva tare: ${recommendations.tare.join(', ')}
+`;
