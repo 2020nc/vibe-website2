@@ -65,12 +65,12 @@ export const categories = [
 export const cafeInfo = {
   name: 'Vibe Caffè',
   program: {
-    zilnic: '08:00 - 22:00',
-    lastCall: '21:30',
-    note: 'Deschis zilnic, inclusiv weekend și sărbători',
+    zilnic: 'Luni-Vineri 08:00-22:00, Sâmbătă-Duminică 09:00-23:00',
+    lastCall: '21:30 (Luni-Vineri), 22:30 (weekend)',
+    note: 'Deschis zilnic, inclusiv sărbători',
   },
   locatie: {
-    adresa: 'Str. Cafenelei 123, București, Sector 1',
+    adresa: 'Bld. Regina Elisabeta 30, Sector 5, București',
     transport: 'Metrou Universitate - 5 min',
     parcare: 'Parcare laterală disponibilă',
   },
