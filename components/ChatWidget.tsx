@@ -12,6 +12,7 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
+import { useSpeechRecognition } from '@/lib/hooks/useSpeechRecognition';
 import { useSpeechSynthesis } from '@/lib/hooks/useSpeechSynthesis';
 
 function createMessageId() {
@@ -103,6 +104,15 @@ export default function ChatWidget() {
   const [userTyped, setUserTyped] = useState(false);
 
   const { speak, stop, isSpeaking, isSupported } = useSpeechSynthesis();
+  const {
+    error: speechRecognitionError,
+    isListening,
+    isSupported: isSpeechRecognitionSupported,
+    resetTranscript,
+    startListening,
+    stopListening,
+    transcript,
+  } = useSpeechRecognition();
   const [speakingId, setSpeakingId] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -123,6 +133,17 @@ export default function ChatWidget() {
   useEffect(() => {
     if (!isSpeaking) setSpeakingId(null);
   }, [isSpeaking]);
+
+  useEffect(() => {
+    if (!transcript) return;
+    setInputValue(transcript);
+  }, [transcript]);
+
+  useEffect(() => {
+    if (!isOpen && isListening) {
+      stopListening();
+    }
+  }, [isListening, isOpen, stopListening]);
 
   // 📜 AUTO-SCROLL LA MESAJE NOI
   const scrollToBottom = () => {
@@ -210,6 +231,17 @@ export default function ChatWidget() {
   // 🎯 HANDLE QUICK REPLY CLICK
   const handleQuickReply = (reply: string) => {
     handleSendMessage(reply, true);
+  };
+
+  const handleMicClick = () => {
+    if (isListening) {
+      stopListening();
+      return;
+    }
+
+    resetTranscript();
+    startListening();
+    inputRef.current?.focus();
   };
 
   // ⌨️ HANDLE KEY PRESS
@@ -345,6 +377,14 @@ export default function ChatWidget() {
 
           {/* INPUT CONTAINER */}
           <div className="p-3 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-700 shrink-0">
+            {speechRecognitionError && (
+              <p className="mb-2 px-1 text-xs text-red-500">{speechRecognitionError}</p>
+            )}
+            {isListening && (
+              <p className="mb-2 px-1 text-xs text-[var(--primary)]">
+                Ascult... spune comanda ta, apoi apasa din nou pe microfon ca sa opresti.
+              </p>
+            )}
             <div className="flex gap-2 items-center">
               <input
                 ref={inputRef}
@@ -352,9 +392,25 @@ export default function ChatWidget() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Scrie un mesaj..."
+                placeholder={isListening ? 'Ascult...' : 'Scrie un mesaj...'}
                 className="flex-1 px-4 py-2.5 rounded-full border-2 border-gray-200 dark:border-gray-600 focus:border-[var(--primary)] focus:outline-none text-sm text-gray-900 dark:text-gray-100 dark:bg-gray-800 placeholder:text-gray-400 dark:placeholder:text-gray-500 transition-colors"
               />
+              {isSpeechRecognitionSupported && (
+                <button
+                  onClick={handleMicClick}
+                  type="button"
+                  title={isListening ? 'Opreste dictarea' : 'Porneste dictarea'}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 shrink-0 ${
+                    isListening
+                      ? 'bg-red-500 hover:bg-red-600 text-white'
+                      : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-[var(--primary)]'
+                  }`}
+                >
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 14a3 3 0 003-3V7a3 3 0 10-6 0v4a3 3 0 003 3zm5-3a1 1 0 112 0 7 7 0 01-6 6.92V21h2a1 1 0 110 2H9a1 1 0 010-2h2v-3.08A7 7 0 015 11a1 1 0 112 0 5 5 0 0010 0z" />
+                  </svg>
+                </button>
+              )}
               <button
                 onClick={() => handleSendMessage()}
                 disabled={!inputValue.trim()}
