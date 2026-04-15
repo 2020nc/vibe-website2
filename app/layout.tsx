@@ -3,6 +3,7 @@ import { Inter, Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import ChatWidget from "@/components/ChatWidget";
+import FABContact from "@/components/FABContact";
 
 // 🎨 TIPOGRAFIE 100% SANS-SERIF - MODERN CLEAN
 // Plus Jakarta Sans - Sans-serif modern pentru TOATE titlurile (H1-H6)
@@ -93,6 +94,7 @@ export default function RootLayout({
         <Navigation />
         {children}
         <ChatWidget />
+        <FABContact />
       </body>
     </html>
   );

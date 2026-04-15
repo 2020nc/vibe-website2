@@ -3,11 +3,14 @@
 export const dynamic = 'force-dynamic';
 
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { getSupabase } from '@/lib/supabase';
 import * as XLSX from 'xlsx';
 
 /* ─── TYPES ───────────────────────────────────────────────── */
 type Status = 'în așteptare' | 'confirmat' | 'respins';
+type StatusDb = 'pending' | 'confirmed' | 'cancelled';
+type RezervareStatusValue = Status | StatusDb;
 
 interface Rezervare {
   id: string;
@@ -18,7 +21,7 @@ interface Rezervare {
   ora: string;
   persoane: number;
   mesaj: string;
-  status: Status;
+  status: RezervareStatusValue;
   created_at: string;
 }
 
@@ -261,7 +264,6 @@ function exportRezervariExcel(rezervari: Rezervare[]) {
 
   // Foaia 2 — Analiză
   const { ziRows, oraRows } = buildAnaliza(rezervari);
-  const ws2 = XLSX.utils.book_new();
 
   // Titlu
   const wsA = XLSX.utils.aoa_to_sheet([
@@ -393,6 +395,19 @@ function calcFinalPrice(item: MenuItem): number {
   if (item.discount_type === 'percent')
     return Math.round((item.price - (item.price * item.discount_amount) / 100) * 100) / 100;
   return Math.round((item.price - item.discount_amount) * 100) / 100;
+}
+
+function normalizeStatus(status: RezervareStatusValue): Status {
+  switch (status) {
+    case 'pending':
+      return 'în așteptare';
+    case 'confirmed':
+      return 'confirmat';
+    case 'cancelled':
+      return 'respins';
+    default:
+      return status;
+  }
 }
 
 const STATUS_CONFIG: Record<Status, { label: string; bg: string; text: string }> = {
@@ -549,6 +564,7 @@ function WizardModal({
                 </div>
                 {form.image_url && (
                   <div className="mt-3 rounded-xl overflow-hidden" style={{ aspectRatio: '4/3', maxHeight: 160 }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={form.image_url}
                       alt="preview"
@@ -835,10 +851,37 @@ export default function AdminPage() {
     setTimeout(() => setMenuSettingsMsg(''), 3000);
   };
 
-  useEffect(() => { if (tenantId) fetchRezervari(); }, [tenantId, fetchRezervari]);
-  useEffect(() => { if (tab === 'meniu') fetchMenu(); }, [tab, fetchMenu]);
-  useEffect(() => { if (tab === 'sarbatori') fetchHoliday(); }, [tab, fetchHoliday]);
-  useEffect(() => { if (tab === 'setari') fetchMenuSettings(); }, [tab, fetchMenuSettings]);
+  useEffect(() => {
+    if (!tenantId) return;
+    const timeoutId = window.setTimeout(() => {
+      void fetchRezervari();
+    }, 0);
+    return () => window.clearTimeout(timeoutId);
+  }, [tenantId, fetchRezervari]);
+
+  useEffect(() => {
+    if (tab !== 'meniu') return;
+    const timeoutId = window.setTimeout(() => {
+      void fetchMenu();
+    }, 0);
+    return () => window.clearTimeout(timeoutId);
+  }, [tab, fetchMenu]);
+
+  useEffect(() => {
+    if (tab !== 'sarbatori') return;
+    const timeoutId = window.setTimeout(() => {
+      void fetchHoliday();
+    }, 0);
+    return () => window.clearTimeout(timeoutId);
+  }, [tab, fetchHoliday]);
+
+  useEffect(() => {
+    if (tab !== 'setari') return;
+    const timeoutId = window.setTimeout(() => {
+      void fetchMenuSettings();
+    }, 0);
+    return () => window.clearTimeout(timeoutId);
+  }, [tab, fetchMenuSettings]);
 
   /* ── rezervări actions ── */
   const updateStatus = async (id: string, status: Status) => {
@@ -868,7 +911,11 @@ export default function AdminPage() {
   const toggleSelectRez = (id: string) => {
     setSelectedRez((prev) => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
       return next;
     });
   };
@@ -975,11 +1022,11 @@ export default function AdminPage() {
 
   /* ── derive ── */
   const rezervariFiltrate = rezervari.filter((r) => {
-    return (filtru === 'toate' || r.status === filtru) &&
+    return (filtru === 'toate' || normalizeStatus(r.status) === filtru) &&
            r.nume.toLowerCase().includes(cautare.toLowerCase());
   });
   const numarPeStatus = (s: typeof FILTRE[number]) =>
-    s === 'toate' ? rezervari.length : rezervari.filter((r) => r.status === s).length;
+    s === 'toate' ? rezervari.length : rezervari.filter((r) => normalizeStatus(r.status) === s).length;
 
   const categories = ['toate', ...new Set(items.map((i) => i.category))];
   const filteredItems = catFilter === 'toate' ? items : items.filter((i) => i.category === catFilter);
@@ -1011,7 +1058,7 @@ export default function AdminPage() {
             <span className="text-2xl font-bold text-teal-500">Vibe Caffè</span>
             <span className="px-2 py-0.5 bg-teal-100 text-teal-700 text-xs font-semibold rounded-full">Admin</span>
           </div>
-          <a href="/" className="text-gray-600 hover:text-teal-500 transition-colors text-sm">← Site public</a>
+          <Link href="/" className="text-gray-600 hover:text-teal-500 transition-colors text-sm">← Site public</Link>
         </div>
       </nav>
 
@@ -1164,7 +1211,8 @@ export default function AdminPage() {
                   </thead>
                   <tbody className="divide-y divide-gray-50">
                     {rezervariFiltrate.map((r) => {
-                      const cfg = STATUS_CONFIG[r.status] ?? STATUS_CONFIG['în așteptare'];
+                      const statusUi = normalizeStatus(r.status);
+                      const cfg = STATUS_CONFIG[statusUi];
                       const isChecked = selectedRez.has(r.id);
                       return (
                         <tr key={r.id} className={`transition-colors ${isChecked ? 'bg-teal-50/60' : 'hover:bg-teal-50/30'}`}>
@@ -1188,13 +1236,13 @@ export default function AdminPage() {
                           </td>
                           <td className="px-5 py-4">
                             <div className="flex gap-2 justify-end">
-                              {r.status !== 'confirmat' && (
+                              {statusUi !== 'confirmat' && (
                                 <button onClick={() => updateStatus(r.id, 'confirmat')} disabled={!!actionLoading}
                                   className="px-3 py-1.5 bg-teal-500 hover:bg-teal-600 disabled:opacity-50 text-white text-xs font-semibold rounded-lg transition-all">
                                   {actionLoading === r.id + 'confirmat' ? '…' : 'Confirmă'}
                                 </button>
                               )}
-                              {r.status !== 'respins' && (
+                              {statusUi !== 'respins' && (
                                 <button onClick={() => updateStatus(r.id, 'respins')} disabled={!!actionLoading}
                                   className="px-3 py-1.5 bg-orange-100 hover:bg-orange-200 disabled:opacity-50 text-orange-700 text-xs font-semibold rounded-lg transition-all">
                                   {actionLoading === r.id + 'respins' ? '…' : 'Respinge'}
@@ -1218,7 +1266,8 @@ export default function AdminPage() {
             {!loadingRez && rezervariFiltrate.length > 0 && (
               <div className="md:hidden space-y-4">
                 {rezervariFiltrate.map((r) => {
-                  const cfg = STATUS_CONFIG[r.status] ?? STATUS_CONFIG['în așteptare'];
+                  const statusUi = normalizeStatus(r.status);
+                  const cfg = STATUS_CONFIG[statusUi];
                   return (
                     <div key={r.id} className={`backdrop-blur-sm rounded-2xl shadow-sm border p-5 transition-colors ${selectedRez.has(r.id) ? 'bg-teal-50 border-teal-200' : 'bg-white/80 border-gray-100'}`}>
                       <div className="flex justify-between items-start mb-3">
@@ -1242,15 +1291,15 @@ export default function AdminPage() {
                         <div><span className="text-gray-400 text-xs block">Persoane</span>{r.persoane}</div>
                         <div><span className="text-gray-400 text-xs block">Telefon</span>{r.telefon}</div>
                       </div>
-                      {r.mesaj && <p className="text-xs text-gray-400 italic mb-4">"{r.mesaj}"</p>}
+                      {r.mesaj && <p className="text-xs text-gray-400 italic mb-4">&ldquo;{r.mesaj}&rdquo;</p>}
                       <div className="flex gap-2 flex-wrap">
-                        {r.status !== 'confirmat' && (
+                        {statusUi !== 'confirmat' && (
                           <button onClick={() => updateStatus(r.id, 'confirmat')} disabled={!!actionLoading}
                             className="flex-1 py-2 bg-teal-500 hover:bg-teal-600 disabled:opacity-50 text-white text-sm font-semibold rounded-xl">
                             Confirmă
                           </button>
                         )}
-                        {r.status !== 'respins' && (
+                        {statusUi !== 'respins' && (
                           <button onClick={() => updateStatus(r.id, 'respins')} disabled={!!actionLoading}
                             className="flex-1 py-2 bg-orange-100 hover:bg-orange-200 disabled:opacity-50 text-orange-700 text-sm font-semibold rounded-xl">
                             Respinge
@@ -1388,7 +1437,11 @@ export default function AdminPage() {
                             <input type="checkbox" checked={isSelected}
                               onChange={() => setSelected((s) => {
                                 const n = new Set(s);
-                                isSelected ? n.delete(item.id) : n.add(item.id);
+                                if (isSelected) {
+                                  n.delete(item.id);
+                                } else {
+                                  n.add(item.id);
+                                }
                                 return n;
                               })}
                               className="w-4 h-4 accent-amber-600 cursor-pointer"
@@ -1396,10 +1449,13 @@ export default function AdminPage() {
                           </td>
                           <td className="px-4 py-3">
                             {item.image_url ? (
-                              <img src={item.image_url} alt={item.name}
-                                className="w-12 h-12 object-cover rounded-lg"
-                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                              />
+                              <>
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={item.image_url} alt={item.name}
+                                  className="w-12 h-12 object-cover rounded-lg"
+                                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                />
+                              </>
                             ) : (
                               <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-gray-300 text-lg">☕</div>
                             )}
@@ -1716,12 +1772,23 @@ export default function AdminPage() {
                             className={`transition-colors ${isSel ? 'bg-rose-50/60' : 'hover:bg-rose-50/30'}`}>
                             <td className="px-4 py-3 text-center">
                               <input type="checkbox" checked={isSel}
-                                onChange={() => setSelectedH((s) => { const n = new Set(s); isSel ? n.delete(item.id) : n.add(item.id); return n; })}
+                                onChange={() => setSelectedH((s) => {
+                                  const n = new Set(s);
+                                  if (isSel) {
+                                    n.delete(item.id);
+                                  } else {
+                                    n.add(item.id);
+                                  }
+                                  return n;
+                                })}
                                 className="w-4 h-4 accent-rose-500 cursor-pointer" />
                             </td>
                             <td className="px-4 py-3">
                               {item.image_url
-                                ? <img src={item.image_url} alt={item.name} className="w-10 h-10 object-cover rounded-lg" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                                ? (
+                                  /* eslint-disable-next-line @next/next/no-img-element */
+                                  <img src={item.image_url} alt={item.name} className="w-10 h-10 object-cover rounded-lg" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                                )
                                 : <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-300 text-lg">☕</div>
                               }
                             </td>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { getSupabase } from '@/lib/supabase';
+import Link from 'next/link';
 import FooterStarter from '@/components/FooterStarter';
 
 interface FormData {
@@ -58,24 +58,26 @@ export default function RezervariPage() {
     setLoading(true);
     setError('');
 
-    const tenantId = process.env.NEXT_PUBLIC_TENANT_ID;
-    if (!tenantId) {
-      setError('Eroare de configurare. Contactați administratorul.');
-      setLoading(false);
-      return;
-    }
+    try {
+      const res = await fetch('/api/rezervari', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
 
-    const { error: supabaseError } = await getSupabase()
-      .from('rezervari')
-      .insert([{ ...form, status: 'în așteptare', tenant_id: tenantId }]);
+      const data = await res.json();
 
-    setLoading(false);
+      if (!res.ok) {
+        throw new Error(data?.error || 'Nu am putut trimite rezervarea.');
+      }
 
-    if (supabaseError) {
-      setError(`Eroare: ${supabaseError.message}`);
-    } else {
       setSuccess(true);
       setForm(initialForm);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'A apărut o eroare neașteptată.';
+      setError(`Eroare: ${message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -84,8 +86,8 @@ export default function RezervariPage() {
       {/* Header */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <a href="/" className="text-2xl font-bold text-teal-500">Vibe Caffè</a>
-          <a href="/" className="text-gray-600 hover:text-teal-500 transition-colors">← Înapoi acasă</a>
+          <Link href="/" className="text-2xl font-bold text-teal-500">Vibe Caffè</Link>
+          <Link href="/" className="text-gray-600 hover:text-teal-500 transition-colors">← Înapoi acasă</Link>
         </div>
       </nav>
 
@@ -144,9 +146,9 @@ export default function RezervariPage() {
                 >
                   Rezervare nouă
                 </button>
-                <a href="/" className="px-6 py-2.5 bg-white border border-teal-300 text-teal-600 hover:bg-teal-50 rounded-full transition-colors font-semibold">
+                <Link href="/" className="px-6 py-2.5 bg-white border border-teal-300 text-teal-600 hover:bg-teal-50 rounded-full transition-colors font-semibold">
                   Înapoi la pagina principală
-                </a>
+                </Link>
               </div>
             </div>
           )}
