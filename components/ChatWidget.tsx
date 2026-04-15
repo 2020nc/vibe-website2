@@ -14,6 +14,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSpeechSynthesis } from '@/lib/hooks/useSpeechSynthesis';
 
+function createMessageId() {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
 // Randeaza markdown: **bold**, *italic*, [text](url), \n => <br>
 function renderMarkdown(text: string) {
   const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\)|\n)/g);
@@ -107,7 +115,8 @@ export default function ChatWidget() {
       setSpeakingId(null);
     } else {
       setSpeakingId(messageId);
-      speak(text);
+      // Chrome can be finicky when starting consecutive utterances; defer one tick.
+      window.setTimeout(() => speak(text), 0);
     }
   };
 
@@ -137,7 +146,7 @@ export default function ChatWidget() {
 
     // Adaugă mesajul utilizatorului
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: createMessageId(),
       text: messageText,
       sender: 'user',
       timestamp: new Date(),
@@ -170,7 +179,7 @@ export default function ChatWidget() {
       const contextReplies = (!isQuickReply ? undefined : getContextualReplies(data.response));
 
       const botResponse: Message = {
-        id: Date.now().toString(),
+        id: createMessageId(),
         text: data.response,
         sender: 'bot',
         timestamp: new Date(),
@@ -186,7 +195,7 @@ export default function ChatWidget() {
           : 'Ups, ceva nu a mers. Incearca din nou!';
 
       const errorMessage: Message = {
-        id: Date.now().toString(),
+        id: createMessageId(),
         text: errorText,
         sender: 'bot',
         timestamp: new Date(),
