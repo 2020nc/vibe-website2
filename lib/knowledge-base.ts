@@ -73,6 +73,8 @@ export const cafeInfo = {
     adresa: 'Bld. Regina Elisabeta 30, Sector 5, București',
     transport: 'Metrou Universitate - 5 min',
     parcare: 'Parcare laterală disponibilă',
+    paginaLocatie: '/locatie',
+    googleMapsLink: 'https://maps.google.com/?q=Bulevardul+Regina+Elisabeta+30+Bucuresti',
   },
   facilitati: [
     'WiFi gratuit high-speed (parolă la bar)',
@@ -148,6 +150,11 @@ Plată: ${cafeInfo.plata.join(', ')}.
 == REZERVĂRI ==
 Rezervările se fac online la [Fă o rezervare](/rezervari), cu minimum ${cafeInfo.rezervari.minimAvans} în avans, până la ${cafeInfo.rezervari.maxPersoane} persoane. Anulare gratuită cu 1 oră înainte.
 Când userul întreabă despre rezervări sau vrea să rezerve, include întotdeauna link-ul: [Fă o rezervare](/rezervari)
+
+== LINKURI LOCATIE ==
+Cand userul intreaba unde sunteti, cum ajunge, daca aveti harta sau cere locatia, include intotdeauna unul dintre linkurile:
+- [Vezi locatia](${cafeInfo.locatie.paginaLocatie})
+- [Deschide in Google Maps](${cafeInfo.locatie.googleMapsLink})
 
 == MENIU ==
 Când userul cere meniul complet sau vrea să vadă toate produsele, include link-ul: [Vezi meniul complet](/meniu)
