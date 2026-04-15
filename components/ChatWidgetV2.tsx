@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useSpeechSynthesis } from '@/lib/hooks/useSpeechSynthesis';
+import { useSpeechSynthesisV2 } from '@/lib/hooks/useSpeechSynthesisV2';
 
 type Message = {
   id: string;
@@ -84,7 +84,7 @@ export default function ChatWidgetV2() {
   const [userTyped, setUserTyped] = useState(false);
   const [speakingId, setSpeakingId] = useState<string | null>(null);
 
-  const { speak, stop, isSpeaking, isSupported } = useSpeechSynthesis();
+  const { speak, stop, isSpeaking, isSupported } = useSpeechSynthesisV2();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
