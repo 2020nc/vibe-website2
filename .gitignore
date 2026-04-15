@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local archives / generated exports
+*.zip
+docs/sesiune-*.docx
+docs/sesiune-*.pdf
+docs/recap-m6-*.docx
+docs/recap-m6-*.pdf
+docs/sesiuni/Backup of *.wbk
