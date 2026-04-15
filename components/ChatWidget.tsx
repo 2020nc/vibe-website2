@@ -117,6 +117,7 @@ export default function ChatWidget() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const wasListeningRef = useRef(false);
 
   // 🔊 HANDLE TEXT-TO-SPEECH
   const handleSpeak = (messageId: string, text: string) => {
@@ -144,6 +145,19 @@ export default function ChatWidget() {
       stopListening();
     }
   }, [isListening, isOpen, stopListening]);
+
+  useEffect(() => {
+    const justStoppedListening = wasListeningRef.current && !isListening;
+    wasListeningRef.current = isListening;
+
+    if (!justStoppedListening) return;
+
+    const spokenMessage = transcript.trim();
+    if (!spokenMessage) return;
+
+    void handleSendMessage(spokenMessage);
+    resetTranscript();
+  }, [isListening, resetTranscript, transcript]);
 
   // 📜 AUTO-SCROLL LA MESAJE NOI
   const scrollToBottom = () => {
@@ -382,7 +396,7 @@ export default function ChatWidget() {
             )}
             {isListening && (
               <p className="mb-2 px-1 text-xs text-[var(--primary)]">
-                Ascult... spune comanda ta, apoi apasa din nou pe microfon ca sa opresti.
+                Ascult... cand te opresti, mesajul se trimite automat.
               </p>
             )}
             <div className="flex gap-2 items-center">
