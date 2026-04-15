@@ -1,30 +1,28 @@
 'use client';
 
-/**
- * 🤖 CHAT WIDGET - Barista Bot pentru Vibe Caffè
- *
- * Componenta principală a chatbot-ului:
- * - Floating button (colț dreapta jos)
- * - Chat window cu mesaje
- * - Input pentru mesaje noi
- * - Typing indicator
- * - Quick replies
- */
-
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSpeechSynthesis } from '@/lib/hooks/useSpeechSynthesis';
 
-// Randeaza markdown: **bold**, *italic*, [text](url), \n => <br>
+type Message = {
+  id: string;
+  text: string;
+  sender: 'user' | 'bot';
+  timestamp: Date;
+  quickReplies?: string[];
+};
+
 function renderMarkdown(text: string) {
   const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\)|\n)/g);
+
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {
       return <strong key={i}>{part.slice(2, -2)}</strong>;
     }
+
     if (part.startsWith('*') && part.endsWith('*')) {
       return <em key={i}>{part.slice(1, -1)}</em>;
     }
-    // Link markdown: [text](url)
+
     const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
     if (linkMatch) {
       return (
@@ -39,22 +37,15 @@ function renderMarkdown(text: string) {
         </a>
       );
     }
+
     if (part === '\n') {
       return <br key={i} />;
     }
+
     return <span key={i}>{part}</span>;
   });
 }
 
-interface Message {
-  id: string;
-  text: string;
-  sender: 'user' | 'bot';
-  timestamp: Date;
-  quickReplies?: string[];
-}
-
-// Detectează quick replies contextuale pe baza răspunsului botului
 function getContextualReplies(responseText: string): string[] | undefined {
   const lower = responseText.toLowerCase();
 
@@ -64,78 +55,68 @@ function getContextualReplies(responseText: string): string[] | undefined {
     lower.includes('cappuccino') ||
     lower.includes('espresso') ||
     lower.includes('produs') ||
-    lower.includes('prețul') ||
-    lower.includes('comandă')
+    lower.includes('pret') ||
+    lower.includes('comanda')
   ) {
-    return ['Opțiuni vegane', 'Deserturi', 'Cafea rece'];
+    return ['Optiuni vegane', 'Deserturi', 'Cafea rece'];
   }
 
-  if (lower.includes('rezervar') || lower.includes('rezervă') || lower.includes('masă')) {
-    return ['Fă o rezervare', 'Program'];
+  if (lower.includes('rezervar') || lower.includes('rezerva') || lower.includes('masa')) {
+    return ['Fa o rezervare', 'Program'];
   }
 
   return undefined;
 }
 
-export default function ChatWidget() {
-  // 📊 STATE MANAGEMENT
+export default function ChatWidgetV2() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Salut! Sunt Vibe, asistentul tău virtual. Cu ce te pot ajuta astăzi?',
+      text: 'Salut! Sunt Vibe, asistentul tau virtual. Cu ce te pot ajuta astazi?',
       sender: 'bot',
       timestamp: new Date(),
-      quickReplies: ['Vezi meniu', 'Recomandări', 'Rezervări', 'Program'],
+      quickReplies: ['Vezi meniu', 'Recomandari', 'Rezervari', 'Program'],
     },
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  // Dacă userul a scris manual, ascunde quick replies
   const [userTyped, setUserTyped] = useState(false);
-
-  const { speak, stop, isSpeaking, isSupported } = useSpeechSynthesis();
   const [speakingId, setSpeakingId] = useState<string | null>(null);
 
+  const { speak, stop, isSpeaking, isSupported } = useSpeechSynthesis();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // 🔊 HANDLE TEXT-TO-SPEECH
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  useEffect(() => {
+    if (!isSpeaking) {
+      setSpeakingId(null);
+    }
+  }, [isSpeaking]);
+
   const handleSpeak = (messageId: string, text: string) => {
     if (speakingId === messageId && isSpeaking) {
       stop();
       setSpeakingId(null);
-    } else {
-      setSpeakingId(messageId);
-      speak(text);
+      return;
     }
+
+    setSpeakingId(messageId);
+    speak(text);
   };
 
-  useEffect(() => {
-    if (!isSpeaking) setSpeakingId(null);
-  }, [isSpeaking]);
-
-  // 📜 AUTO-SCROLL LA MESAJE NOI
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  // 📝 TRIMITE MESAJ
-  // isQuickReply=true înseamnă click pe buton (nu tastare manuală)
   const handleSendMessage = async (text?: string, isQuickReply = false) => {
     const messageText = text || inputValue.trim();
     if (!messageText) return;
 
-    // Dacă userul a scris manual, activează flag-ul care ascunde quick replies
     if (!isQuickReply) {
       setUserTyped(true);
     }
 
-    // Adaugă mesajul utilizatorului
     const userMessage: Message = {
       id: Date.now().toString(),
       text: messageText,
@@ -148,7 +129,6 @@ export default function ChatWidget() {
     setIsTyping(true);
 
     try {
-      // 🚀 API CALL către Claude AI
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
@@ -166,8 +146,7 @@ export default function ChatWidget() {
         throw new Error(data?.details || data?.error || 'Failed to get response');
       }
 
-      // Calculează quick replies contextuale (doar dacă userul nu a scris manual)
-      const contextReplies = (!isQuickReply ? undefined : getContextualReplies(data.response));
+      const contextReplies = !isQuickReply ? undefined : getContextualReplies(data.response);
 
       const botResponse: Message = {
         id: Date.now().toString(),
@@ -180,6 +159,7 @@ export default function ChatWidget() {
       setMessages((prev) => [...prev, botResponse]);
     } catch (error) {
       console.error('Chat error:', error);
+
       const errorText =
         error instanceof Error
           ? `Ups, ceva nu a mers: ${error.message}`
@@ -198,12 +178,10 @@ export default function ChatWidget() {
     }
   };
 
-  // 🎯 HANDLE QUICK REPLY CLICK
   const handleQuickReply = (reply: string) => {
     handleSendMessage(reply, true);
   };
 
-  // ⌨️ HANDLE KEY PRESS
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -213,16 +191,16 @@ export default function ChatWidget() {
 
   return (
     <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
-      {/* 💬 CHAT WINDOW */}
       {isOpen && (
-        <div className="
+        <div
+          className="
           mb-4 flex flex-col overflow-hidden shadow-2xl
           fixed inset-0 rounded-none
           sm:relative sm:inset-auto sm:w-[380px] sm:h-[600px] sm:rounded-2xl
           bg-white dark:bg-gray-900
           border border-gray-100 dark:border-gray-700
-        ">
-          {/* HEADER — gradient primar + font Plus Jakarta Sans */}
+        "
+        >
           <div className="bg-gradient-to-r from-[var(--primary)] to-[var(--primary-dark)] text-white px-5 py-4 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
@@ -232,7 +210,10 @@ export default function ChatWidget() {
                 </svg>
               </div>
               <div>
-                <h3 className="font-bold text-base leading-tight" style={{ fontFamily: 'var(--font-plus-jakarta-sans, sans-serif)' }}>
+                <h3
+                  className="font-bold text-base leading-tight"
+                  style={{ fontFamily: 'var(--font-plus-jakarta-sans, sans-serif)' }}
+                >
                   Vibe
                 </h3>
                 <p className="text-xs text-white/80 leading-tight">Asistent virtual • Online</p>
@@ -248,11 +229,9 @@ export default function ChatWidget() {
             </button>
           </div>
 
-          {/* MESSAGES CONTAINER */}
           <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50 dark:bg-gray-800">
             {messages.map((message, index) => {
-              const isLastBotMessage =
-                message.sender === 'bot' && index === messages.length - 1;
+              const isLastBotMessage = message.sender === 'bot' && index === messages.length - 1;
               const showReplies =
                 !userTyped &&
                 isLastBotMessage &&
@@ -261,7 +240,6 @@ export default function ChatWidget() {
 
               return (
                 <div key={message.id}>
-                  {/* MESSAGE BUBBLE */}
                   <div className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                     <div
                       className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
@@ -274,12 +252,11 @@ export default function ChatWidget() {
                     </div>
                   </div>
 
-                  {/* BUTON ASCULTĂ — doar pentru mesajele bot, dacă browserul suportă TTS */}
                   {message.sender === 'bot' && isSupported && (
                     <div className="flex justify-start mt-1 ml-1">
                       <button
                         onClick={() => handleSpeak(message.id, message.text)}
-                        title={speakingId === message.id && isSpeaking ? 'Oprește' : 'Ascultă'}
+                        title={speakingId === message.id && isSpeaking ? 'Opreste' : 'Asculta'}
                         className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs transition-all duration-200 ${
                           speakingId === message.id && isSpeaking
                             ? 'bg-[var(--primary)] text-white'
@@ -288,19 +265,18 @@ export default function ChatWidget() {
                       >
                         {speakingId === message.id && isSpeaking ? (
                           <svg className="w-3.5 h-3.5 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" />
                           </svg>
                         ) : (
                           <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
                           </svg>
                         )}
-                        <span>{speakingId === message.id && isSpeaking ? 'Stop' : 'Ascultă'}</span>
+                        <span>{speakingId === message.id && isSpeaking ? 'Stop' : 'Asculta'}</span>
                       </button>
                     </div>
                   )}
 
-                  {/* QUICK REPLIES — doar ultimul mesaj bot, doar dacă userul n-a scris manual */}
                   {showReplies && (
                     <div className="flex flex-wrap gap-2 mt-2 ml-1">
                       {message.quickReplies!.map((reply, i) => (
@@ -318,7 +294,6 @@ export default function ChatWidget() {
               );
             })}
 
-            {/* TYPING INDICATOR */}
             {isTyping && (
               <div className="flex justify-start">
                 <div className="bg-white dark:bg-gray-700 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm border border-gray-100 dark:border-gray-600">
@@ -334,7 +309,6 @@ export default function ChatWidget() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* INPUT CONTAINER */}
           <div className="p-3 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-700 shrink-0">
             <div className="flex gap-2 items-center">
               <input
@@ -360,7 +334,6 @@ export default function ChatWidget() {
         </div>
       )}
 
-      {/* 🔘 FLOATING BUTTON — culoarea primară, ascuns pe mobil când chat-ul e deschis */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
@@ -373,7 +346,6 @@ export default function ChatWidget() {
         </button>
       )}
 
-      {/* NOTIFICATION BADGE */}
       {!isOpen && (
         <div className="absolute -top-1 -right-1 w-5 h-5 bg-[var(--secondary)] text-white text-xs rounded-full flex items-center justify-center font-bold">
           1

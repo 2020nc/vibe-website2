@@ -52,8 +52,9 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { message, conversationHistory = [] } = body;
+    const trimmedMessage = typeof message === 'string' ? message.trim() : '';
 
-    if (!message || typeof message !== 'string') {
+    if (!trimmedMessage) {
       return NextResponse.json({ error: 'Message is required' }, { status: 400 });
     }
 
@@ -74,12 +75,12 @@ export async function POST(request: NextRequest) {
 
     // API Call către Claude
     const response = await getAnthropic().messages.create({
-      model: 'claude-sonnet-4-5-20250929',
+      model: process.env.ANTHROPIC_MODEL?.trim() || 'claude-sonnet-4-20250514',
       max_tokens: 300,
       system: SYSTEM_PROMPT,
       messages: [
         ...history,
-        { role: 'user', content: message },
+        { role: 'user', content: trimmedMessage },
       ],
     });
 
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
         ? response.content[0].text
         : 'Scuze, nu am înțeles. Poți repeta?';
 
-    const quickReplies = generateQuickReplies(message, botResponse);
+    const quickReplies = generateQuickReplies(trimmedMessage, botResponse);
 
     return NextResponse.json({
       response: botResponse,
@@ -99,7 +100,12 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error: any) {
-    console.error('Anthropic API Error:', error);
+    console.error('Anthropic API Error:', {
+      message: error?.message,
+      status: error?.status,
+      type: error?.type,
+      model: process.env.ANTHROPIC_MODEL?.trim() || 'claude-sonnet-4-20250514',
+    });
 
     if (error.status === 401) {
       return NextResponse.json(
@@ -108,9 +114,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (error?.status === 400) {
+      return NextResponse.json(
+        {
+          error: 'Anthropic request invalid',
+          details: error?.message || 'Verifică modelul și payload-ul trimis',
+        },
+        { status: 400 }
+      );
+    }
+
     return NextResponse.json(
-      { error: 'Failed to get response from Claude', details: error.message },
-      { status: 500 }
+      {
+        error: 'Failed to get response from Claude',
+        details: error?.message || 'Unknown Anthropic error',
+      },
+      { status: error?.status || 500 }
     );
   }
 }
