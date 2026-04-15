@@ -56,14 +56,14 @@ function findPreferredVoice(voices: SpeechSynthesisVoice[]) {
     return femaleRo;
   }
 
-  const femaleEn = voices.find((voice) => voice.lang.startsWith('en') && isFemaleLikeVoice(voice));
-  if (femaleEn) {
-    return femaleEn;
-  }
-
   const anyRo = voices.find((voice) => voice.lang.startsWith('ro'));
   if (anyRo) {
     return anyRo;
+  }
+
+  const femaleEn = voices.find((voice) => voice.lang.startsWith('en') && isFemaleLikeVoice(voice));
+  if (femaleEn) {
+    return femaleEn;
   }
 
   return voices.find(isFemaleLikeVoice) ?? null;
@@ -110,8 +110,8 @@ export function useSpeechSynthesisV2() {
 
       const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.lang = 'ro-RO';
-      utterance.rate = 0.92;
-      utterance.pitch = 1.12;
+      utterance.rate = 0.9;
+      utterance.pitch = 1.02;
 
       const voices =
         voicesRef.current.length > 0 ? voicesRef.current : window.speechSynthesis.getVoices();
