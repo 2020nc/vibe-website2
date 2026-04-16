@@ -15,6 +15,11 @@ import { useState, useRef, useEffect } from 'react';
 import { useSpeechRecognition } from '@/lib/hooks/useSpeechRecognition';
 import { useSpeechSynthesis } from '@/lib/hooks/useSpeechSynthesis';
 
+type AnalyticsWindow = Window & {
+  dataLayer?: Array<Record<string, unknown>>;
+  gtag?: (...args: unknown[]) => void;
+};
+
 function createMessageId() {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID();
@@ -86,6 +91,14 @@ function getContextualReplies(responseText: string): string[] | undefined {
   return undefined;
 }
 
+function trackAssistantEvent(eventName: string, details: Record<string, unknown> = {}) {
+  if (typeof window === 'undefined') return;
+
+  const analyticsWindow = window as AnalyticsWindow;
+  analyticsWindow.dataLayer?.push({ event: eventName, ...details });
+  analyticsWindow.gtag?.('event', eventName, details);
+}
+
 export default function ChatWidget() {
   // 📊 STATE MANAGEMENT
   const [isOpen, setIsOpen] = useState(false);
@@ -95,7 +108,7 @@ export default function ChatWidget() {
       text: 'Salut! Sunt Vibe, asistentul tău virtual. Cu ce te pot ajuta astăzi?',
       sender: 'bot',
       timestamp: new Date(),
-      quickReplies: ['Vezi meniu', 'Recomandări', 'Rezervări', 'Program'],
+      quickReplies: ['Recomandă-mi o cafea', 'Vreau să rezerv', 'Program & locație', 'Oferte speciale'],
     },
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -139,6 +152,11 @@ export default function ChatWidget() {
     if (!transcript) return;
     setInputValue(transcript);
   }, [transcript]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    trackAssistantEvent('assistant_opened');
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen && isListening) {
@@ -190,6 +208,10 @@ export default function ChatWidget() {
     setMessages((prev) => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
+    trackAssistantEvent('assistant_message_sent', {
+      source: isQuickReply ? 'quick_reply' : 'manual_or_voice',
+      prompt: messageText,
+    });
 
     try {
       // 🚀 API CALL către Claude AI
@@ -244,16 +266,19 @@ export default function ChatWidget() {
 
   // 🎯 HANDLE QUICK REPLY CLICK
   const handleQuickReply = (reply: string) => {
+    trackAssistantEvent('assistant_quick_reply_clicked', { reply });
     handleSendMessage(reply, true);
   };
 
   const handleMicClick = () => {
     if (isListening) {
+      trackAssistantEvent('assistant_voice_stopped');
       stopListening();
       return;
     }
 
     resetTranscript();
+    trackAssistantEvent('assistant_voice_started');
     startListening();
     inputRef.current?.focus();
   };
@@ -397,6 +422,11 @@ export default function ChatWidget() {
             {isListening && (
               <p className="mb-2 px-1 text-xs text-[var(--primary)]">
                 Ascult... cand te opresti, mesajul se trimite automat.
+              </p>
+            )}
+            {!isListening && !speechRecognitionError && isSpeechRecognitionSupported && (
+              <p className="mb-1 px-1 text-xs text-gray-400 dark:text-gray-500">
+                Te pot ajuta cu: meniu, rezervari, program si locatie. Apasa microfonul pentru dictare.
               </p>
             )}
             <div className="flex gap-2 items-center">

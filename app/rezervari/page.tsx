@@ -286,10 +286,19 @@ export default function RezervariPage() {
           )}
 
           {/* Info compactă jos */}
-          <div className="mt-6 flex flex-wrap justify-center gap-6 text-sm text-gray-500">
-            <span>👥 Până la 20 persoane per rezervare</span>
-            <span>✅ Confirmare prin telefon sau email în 2 ore</span>
-            <span>❌ Anulare gratuită cu cel puțin 2 ore înainte</span>
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="rounded-2xl border border-gray-200 bg-white px-4 py-4 text-sm text-gray-600 text-center shadow-sm">
+              <p className="font-semibold text-gray-900 mb-1">Grupuri de pana la 20 persoane</p>
+              <p>Pentru grupuri mai mari, te ajutam rapid prin telefon sau WhatsApp.</p>
+            </div>
+            <div className="rounded-2xl border border-gray-200 bg-white px-4 py-4 text-sm text-gray-600 text-center shadow-sm">
+              <p className="font-semibold text-gray-900 mb-1">Confirmare in cel mult 2 ore</p>
+              <p>Primesti raspuns prin telefon sau email, in functie de preferinta ta.</p>
+            </div>
+            <div className="rounded-2xl border border-gray-200 bg-white px-4 py-4 text-sm text-gray-600 text-center shadow-sm">
+              <p className="font-semibold text-gray-900 mb-1">Anulare gratuita</p>
+              <p>Ne anunti cu minimum 2 ore inainte si reprogramam fara costuri.</p>
+            </div>
           </div>
 
         </div>

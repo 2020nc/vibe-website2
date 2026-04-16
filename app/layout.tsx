@@ -5,8 +5,6 @@ import Navigation from "@/components/Navigation";
 import ChatWidget from "@/components/ChatWidget";
 import FABContact from "@/components/FABContact";
 
-// 🎨 TIPOGRAFIE 100% SANS-SERIF - MODERN CLEAN
-// Plus Jakarta Sans - Sans-serif modern pentru TOATE titlurile (H1-H6)
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-heading",
   subsets: ["latin"],
@@ -20,7 +18,6 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-// Inter - Sans-serif curat pentru body text
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -28,30 +25,33 @@ const inter = Inter({
   display: "swap",
 });
 
-/**
- * 🔍 SEO METADATA
- * Pentru cursanți: Metadata = informații pentru Google și social media
- */
 export const metadata: Metadata = {
   metadataBase: new URL("https://vibe-website2.vercel.app"),
   title: {
-    default: "Vibe Caffè — Cafea de Specialitate în București",
-    template: "%s | Vibe Caffè",
+    default: "Vibe Caffe - Cafea de Specialitate in Bucuresti",
+    template: "%s | Vibe Caffe",
   },
-  description: "Cafea single-origin, brunch de weekend și un spațiu work-friendly în centrul Bucureștiului. Rezervă masa ta online.",
-  keywords: ["cafea specialitate", "cafenea bucuresti", "specialty coffee", "brunch bucuresti", "vibe caffe"],
-  authors: [{ name: "Vibe Caffè Team" }],
+  description:
+    "Cafea single-origin, brunch de weekend si un spatiu potrivit pentru lucru in centrul Bucurestiului. Rezerva masa ta online.",
+  keywords: [
+    "cafea specialitate",
+    "cafenea bucuresti",
+    "specialty coffee",
+    "brunch bucuresti",
+    "vibe caffe",
+  ],
+  authors: [{ name: "Vibe Caffe Team" }],
   openGraph: {
-    title: "Vibe Caffè — Cafea de Specialitate",
-    description: "Cafea single-origin și brunch în inima Bucureștiului.",
+    title: "Vibe Caffe - Cafea de Specialitate",
+    description: "Cafea single-origin si brunch in inima Bucurestiului.",
     url: "https://vibe-website2.vercel.app",
-    siteName: "Vibe Caffè",
+    siteName: "Vibe Caffe",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Interiorul Vibe Caffè",
+        alt: "Interiorul Vibe Caffe",
       },
     ],
     locale: "ro_RO",
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vibe Caffè — Cafea de Specialitate",
+    title: "Vibe Caffe - Cafea de Specialitate",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -68,9 +68,9 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
 };

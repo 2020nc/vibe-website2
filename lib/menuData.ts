@@ -19,7 +19,7 @@ export const menuData = {
     { name: 'Cold Drip', price: 26, description: 'Extracție la rece, 12 ore, aromă intensă', image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&auto=format&fit=crop' },
   ],
   'Cold Brew': [
-    { name: 'Cold Brew Classic', price: 18, description: 'Infuzie la rece 18 ore, smooth și fără aciditate. · Variante: clasic / lapte de ovăz · 300ml', image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&auto=format&fit=crop' },
+    { name: 'Cold Brew Classic', price: 18, description: 'Infuzie la rece 18 ore, gust catifelat și fără aciditate. · Variante: clasic / lapte de ovăz · 300ml', image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600&auto=format&fit=crop' },
     { name: 'Cold Brew Tonic', price: 22, description: 'Cold brew cu apă tonică și portocală proaspătă, răcoritor și ușor amărui. · Variante: clasic · 350ml', image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&auto=format&fit=crop' },
     { name: 'Nitro Cold Brew', price: 24, description: 'Cold brew cu azot, textură cremoasă și spumoasă fără lapte. · Variante: doar clasic · 250ml', image: 'https://images.unsplash.com/photo-1592663527359-cf6642f54cff?w=600&auto=format&fit=crop' },
     { name: 'Iced Latte', price: 19, description: 'Espresso dublu cu lapte rece și gheață, echilibrat și răcoritor. · Variante: vacă / ovăz / migdale · 350ml', image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&auto=format&fit=crop' },

@@ -85,12 +85,12 @@ export default function Home() {
                 icon: '☕',
               },
               {
-                title: 'Spațiu work-friendly',
+                title: 'Spațiu de lucru',
                 desc: 'Wi-Fi stabil, prize la fiecare masă și o atmosferă care face munca mai plăcută. Potrivit pentru întâlniri și sesiuni de lucru.',
                 icon: '💻',
               },
               {
-                title: 'Weekend & deserturi',
+                title: 'Deserturi de weekend',
                 desc: 'Meniu special disponibil în fiecare weekend, cu ingrediente proaspete și deserturi de patiserie artizanală.',
                 icon: '🥐',
               },

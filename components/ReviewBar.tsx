@@ -1,15 +1,15 @@
 const reviews = [
   {
-    text: 'Cea mai bună cafea de specialitate pe care am găsit-o în centrul Bucureștiului.',
-    author: '— Andreea M., martie 2026',
+    text: "Cea mai buna cafea de specialitate pe care am gasit-o in centrul Bucurestiului.",
+    author: "- Andreea M., martie 2026",
   },
   {
-    text: 'Brunch-ul de weekend e o revelație. Ouăle Benedict și cold brew-ul sunt combinația perfectă.',
-    author: '— Mihai T., februarie 2026',
+    text: "Brunch-ul de weekend e o revelatie. Ouale Benedict si cold brew-ul sunt combinatia perfecta.",
+    author: "- Mihai T., februarie 2026",
   },
   {
-    text: 'Atmosferă work-friendly perfectă. WiFi stabil, prize la fiecare masă și cafea excelentă.',
-    author: '— Raluca D., martie 2026',
+    text: "Atmosfera potrivita pentru lucru. WiFi stabil, prize la fiecare masa si cafea excelenta.",
+    author: "- Raluca D., martie 2026",
   },
 ];
 
@@ -17,15 +17,18 @@ export default function ReviewBar() {
   return (
     <section className="bg-slate-50 dark:bg-slate-900 py-12 px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Rating agregat */}
         <div className="text-center mb-10">
-          <p className="text-4xl font-bold" style={{ color: 'var(--primary, #14B8A6)' }}>
-            ⭐ <span data-rating>4.9</span> / 5
+          <p
+            className="text-4xl font-bold"
+            style={{ color: "var(--primary, #14B8A6)" }}
+          >
+            <span aria-hidden="true">★</span> <span data-rating>4.9</span> / 5
           </p>
-          <p className="text-sm text-slate-500 mt-1">bazat pe <span data-reviews>340+</span> recenzii Google</p>
+          <p className="text-sm text-slate-500 mt-1">
+            bazat pe <span data-reviews>340+</span> recenzii Google
+          </p>
         </div>
 
-        {/* Review snippets */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {reviews.map((review, i) => (
             <div

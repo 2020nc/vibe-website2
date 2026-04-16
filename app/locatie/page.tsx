@@ -131,26 +131,29 @@ export default function LocatiePage() {
                 </div>
 
                 {/* CTA-uri grupate */}
-                <div className="flex flex-col gap-3 pt-2">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
                   <a
                     href="https://maps.google.com/?q=Bld.+Regina+Elisabeta+30+Bucuresti"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-3 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-full text-center transition-all duration-300 hover:scale-105"
+                    className="w-full px-4 py-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-2xl text-center transition-all duration-300 hover:scale-[1.02] shadow-sm"
                   >
-                    Deschide în Google Maps
+                    <span className="block text-sm font-bold">Google Maps</span>
+                    <span className="block text-xs text-white/80 mt-1">Traseu rapid pana la cafenea</span>
                   </a>
                   <a
                     href="tel:+40721234567"
-                    className="w-full py-3 bg-gray-900 hover:bg-gray-700 text-white font-semibold rounded-full text-center transition-all duration-300 hover:scale-105"
+                    className="w-full px-4 py-4 bg-gray-900 hover:bg-gray-700 text-white font-semibold rounded-2xl text-center transition-all duration-300 hover:scale-[1.02] shadow-sm"
                   >
-                    Sună acum
+                    <span className="block text-sm font-bold">Suna acum</span>
+                    <span className="block text-xs text-white/70 mt-1">Confirmi rapid o masa sau o intrebare</span>
                   </a>
                   <Link
                     href="/rezervari"
-                    className="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-full text-center transition-all duration-300 hover:scale-105"
+                    className="w-full px-4 py-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-2xl text-center transition-all duration-300 hover:scale-[1.02] shadow-sm"
                   >
-                    Rezervă masă
+                    <span className="block text-sm font-bold">Rezerva masa</span>
+                    <span className="block text-xs text-white/80 mt-1">Ideal pentru weekend si grupuri</span>
                   </Link>
                 </div>
 
@@ -172,12 +175,12 @@ export default function LocatiePage() {
 
                 <div>
                   <h3 className="text-xl font-semibold text-primary mb-2">Facilități</h3>
-                  <div className="flex flex-col gap-2">
-                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">📶 WiFi Gratuit</span>
-                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">🔌 Prize la fiecare masă</span>
-                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">♿ Acces persoane cu dizabilități</span>
-                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">🅿️ Parcare gratuită</span>
-                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">🐕 Pet-friendly</span>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">WiFi gratuit</span>
+                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">Prize la fiecare masa</span>
+                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">Acces facil</span>
+                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">Parcare in apropiere</span>
+                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">Pet-friendly</span>
                   </div>
                 </div>
               </div>

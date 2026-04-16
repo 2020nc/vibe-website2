@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-import Navigation from '@/components/Navigation';
 import FooterStarter from '@/components/FooterStarter';
 
 export const metadata = {
@@ -107,8 +106,6 @@ export default async function SarbatoriPage() {
 
   return (
     <>
-      <Navigation />
-
       <main className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-20">
 
         {/* HERO */}
