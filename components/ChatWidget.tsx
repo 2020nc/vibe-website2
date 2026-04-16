@@ -127,10 +127,12 @@ export default function ChatWidget() {
     transcript,
   } = useSpeechRecognition();
   const [speakingId, setSpeakingId] = useState<string | null>(null);
+  const [pausedSpeech, setPausedSpeech] = useState<{ id: string; text: string } | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const wasListeningRef = useRef(false);
+  const pausedSpeakRef = useRef<{ id: string; text: string } | null>(null);
 
   // 🔊 HANDLE TEXT-TO-SPEECH
   const handleSpeak = (messageId: string, text: string) => {
@@ -147,6 +149,20 @@ export default function ChatWidget() {
   useEffect(() => {
     if (!isSpeaking) setSpeakingId(null);
   }, [isSpeaking]);
+
+  // ⏸️ Oprește la închidere, evidențiază butonul la redeschidere
+  useEffect(() => {
+    if (!isOpen && isSpeaking && speakingId) {
+      const msg = messages.find(m => m.id === speakingId);
+      if (msg) {
+        pausedSpeakRef.current = { id: msg.id, text: msg.text };
+        setPausedSpeech({ id: msg.id, text: msg.text });
+      }
+      stop();
+      setSpeakingId(null);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   useEffect(() => {
     if (!transcript) return;
@@ -298,7 +314,7 @@ export default function ChatWidget() {
         <div className="
           mb-4 flex flex-col overflow-hidden shadow-2xl
           fixed inset-0 rounded-none
-          sm:relative sm:inset-auto sm:w-[380px] sm:h-[600px] sm:rounded-2xl
+          sm:relative sm:inset-auto sm:w-[380px] sm:max-h-[min(600px,calc(100vh-90px))] sm:h-auto sm:rounded-2xl
           bg-white dark:bg-gray-900
           border border-gray-100 dark:border-gray-700
         ">
@@ -354,31 +370,6 @@ export default function ChatWidget() {
                     </div>
                   </div>
 
-                  {/* BUTON ASCULTĂ — doar pentru mesajele bot, dacă browserul suportă TTS */}
-                  {message.sender === 'bot' && isSupported && (
-                    <div className="flex justify-start mt-1 ml-1">
-                      <button
-                        onClick={() => handleSpeak(message.id, message.text)}
-                        title={speakingId === message.id && isSpeaking ? 'Oprește' : 'Ascultă'}
-                        className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs transition-all duration-200 ${
-                          speakingId === message.id && isSpeaking
-                            ? 'bg-[var(--primary)] text-white'
-                            : 'text-gray-400 hover:text-[var(--primary)] hover:bg-gray-100 dark:hover:bg-gray-700'
-                        }`}
-                      >
-                        {speakingId === message.id && isSpeaking ? (
-                          <svg className="w-3.5 h-3.5 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
-                          </svg>
-                        ) : (
-                          <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-                          </svg>
-                        )}
-                        <span>{speakingId === message.id && isSpeaking ? 'Stop' : 'Ascultă'}</span>
-                      </button>
-                    </div>
-                  )}
 
                   {/* QUICK REPLIES — doar ultimul mesaj bot, doar dacă userul n-a scris manual */}
                   {showReplies && (
@@ -416,6 +407,42 @@ export default function ChatWidget() {
 
           {/* INPUT CONTAINER */}
           <div className="p-3 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-700 shrink-0">
+            {/* BUTON ASCULTĂ STICKY — ultimul mesaj bot, mereu vizibil */}
+            {isSupported && (() => {
+              const lastBot = [...messages].reverse().find(m => m.sender === 'bot');
+              if (!lastBot) return null;
+              const active = speakingId === lastBot.id && isSpeaking;
+              const wasPaused = !active && pausedSpeech?.id === lastBot.id;
+              return (
+                <div className="flex justify-start mb-2">
+                  <button
+                    onClick={() => {
+                      if (wasPaused) setPausedSpeech(null);
+                      handleSpeak(lastBot.id, lastBot.text);
+                    }}
+                    title={active ? 'Oprește' : wasPaused ? 'Ascultă din nou de la început' : 'Ascultă ultimul răspuns'}
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
+                      active
+                        ? 'bg-[var(--primary)] text-white'
+                        : wasPaused
+                          ? 'bg-[var(--secondary)] text-white animate-pulse'
+                          : 'text-gray-400 hover:text-[var(--primary)] hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600'
+                    }`}
+                  >
+                    {active ? (
+                      <svg className="w-3.5 h-3.5 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                      </svg>
+                    ) : (
+                      <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                      </svg>
+                    )}
+                    <span>{active ? 'Stop' : wasPaused ? '▶ Ascultă din nou' : 'Ascultă'}</span>
+                  </button>
+                </div>
+              );
+            })()}
             {speechRecognitionError && (
               <p className="mb-2 px-1 text-xs text-red-500">{speechRecognitionError}</p>
             )}
@@ -425,8 +452,8 @@ export default function ChatWidget() {
               </p>
             )}
             {!isListening && !speechRecognitionError && isSpeechRecognitionSupported && (
-              <p className="mb-1 px-1 text-xs text-gray-400 dark:text-gray-500">
-                Te pot ajuta cu: meniu, rezervari, program si locatie. Apasa microfonul pentru dictare.
+              <p className="mb-2 px-2.5 py-1 rounded-full text-[10px] font-medium text-[var(--primary-dark)] bg-[var(--primary)]/10 border border-[var(--primary)]/20 whitespace-nowrap overflow-hidden text-ellipsis">
+                🎤 Meniu · Rezervări · Program · Locație
               </p>
             )}
             <div className="flex gap-2 items-center">
