@@ -88,8 +88,28 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const themeInitScript = `
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var dark = saved === 'dark';
+        var root = document.documentElement;
+        if (dark) {
+          root.setAttribute('data-theme', 'dark');
+          root.classList.add('dark');
+        } else {
+          root.removeAttribute('data-theme');
+          root.classList.remove('dark');
+        }
+      } catch (e) {}
+    })();
+  `;
+
   return (
     <html lang="ro">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body
         className={`${plusJakarta.variable} ${inter.variable} ${playfair.variable} antialiased`}
       >

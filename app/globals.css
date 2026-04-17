@@ -63,6 +63,12 @@ html {
   /* Background & Text - Light Mode */
   --background: #FAFAFA;
   --foreground: #1F2937;
+  --surface-page: #FAFAFA;
+  --surface-card: #FFFFFF;
+  --surface-muted: #F9FAFB;
+  --text-main: #111827;
+  --text-muted: #4B5563;
+  --border-subtle: #E5E7EB;
 
   /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.85);
@@ -70,33 +76,64 @@ html {
 }
 
 /* 🌙 DARK MODE */
-[data-theme='dark'] {
+:is([data-theme='dark'], .dark) {
   --background: #1A0D05;
   --foreground: #FDF0E0;
+  --surface-page: #1A0D05;
+  --surface-card: #2D1A0A;
+  --surface-muted: #241308;
+  --text-main: #FDF0E0;
+  --text-muted: #F0D9B5;
+  --border-subtle: #5A3A22;
   --glass-bg: rgba(45, 26, 10, 0.88);
   --glass-border: rgba(249, 115, 22, 0.15);
 }
 
-[data-theme='dark'] body {
+:is([data-theme='dark'], .dark) body {
   background: linear-gradient(135deg, #1A0D05 0%, #0D0702 100%);
   color: var(--foreground);
 }
 
-[data-theme='dark'] .bg-white {
+:is([data-theme='dark'], .dark) .bg-white,
+:is([data-theme='dark'], .dark) .bg-gray-50,
+:is([data-theme='dark'], .dark) .bg-gray-100,
+:is([data-theme='dark'], .dark) .bg-white\/95,
+:is([data-theme='dark'], .dark) .bg-white\/90,
+:is([data-theme='dark'], .dark) .bg-white\/80,
+:is([data-theme='dark'], .dark) .bg-gray-50\/95,
+:is([data-theme='dark'], .dark) .bg-gray-50\/90,
+:is([data-theme='dark'], .dark) .bg-gray-50\/80 {
   background-color: #2D1A0A !important;
 }
 
-[data-theme='dark'] .text-gray-900 {
+:is([data-theme='dark'], .dark) .border-gray-50,
+:is([data-theme='dark'], .dark) .border-gray-100,
+:is([data-theme='dark'], .dark) .border-gray-200,
+:is([data-theme='dark'], .dark) .border-gray-300 {
+  border-color: #5A3A22 !important;
+}
+
+:is([data-theme='dark'], .dark) .text-gray-900 {
   color: #FDF0E0 !important;
 }
 
-[data-theme='dark'] .text-gray-700 {
+:is([data-theme='dark'], .dark) .text-gray-800,
+:is([data-theme='dark'], .dark) .text-gray-700 {
   color: #F0D9B5 !important;
 }
 
-[data-theme='dark'] .text-gray-600 {
+:is([data-theme='dark'], .dark) .text-gray-600,
+:is([data-theme='dark'], .dark) .text-gray-500,
+:is([data-theme='dark'], .dark) .text-gray-400 {
   color: #C8A882 !important;
 }
+
+.surface-page { background-color: var(--surface-page); }
+.surface-card { background-color: var(--surface-card); }
+.surface-muted { background-color: var(--surface-muted); }
+.text-main { color: var(--text-main); }
+.text-muted { color: var(--text-muted); }
+.border-subtle { border-color: var(--border-subtle); }
 
 @theme inline {
   --color-primary: var(--primary);

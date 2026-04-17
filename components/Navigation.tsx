@@ -1,5 +1,5 @@
-/**
- * 🧭 NAVIGATION - Sticky navigation cu blur effect
+﻿/**
+ * NAVIGATION - Sticky navigation cu blur effect
  * MODERN: Position fixed, backdrop-filter blur, shrink on scroll
  */
 
@@ -32,25 +32,31 @@ export default function Navigation() {
       const el = document.getElementById(id);
       if (!el) return;
       const obs = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
+        ([entry]) => {
+          if (entry.isIntersecting) setActiveSection(id);
+        },
         { threshold: 0.1, rootMargin: '-60px 0px -40% 0px' }
       );
       obs.observe(el);
       observers.push(obs);
     });
+
     return () => observers.forEach((o) => o.disconnect());
   }, [isAdminRoute]);
 
   if (isAdminRoute) return null;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 py-4 transition-all duration-300" style={{ backgroundColor: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(12px)', boxShadow: '0 1px 8px rgba(0,0,0,0.08)' }}>
+    <nav className="fixed top-0 left-0 right-0 z-50 py-4 transition-all duration-300 bg-white/95 dark:bg-[#1A120C]/95 backdrop-blur-md shadow-sm border-b border-gray-100 dark:border-[#5A3A22]">
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <svg className={`transition-all duration-300 ${
-            isScrolled ? 'w-8 h-8' : 'w-10 h-10'
-          } text-primary`} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+          <svg
+            className={`transition-all duration-300 ${isScrolled ? 'w-8 h-8' : 'w-10 h-10'} text-primary`}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            viewBox="0 0 24 24"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5a8.25 8.25 0 0 0 15 0" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5h1.875A1.125 1.125 0 0 1 22.5 11.625v0a3.375 3.375 0 0 1-3.375 3.375H19.5" />
@@ -59,39 +65,33 @@ export default function Navigation() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 18v3" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 18v3" />
           </svg>
-          <span className="font-bold text-xl transition-all duration-300" style={{ color: '#111827', fontFamily: 'var(--font-playfair)' }}
+          <span
+            className="font-bold text-xl transition-all duration-300 text-gray-900 dark:text-gray-100"
+            style={{ fontFamily: 'var(--font-playfair)' }}
           >
             Vibe Caffè
           </span>
         </Link>
 
-        {/* Menu Links */}
-        <div className="hidden md:flex items-center gap-6">
-          <Link
-            href="/meniu"
-            className="font-semibold transition-all duration-200 px-3 py-1.5 rounded-full hover:text-primary"
-            style={{ color: '#111827' }}
-          >
+        <div className="hidden md:flex items-center gap-6 text-gray-900 dark:text-gray-100">
+          <Link href="/meniu" className="font-semibold transition-all duration-200 px-3 py-1.5 rounded-full hover:text-primary">
             Meniu
           </Link>
+
           <Link
             href="/#de-ce-vibe"
             className={`font-semibold transition-all duration-200 px-3 py-1.5 rounded-full ${
               activeSection === 'de-ce-vibe' ? 'bg-primary text-white shadow-sm' : 'hover:text-primary'
             }`}
-            style={{ color: activeSection === 'de-ce-vibe' ? undefined : '#111827' }}
+            style={{ color: activeSection === 'de-ce-vibe' ? undefined : 'inherit' }}
           >
             De ce Vibe?
           </Link>
-          <Link
-            href="/locatie"
-            className="font-semibold transition-all duration-200 px-3 py-1.5 rounded-full hover:text-primary"
-            style={{ color: '#111827' }}
-          >
+
+          <Link href="/locatie" className="font-semibold transition-all duration-200 px-3 py-1.5 rounded-full hover:text-primary">
             Locație
           </Link>
 
-          {/* DARK MODE TOGGLE */}
           <ThemeToggle />
 
           <div className="flex flex-col items-center gap-1">
@@ -101,15 +101,27 @@ export default function Navigation() {
             >
               Rezervă Masă
             </Link>
+
             <div className="flex gap-2">
-              <a href="tel:+40721234567" className="text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-200 text-orange-900 hover:bg-orange-300 transition-colors">📞 Sună</a>
-              <a href="https://wa.me/40721234567" target="_blank" rel="noopener noreferrer" className="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-700 hover:bg-green-200 transition-colors">💬 WhatsApp</a>
+              <a
+                href="tel:+40721234567"
+                className="text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-200 text-orange-900 hover:bg-orange-300 transition-colors"
+              >
+                Sună
+              </a>
+              <a
+                href="https://wa.me/40721234567"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-700 hover:bg-green-200 transition-colors"
+              >
+                WhatsApp
+              </a>
             </div>
           </div>
         </div>
 
-        {/* Mobile Menu Button */}
-        <button type="button" aria-label="Deschide meniul de navigare" className="md:hidden text-gray-900">
+        <button type="button" aria-label="Deschide meniul de navigare" className="md:hidden text-gray-900 dark:text-gray-100">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
