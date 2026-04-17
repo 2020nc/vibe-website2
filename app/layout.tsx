@@ -2,29 +2,31 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
-import ChatWidget from "@/components/ChatWidget";
+import DeferredChatWidget from "@/components/DeferredChatWidget";
 import FABContact from "@/components/FABContact";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-heading",
-  subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
+  subsets: ["latin", "latin-ext"],
+  weight: ["600", "700", "800"],
   display: "swap",
-  preload: false,
+  preload: true,
 });
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   weight: ["700"],
   display: "swap",
+  preload: true,
 });
 
 const inter = Inter({
   variable: "--font-inter",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   weight: ["400", "600", "700"],
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -115,7 +117,7 @@ export default function RootLayout({
       >
         <Navigation />
         {children}
-        <ChatWidget />
+        <DeferredChatWidget />
         <FABContact />
       </body>
     </html>

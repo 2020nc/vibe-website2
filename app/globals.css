@@ -55,8 +55,8 @@ html {
 
 :root {
   /* Culori principale */
-  --primary: #14B8A6;
-  --primary-dark: #0D9488;
+  --primary: #0F766E;
+  --primary-dark: #115E59;
   --secondary: #F97316;
   --secondary-dark: #EA580C;
 
@@ -411,12 +411,17 @@ html.lenis-smooth {
 
 /* Animații scroll — Intersection Observer */
 .animate-on-scroll {
+  opacity: 1;
+  transform: none;
+}
+
+.scroll-animations-ready .animate-on-scroll {
   opacity: 0;
   transform: translateY(28px);
-  transition: opacity 0.65s ease,
-              transform 0.65s ease;
+  transition: opacity 0.65s ease, transform 0.65s ease;
 }
-.animate-on-scroll.visible {
+
+.scroll-animations-ready .animate-on-scroll.visible {
   opacity: 1;
   transform: translateY(0);
 }

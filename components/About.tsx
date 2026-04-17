@@ -1,102 +1,133 @@
 /**
- * 📖 ABOUT SECTION - Cu scroll animations
- * MODERNIZAT: Intersection Observer + Parallax effect
+ * ABOUT SECTION - Cu scroll animations
+ * MODERNIZAT: Intersection Observer + parallax optimizat
  */
 
 'use client';
 
+import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
 import { useScrollAnimation } from '@/lib/hooks/useScrollAnimation';
-import { useEffect, useState } from 'react';
 
 export default function About() {
   const { elementRef, isVisible } = useScrollAnimation(0.2);
-  const [parallaxOffset, setParallaxOffset] = useState(0);
+  const [hasImageError, setHasImageError] = useState(false);
+  const imageFrameRef = useRef<HTMLDivElement>(null);
 
-  // Efect parallax pe imagine - compatibil cu Lenis smooth scroll
+  // Parallax-ul ruleaza doar pe desktop si actualizeaza direct transform-ul.
   useEffect(() => {
-    let rafId: number;
+    const frame = imageFrameRef.current;
+    if (!frame) return;
 
-    const handleParallax = () => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let rafId = 0;
+    let ticking = false;
+
+    const applyParallax = () => {
+      ticking = false;
+
       const element = elementRef.current;
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        const scrollProgress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
-        const offset = scrollProgress * 100 - 50; // Parallax range: -50px to +50px
-        setParallaxOffset(offset);
+      const isMobile = window.innerWidth < 768;
+
+      if (!element || isMobile || prefersReducedMotion.matches) {
+        frame.style.transform = 'translate3d(0, 0, 0)';
+        return;
       }
-      rafId = requestAnimationFrame(handleParallax);
+
+      const rect = element.getBoundingClientRect();
+      const scrollProgress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+      const clampedProgress = Math.min(Math.max(scrollProgress, 0), 1);
+      const offset = clampedProgress * 36 - 18;
+
+      frame.style.transform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
     };
 
-    rafId = requestAnimationFrame(handleParallax);
-    return () => cancelAnimationFrame(rafId);
+    const requestParallax = () => {
+      if (ticking) return;
+      ticking = true;
+      rafId = window.requestAnimationFrame(applyParallax);
+    };
+
+    applyParallax();
+    window.addEventListener('scroll', requestParallax, { passive: true });
+    window.addEventListener('resize', requestParallax);
+    prefersReducedMotion.addEventListener('change', requestParallax);
+
+    return () => {
+      window.removeEventListener('scroll', requestParallax);
+      window.removeEventListener('resize', requestParallax);
+      prefersReducedMotion.removeEventListener('change', requestParallax);
+      window.cancelAnimationFrame(rafId);
+      frame.style.transform = 'translate3d(0, 0, 0)';
+    };
   }, [elementRef]);
 
   return (
-    <section className="py-20 px-6 bg-white/50" ref={elementRef}>
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          {/* IMAGINE - Slide in from left + Parallax */}
+    <section className="bg-white/50 px-6 py-20" ref={elementRef}>
+      <div className="mx-auto max-w-7xl">
+        <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
           <div
-            className={`order-2 md:order-1 transition-all duration-1000 ${
-              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'
+            className={`order-2 transition-all duration-1000 md:order-1 ${
+              isVisible ? 'translate-x-0 opacity-100' : '-translate-x-12 opacity-0'
             }`}
           >
-            <div className="rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-shadow duration-500">
-              <img
-                src="https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800&auto=format&fit=crop"
-                alt="Interior cafenea modern și primitor"
-                className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700"
-                style={{
-                  transform: `translateY(${parallaxOffset}px)`,
-                  transition: 'transform 0.1s ease-out'
-                }}
-                onError={(e) => {
-                  const img = e.target as HTMLImageElement;
-                  img.style.display = 'none';
-                  const parent = img.parentElement;
-                  if (parent) {
-                    parent.style.cssText += 'display:flex;align-items:center;justify-content:center;min-height:400px;background:linear-gradient(135deg,#fef3c7,#fed7aa)';
-                    parent.innerHTML = '<span style="font-size:5rem">☕</span>';
-                  }
-                }}
-              />
+            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-gradient-to-br from-amber-100 via-orange-50 to-amber-200 shadow-2xl transition-shadow duration-500 hover:shadow-3xl">
+              {hasImageError ? (
+                <div className="flex h-full items-center justify-center bg-gradient-to-br from-amber-100 to-orange-200">
+                  <span className="text-7xl" aria-hidden="true">
+                    ☕
+                  </span>
+                </div>
+              ) : (
+                <div
+                  ref={imageFrameRef}
+                  className="h-full w-full transition-transform duration-700 will-change-transform"
+                >
+                  <Image
+                    src="https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop"
+                    alt="Interior cafenea modern si primitor"
+                    width={800}
+                    height={600}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    quality={72}
+                    className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                    onError={() => setHasImageError(true)}
+                  />
+                </div>
+              )}
             </div>
           </div>
 
-          {/* TEXT - Slide in from right */}
           <div
-            className={`order-1 md:order-2 transition-all duration-1000 delay-200 ${
-              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'
+            className={`order-1 transition-all duration-1000 delay-200 md:order-2 ${
+              isVisible ? 'translate-x-0 opacity-100' : 'translate-x-12 opacity-0'
             }`}
           >
-            <div className="inline-block px-4 py-2 bg-secondary/10 text-secondary font-semibold rounded-full mb-4">
+            <div className="mb-4 inline-block rounded-full bg-secondary/10 px-4 py-2 font-semibold text-secondary">
               Despre Noi
             </div>
 
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-              Pasiunea pentru cafea,{' '}
-              <span className="text-primary">din 2020</span>
+            <h2 className="mb-6 text-4xl leading-tight font-bold text-foreground md:text-5xl">
+              Pasiunea pentru cafea, <span className="text-primary">din 2020</span>
             </h2>
 
-            <p className="text-lg text-gray-700 mb-4 leading-relaxed">
-              Am deschis Vibe Caffè cu o singură regulă: nicio ceașcă nu pleacă
-              la masă dacă nu am fi bucuroși s-o bem noi înșine. De atunci,
-              Andreea M. ne-a dat 5 stele de 3 ori, Mihai T. vine în fiecare
-              dimineață de marți și Raluca D. și-a scris teza de doctorat la
-              masa din colțul din dreapta.
+            <p className="mb-4 text-lg leading-relaxed text-gray-700">
+              Am deschis Vibe Caffe cu o singura regula: nicio ceasca nu pleaca la masa daca nu
+              am fi bucurosi s-o bem noi insine. De atunci, Andreea M. ne-a dat 5 stele de 3 ori,
+              Mihai T. vine in fiecare dimineata de marti si Raluca D. si-a scris teza de doctorat
+              la masa din coltul din dreapta.
             </p>
 
-            <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Colaborăm direct cu plantații din America de Sud și Africa,
-              selectând doar cele mai bune boabe, prăjite săptămânal în micul
-              nostru atelier din București.
+            <p className="mb-8 text-lg leading-relaxed text-gray-700">
+              Colaboram direct cu plantatii din America de Sud si Africa, selectand doar cele mai
+              bune boabe, prajite saptamanal in micul nostru atelier din Bucuresti.
             </p>
 
             <a
               href="/rezervari"
-              className="inline-block px-8 py-4 bg-primary hover:bg-primary-dark text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-xl"
+              className="inline-block rounded-full bg-primary px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-primary-dark hover:shadow-xl"
             >
-              Programează o Vizită
+              Programeaza o Vizita
             </a>
           </div>
         </div>

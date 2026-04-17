@@ -5,7 +5,6 @@ export const dynamic = 'force-dynamic';
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { getSupabase } from '@/lib/supabase';
-import * as XLSX from 'xlsx';
 
 /* ─── TYPES ───────────────────────────────────────────────── */
 type Status = 'în așteptare' | 'confirmat' | 'respins';
@@ -44,8 +43,20 @@ interface HolidayConfig {
   label: string;
 }
 
+type XlsxModule = typeof import('xlsx');
+
+let xlsxModulePromise: Promise<XlsxModule> | null = null;
+
+function loadXlsx() {
+  if (!xlsxModulePromise) {
+    xlsxModulePromise = import('xlsx');
+  }
+  return xlsxModulePromise;
+}
+
 /* ─── EXPORT ──────────────────────────────────────────────── */
-function exportExcel(items: MenuItem[]) {
+async function exportExcel(items: MenuItem[]) {
+  const XLSX = await loadXlsx();
   const rows = items.map((item) => ({
     'Nume':        item.name,
     'Categorie':   item.category,
@@ -136,7 +147,8 @@ function calcHolidayPrice(price: number, cfg: HolidayConfig): number {
   return Math.round((price - cfg.discount_amount) * 100) / 100;
 }
 
-function exportHolidayExcel(items: MenuItem[], cfg: HolidayConfig) {
+async function exportHolidayExcel(items: MenuItem[], cfg: HolidayConfig) {
+  const XLSX = await loadXlsx();
   const badge = cfg.discount_type === 'percent' ? `-${cfg.discount_amount}%` : `-${cfg.discount_amount} RON`;
   const rows = items.map((item) => ({
     'Nume':              item.name,
@@ -243,7 +255,8 @@ function buildAnaliza(rezervari: Rezervare[]) {
   return { ziRows, oraRows };
 }
 
-function exportRezervariExcel(rezervari: Rezervare[]) {
+async function exportRezervariExcel(rezervari: Rezervare[]) {
+  const XLSX = await loadXlsx();
   const wb = XLSX.utils.book_new();
 
   // Foaia 1 — Date brute
@@ -1094,7 +1107,7 @@ export default function AdminPage() {
               </div>
               <div className="flex flex-wrap gap-3">
                 <button
-                  onClick={() => exportRezervariExcel(rezervari)}
+                  onClick={() => { void exportRezervariExcel(rezervari); }}
                   disabled={rezervari.length === 0}
                   className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 >
@@ -1328,7 +1341,7 @@ export default function AdminPage() {
               </div>
               <div className="flex gap-2 flex-wrap">
                 <button
-                  onClick={() => exportExcel(filteredItems)}
+                  onClick={() => { void exportExcel(filteredItems); }}
                   className="px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-xl transition-all shadow-sm"
                 >
                   Excel
@@ -1679,7 +1692,7 @@ export default function AdminPage() {
                   </span>
                 </p>
                 <div className="flex gap-2">
-                  <button onClick={() => exportHolidayExcel(hVisible, holidayCfg)}
+                  <button onClick={() => { void exportHolidayExcel(hVisible, holidayCfg); }}
                     className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold text-sm rounded-xl transition-all">
                     Excel
                   </button>

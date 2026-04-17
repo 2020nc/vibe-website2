@@ -100,6 +100,7 @@ function trackAssistantEvent(eventName: string, details: Record<string, unknown>
 }
 
 export default function ChatWidget() {
+  const chatPanelId = 'chat-widget-panel';
   // 📊 STATE MANAGEMENT
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -311,13 +312,19 @@ export default function ChatWidget() {
     <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
       {/* 💬 CHAT WINDOW */}
       {isOpen && (
-        <div className="
+        <div
+          id={chatPanelId}
+          role="dialog"
+          aria-modal="false"
+          aria-label="Asistentul virtual Vibe"
+          className="
           mb-4 flex flex-col overflow-hidden shadow-2xl
           fixed inset-0 rounded-none
           sm:relative sm:inset-auto sm:w-[380px] sm:max-h-[min(600px,calc(100vh-90px))] sm:h-auto sm:rounded-2xl
           bg-white dark:bg-gray-900
           border border-gray-100 dark:border-gray-700
-        ">
+        "
+        >
           {/* HEADER — gradient primar + font Plus Jakarta Sans */}
           <div className="bg-gradient-to-r from-[var(--primary)] to-[var(--primary-dark)] text-white px-5 py-4 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-3">
@@ -336,6 +343,7 @@ export default function ChatWidget() {
             </div>
             <button
               onClick={() => setIsOpen(false)}
+              aria-label="Inchide chatul"
               className="text-white/80 hover:text-white transition-colors p-1 rounded-full hover:bg-white/10"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -500,6 +508,9 @@ export default function ChatWidget() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
+          aria-label="Deschide asistentul virtual Vibe"
+          aria-expanded={isOpen}
+          aria-controls={chatPanelId}
           className="w-14 h-14 bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] text-white rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center animate-pulse"
         >
           <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">

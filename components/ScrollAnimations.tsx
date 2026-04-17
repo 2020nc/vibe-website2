@@ -18,6 +18,27 @@ export default function ScrollAnimations() {
   const animatedRef = useRef(false); // flag anti re-animare
 
   useEffect(() => {
+    const root = document.documentElement;
+    const elements = Array.from(document.querySelectorAll<HTMLElement>('.animate-on-scroll'));
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    if (elements.length === 0) {
+      return;
+    }
+
+    const revealAll = () => {
+      elements.forEach((element) => element.classList.add('visible'));
+    };
+
+    root.classList.add('scroll-animations-ready');
+
+    if (prefersReducedMotion.matches) {
+      revealAll();
+      return () => {
+        root.classList.remove('scroll-animations-ready');
+      };
+    }
+
     // --- Modificarea 8: scroll animations ---
     const observer = new IntersectionObserver(
       (entries) => {
@@ -30,7 +51,6 @@ export default function ScrollAnimations() {
       { threshold: 0.15 }
     );
 
-    const elements = document.querySelectorAll('.animate-on-scroll');
     elements.forEach((el) => observer.observe(el));
 
     // --- Modificarea 9: contor animat ---
@@ -86,6 +106,7 @@ export default function ScrollAnimations() {
     }
 
     return () => {
+      root.classList.remove('scroll-animations-ready');
       observer.disconnect();
       counterObserver.disconnect();
     };
