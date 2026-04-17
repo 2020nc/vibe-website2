@@ -1,14 +1,14 @@
 const reviews = [
   {
-    text: "Cea mai buna cafea de specialitate pe care am gasit-o in centrul Bucurestiului.",
+    text: "Cea mai bună cafea de specialitate pe care am găsit-o în centrul Bucureștiului.",
     author: "- Andreea M., martie 2026",
   },
   {
-    text: "Brunch-ul de weekend e o revelatie. Ouale Benedict si cold brew-ul sunt combinatia perfecta.",
+    text: "Brunch-ul de weekend e o revelație. Ouăle Benedict și cold brew-ul sunt combinația perfectă.",
     author: "- Mihai T., februarie 2026",
   },
   {
-    text: "Atmosfera potrivita pentru lucru. WiFi stabil, prize la fiecare masa si cafea excelenta.",
+    text: "Atmosfera potrivită pentru lucru. WiFi stabil, prize la fiecare masă și cafea excelentă.",
     author: "- Raluca D., martie 2026",
   },
 ];

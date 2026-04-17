@@ -17,17 +17,17 @@ function getAnthropic() {
 const SYSTEM_PROMPT = `${KNOWLEDGE_BASE}
 
 == STIL DE LIMBA ==
-- Scrie exclusiv in romana naturala.
-- Nu folosi formule sau interjectii in engleza precum: Hey, Hi, Hello, Okay, Wow.
-- Nu folosi emoji in raspunsuri.
-- Respecta punctuatia naturala a frazelor si nu adauga cuvinte decorative inutile.
+- Scrie exclusiv în română naturală.
+- Nu folosi formule sau interjecții în engleză precum: Hey, Hi, Hello, Okay, Wow.
+- Nu folosi emoji în răspunsuri.
+- Respectă punctuația naturală a frazelor și nu adăuga cuvinte decorative inutile.
 `;
 
 function generateQuickReplies(userMessage: string, botResponse: string): string[] {
   const lower = (userMessage + ' ' + botResponse).toLowerCase();
 
   if (lower.includes('rezerv') || lower.includes('masa')) {
-    return ['Cate persoane?', 'Deschide formularul', 'Vad meniul'];
+    return ['Câte persoane?', 'Deschide formularul', 'Văd meniul'];
   }
   if (lower.includes('vegan') || lower.includes('plant')) {
     return ['Oat Milk Latte', 'Almond Cappuccino', 'Cold Brew', 'Tot meniul'];
@@ -45,10 +45,10 @@ function generateQuickReplies(userMessage: string, botResponse: string): string[
     return ['Espresso', 'Vegan', 'Cold', 'Patiserie'];
   }
   if (lower.includes('program') || lower.includes('unde') || lower.includes('adres')) {
-    return ['Fac o rezervare', 'Vad meniul', 'Pet-friendly?'];
+    return ['Fac o rezervare', 'Văd meniul', 'Pet-friendly?'];
   }
 
-  return ['Vreau cafea', 'Fac o rezervare', 'Vad meniul', 'Info locatie'];
+  return ['Vreau cafea', 'Fac o rezervare', 'Văd meniul', 'Info locație'];
 }
 
 export async function POST(request: NextRequest) {
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     const botResponse =
       response.content[0]?.type === 'text'
         ? response.content[0].text
-        : 'Scuze, nu am inteles. Poti repeta?';
+        : 'Scuze, nu am înțeles. Poți repeta?';
 
     const quickReplies = generateQuickReplies(trimmedMessage, botResponse);
 
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
 
     if (err?.status === 401) {
       return NextResponse.json(
-        { error: 'Invalid ANTHROPIC_API_KEY. Verifica .env.local' },
+        { error: 'Invalid ANTHROPIC_API_KEY. Verifică .env.local' },
         { status: 401 }
       );
     }
@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Anthropic request invalid',
-          details: err?.message || 'Verifica modelul si payload-ul trimis',
+          details: err?.message || 'Verifică modelul și payload-ul trimis',
         },
         { status: 400 }
       );

@@ -28,7 +28,7 @@ export default function AdminLogin() {
       router.push('/admin')
     } else {
       const { error: msg } = await res.json()
-      setError(msg ?? 'Email sau parola incorecta.')
+      setError(msg ?? 'Email sau parolă incorectă.')
     }
   }
 
@@ -52,7 +52,7 @@ export default function AdminLogin() {
         />
         <input
           type="password"
-          placeholder="Parola"
+          placeholder="Parolă"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -64,11 +64,11 @@ export default function AdminLogin() {
           disabled={loading}
           className="w-full py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-lg font-semibold transition"
         >
-          {loading ? 'Se verifica...' : 'Intra in admin'}
+          {loading ? 'Se verifică...' : 'Intră în admin'}
         </button>
         <p className="text-center">
           <Link href="/" className="text-gray-500 text-xs hover:text-gray-300">
-            Inapoi la site
+            Înapoi la site
           </Link>
         </p>
       </form>

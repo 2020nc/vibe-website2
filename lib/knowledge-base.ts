@@ -152,9 +152,9 @@ Rezervările se fac online la [Fă o rezervare](/rezervari), cu minimum ${cafeIn
 Când userul întreabă despre rezervări sau vrea să rezerve, include întotdeauna link-ul: [Fă o rezervare](/rezervari)
 
 == LINKURI LOCATIE ==
-Cand userul intreaba unde sunteti, cum ajunge, daca aveti harta sau cere locatia, include intotdeauna unul dintre linkurile:
-- [Vezi locatia](${cafeInfo.locatie.paginaLocatie})
-- [Deschide in Google Maps](${cafeInfo.locatie.googleMapsLink})
+Când userul întreabă unde sunteți, cum ajunge, dacă aveți hartă sau cere locația, include întotdeauna unul dintre linkurile:
+- [Vezi locația](${cafeInfo.locatie.paginaLocatie})
+- [Deschide în Google Maps](${cafeInfo.locatie.googleMapsLink})
 
 == MENIU ==
 Când userul cere meniul complet sau vrea să vadă toate produsele, include link-ul: [Vezi meniul complet](/meniu)

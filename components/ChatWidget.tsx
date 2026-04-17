@@ -448,7 +448,7 @@ export default function ChatWidget() {
             )}
             {isListening && (
               <p className="mb-2 px-1 text-xs text-[var(--primary)]">
-                Ascult... cand te opresti, mesajul se trimite automat.
+                Ascult... când te oprești, mesajul se trimite automat.
               </p>
             )}
             {!isListening && !speechRecognitionError && isSpeechRecognitionSupported && (

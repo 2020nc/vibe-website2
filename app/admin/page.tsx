@@ -101,7 +101,7 @@ async function exportPDF(items: MenuItem[]) {
 
   autoTable(doc, {
     startY: 72,
-    head: [['Produs', 'Categorie', 'Pret (RON)', 'Reducere', 'Pret final (RON)', 'Disponibil', 'Descriere']],
+    head: [['Produs', 'Categorie', 'Preț (RON)', 'Reducere', 'Preț final (RON)', 'Disponibil', 'Descriere']],
     body: items.map((item) => [
       item.name,
       item.category,
@@ -141,16 +141,16 @@ function exportHolidayExcel(items: MenuItem[], cfg: HolidayConfig) {
   const rows = items.map((item) => ({
     'Nume':              item.name,
     'Categorie':         item.category,
-    'Pret normal (RON)': item.price,
+    'Preț normal (RON)': item.price,
     'Reducere':          badge,
-    'Pret sarbatoare (RON)': calcHolidayPrice(item.price, cfg),
+    'Preț sărbătoare (RON)': calcHolidayPrice(item.price, cfg),
     'Disponibil':        item.available ? 'Da' : 'Nu',
     'Descriere':         item.description ?? '',
   }));
   const ws = XLSX.utils.json_to_sheet(rows);
   ws['!cols'] = [22, 14, 16, 12, 20, 12, 40].map((w) => ({ wch: w }));
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Sarbatori');
+  XLSX.utils.book_append_sheet(wb, ws, 'Sărbători');
   XLSX.writeFile(wb, `sarbatori-vibe-caffe-${new Date().toISOString().slice(0,10)}.xlsx`);
 }
 
@@ -183,14 +183,14 @@ async function exportHolidayPDF(items: MenuItem[], cfg: HolidayConfig) {
 
   doc.setFontSize(18);
   doc.setTextColor(40);
-  doc.text(`Meniu Sarbatoare — ${cfg.label}`, 40, 40);
+  doc.text(`Meniu Sărbătoare — ${cfg.label}`, 40, 40);
   doc.setFontSize(10);
   doc.setTextColor(120);
   doc.text(`Reducere: ${badge}   |   Generat: ${new Date().toLocaleDateString('ro-RO')}`, 40, 58);
 
   autoTable(doc, {
     startY: 72,
-    head: [['Produs', 'Categorie', 'Pret normal', 'Reducere', 'Pret sarbatoare', 'Disponibil', 'Descriere']],
+    head: [['Produs', 'Categorie', 'Preț normal', 'Reducere', 'Preț sărbătoare', 'Disponibil', 'Descriere']],
     body: items.map((item) => [
       item.name,
       item.category,
@@ -260,15 +260,15 @@ function exportRezervariExcel(rezervari: Rezervare[]) {
   }));
   const ws1 = XLSX.utils.json_to_sheet(brute);
   ws1['!cols'] = [20, 28, 14, 12, 8, 10, 14, 40, 20].map((w) => ({ wch: w }));
-  XLSX.utils.book_append_sheet(wb, ws1, 'Rezervari');
+  XLSX.utils.book_append_sheet(wb, ws1, 'Rezervări');
 
   // Foaia 2 — Analiză
   const { ziRows, oraRows } = buildAnaliza(rezervari);
 
   // Titlu
   const wsA = XLSX.utils.aoa_to_sheet([
-    ['ANALIZA REZERVARI — Vibe Caffe'],
-    [`Generat: ${new Date().toLocaleDateString('ro-RO')}   |   Total: ${rezervari.length} rezervari`],
+    ['ANALIZA REZERVĂRI — Vibe Caffe'],
+    [`Generat: ${new Date().toLocaleDateString('ro-RO')}   |   Total: ${rezervari.length} rezervări`],
     [],
     ['Distribuție pe zi a săptămânii'],
   ]);
@@ -314,9 +314,9 @@ async function exportRezervariPDF(rezervari: Rezervare[]) {
 
   // ── Pagina 1: Lista rezervări ──
   doc.setFontSize(18); doc.setTextColor(40);
-  doc.text('Rezervari Vibe Caffe', 40, 40);
+  doc.text('Rezervări Vibe Caffe', 40, 40);
   doc.setFontSize(10); doc.setTextColor(120);
-  doc.text(`Generat: ${date}   |   Total: ${rezervari.length} rezervari`, 40, 58);
+  doc.text(`Generat: ${date}   |   Total: ${rezervari.length} rezervări`, 40, 58);
 
   autoTable(doc, {
     startY: 72,
@@ -349,19 +349,19 @@ async function exportRezervariPDF(rezervari: Rezervare[]) {
   // ── Pagina 2: Analiză ──
   doc.addPage();
   doc.setFontSize(18); doc.setTextColor(40);
-  doc.text('Analiza Rezervari', 40, 40);
+  doc.text('Analiza Rezervări', 40, 40);
   doc.setFontSize(10); doc.setTextColor(120);
   doc.text(`Generat: ${date}`, 40, 58);
 
   const { ziRows, oraRows } = buildAnaliza(rezervari);
 
   doc.setFontSize(13); doc.setTextColor(40); doc.setFont('DejaVu', 'bold');
-  doc.text('Distributie pe zi a saptamanii', 40, 85);
+  doc.text('Distribuție pe zi a săptămânii', 40, 85);
   doc.setFont('DejaVu', 'normal');
 
   autoTable(doc, {
     startY: 95,
-    head: [['Zi', 'Nr. rezervari']],
+    head: [['Zi', 'Nr. rezervări']],
     body: ziRows.map((r) => [r['Zi'], r['Nr. rezervări'].toString()]),
     styles: { fontSize: 10, cellPadding: 5, font: 'DejaVu' },
     headStyles: { fillColor: teal, textColor: 255, fontStyle: 'bold', font: 'DejaVu' },
@@ -372,12 +372,12 @@ async function exportRezervariPDF(rezervari: Rezervare[]) {
 
   const y2 = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 30;
   doc.setFontSize(13); doc.setTextColor(40); doc.setFont('DejaVu', 'bold');
-  doc.text('Distributie pe ora', 40, y2);
+  doc.text('Distribuție pe oră', 40, y2);
   doc.setFont('DejaVu', 'normal');
 
   autoTable(doc, {
     startY: y2 + 10,
-    head: [['Ora', 'Nr. rezervari']],
+    head: [['Ora', 'Nr. rezervări']],
     body: oraRows.map((r) => [r['Ora'], r['Nr. rezervări'].toString()]),
     styles: { fontSize: 10, cellPadding: 5, font: 'DejaVu' },
     headStyles: { fillColor: teal, textColor: 255, fontStyle: 'bold', font: 'DejaVu' },

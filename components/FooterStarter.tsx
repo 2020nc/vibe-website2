@@ -56,8 +56,8 @@ export default function FooterStarter() {
               Vibe <span className="text-primary">Caffe</span>
             </h3>
             <p className="text-gray-300 leading-relaxed mb-6">
-              Cafea de specialitate intr-un ambient modern si relaxant.
-              Te asteptam la Bld. Regina Elisabeta 30, Bucuresti.
+              Cafea de specialitate într-un ambient modern și relaxant.
+              Te așteptăm la Bld. Regina Elisabeta 30, București.
             </p>
             <div className="flex gap-4">
               <a href="#" aria-label="Instagram" className="w-10 h-10 bg-gray-700 hover:bg-primary rounded-full flex items-center justify-center transition-colors duration-300">
@@ -76,17 +76,17 @@ export default function FooterStarter() {
             <h4 className="text-lg font-semibold text-white mb-4">Navigare</h4>
             <ul className="space-y-3">
               <li><Link href="/meniu" className="text-gray-300 hover:text-primary transition-colors duration-200">Meniu</Link></li>
-              <li><Link href="/rezervari" className="text-gray-300 hover:text-primary transition-colors duration-200">Rezervari</Link></li>
-              <li><Link href="/locatie" className="text-gray-300 hover:text-primary transition-colors duration-200">Locatie</Link></li>
+              <li><Link href="/rezervari" className="text-gray-300 hover:text-primary transition-colors duration-200">Rezervări</Link></li>
+              <li><Link href="/locatie" className="text-gray-300 hover:text-primary transition-colors duration-200">Locație</Link></li>
               <li><a href="/#de-ce-vibe" className="text-gray-300 hover:text-primary transition-colors duration-200">De ce Vibe?</a></li>
-              <li><Link href="/sarbatori" className="text-gray-300 hover:text-primary transition-colors duration-200">Oferte Sarbatori</Link></li>
+              <li><Link href="/sarbatori" className="text-gray-300 hover:text-primary transition-colors duration-200">Oferte Sărbători</Link></li>
             </ul>
 
             <h4 className="text-lg font-semibold text-white mt-8 mb-3">Contact</h4>
             <p className="text-gray-300 text-sm leading-relaxed">
               Bld. Regina Elisabeta, Nr. 30
               <br />
-              Sector 5, Bucuresti
+              Sector 5, București
               <br />
               <a href="tel:+40721234567" className="hover:text-primary transition-colors">+40 721 234 567</a>
             </p>
@@ -94,7 +94,7 @@ export default function FooterStarter() {
 
           <div>
             <h4 className="text-lg font-semibold text-white mb-2">Newsletter</h4>
-            <p className="text-gray-300 text-sm mb-4">Primeste oferte sezoniere, noutati din meniu si invitatii la evenimentele Vibe, fara mesaje inutile.</p>
+            <p className="text-gray-300 text-sm mb-4">Primește oferte sezoniere, noutăți din meniu și invitații la evenimentele Vibe, fără mesaje inutile.</p>
 
             <form onSubmit={handleNewsletter} className="space-y-3">
               <input
@@ -111,20 +111,20 @@ export default function FooterStarter() {
                 disabled={status === 'loading' || status === 'success'}
                 className="w-full px-6 py-3 bg-primary hover:bg-primary-dark text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {status === 'loading' ? 'Se trimite...' : 'Aboneaza-te'}
+                {status === 'loading' ? 'Se trimite...' : 'Abonează-te'}
               </button>
             </form>
 
-            {status === 'success' && <p className="mt-3 text-green-700 text-sm py-3 px-4 bg-green-50 rounded-xl leading-relaxed">Bun venit in familia Vibe! Prima ta oferta exclusiva ajunge in inbox in mai putin de 5 minute.</p>}
+            {status === 'success' && <p className="mt-3 text-green-700 text-sm py-3 px-4 bg-green-50 rounded-xl leading-relaxed">Bun venit în familia Vibe! Prima ta ofertă exclusivă ajunge în inbox în mai puțin de 5 minute.</p>}
             {status === 'duplicate' && <p className="mt-3 text-yellow-400 text-sm">Acest email este deja abonat.</p>}
-            {status === 'error' && <p className="mt-3 text-red-400 text-sm">Eroare. Te rugam incearca din nou.</p>}
+            {status === 'error' && <p className="mt-3 text-red-400 text-sm">Eroare. Te rugăm, încearcă din nou.</p>}
           </div>
         </div>
 
         <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-gray-700 text-center text-gray-500 text-sm space-y-2">
-          <div>© 2026 Vibe Caffe. Cafea buna, oameni buni, un loc al tau.</div>
+          <div>© 2026 Vibe Caffe. Cafea bună, oameni buni, un loc al tău.</div>
           <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
-            <a href="/confidentialitate" className="hover:text-gray-300 transition-colors">Politica confidentialitate</a>
+            <a href="/confidentialitate" className="hover:text-gray-300 transition-colors">Politica de confidențialitate</a>
             <span>|</span>
             <a href="/cookies" className="hover:text-gray-300 transition-colors">Cookies</a>
             <span>|</span>

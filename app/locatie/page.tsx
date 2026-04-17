@@ -139,21 +139,21 @@ export default function LocatiePage() {
                     className="w-full px-4 py-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-2xl text-center transition-all duration-300 hover:scale-[1.02] shadow-sm"
                   >
                     <span className="block text-sm font-bold">Google Maps</span>
-                    <span className="block text-xs text-white/80 mt-1">Traseu rapid pana la cafenea</span>
+                    <span className="block text-xs text-white/80 mt-1">Traseu rapid până la cafenea</span>
                   </a>
                   <a
                     href="tel:+40721234567"
                     className="w-full px-4 py-4 bg-gray-900 hover:bg-gray-700 text-white font-semibold rounded-2xl text-center transition-all duration-300 hover:scale-[1.02] shadow-sm"
                   >
-                    <span className="block text-sm font-bold">Suna acum</span>
-                    <span className="block text-xs text-white/70 mt-1">Confirmi rapid o masa sau o intrebare</span>
+                    <span className="block text-sm font-bold">Sună acum</span>
+                    <span className="block text-xs text-white/70 mt-1">Confirmi rapid o masă sau o întrebare</span>
                   </a>
                   <Link
                     href="/rezervari"
                     className="w-full px-4 py-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-2xl text-center transition-all duration-300 hover:scale-[1.02] shadow-sm"
                   >
-                    <span className="block text-sm font-bold">Rezerva masa</span>
-                    <span className="block text-xs text-white/80 mt-1">Ideal pentru weekend si grupuri</span>
+                    <span className="block text-sm font-bold">Rezervă masă</span>
+                    <span className="block text-xs text-white/80 mt-1">Ideal pentru weekend și grupuri</span>
                   </Link>
                 </div>
 
@@ -177,9 +177,9 @@ export default function LocatiePage() {
                   <h3 className="text-xl font-semibold text-primary mb-2">Facilități</h3>
                   <div className="flex flex-wrap gap-2">
                     <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">WiFi gratuit</span>
-                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">Prize la fiecare masa</span>
+                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">Prize la fiecare masă</span>
                     <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">Acces facil</span>
-                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">Parcare in apropiere</span>
+                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">Parcare în apropiere</span>
                     <span className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm">Pet-friendly</span>
                   </div>
                 </div>
@@ -200,7 +200,7 @@ export default function LocatiePage() {
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Locatia Vibe Caffe pe harta"
+                  title="Locația Vibe Caffe pe hartă"
                 />
               </div>
               <div className="mt-4">

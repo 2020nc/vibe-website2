@@ -30,14 +30,14 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://vibe-website2.vercel.app"),
   title: {
-    default: "Vibe Caffe - Cafea de Specialitate in Bucuresti",
+    default: "Vibe Caffe - Cafea de Specialitate în București",
     template: "%s | Vibe Caffe",
   },
   description:
-    "Cafea single-origin, brunch de weekend si un spatiu potrivit pentru lucru in centrul Bucurestiului. Rezerva masa ta online.",
+    "Cafea single-origin, brunch de weekend și un spațiu potrivit pentru lucru în centrul Bucureștiului. Rezervă masă online.",
   keywords: [
     "cafea specialitate",
-    "cafenea bucuresti",
+    "cafenea bucurești",
     "specialty coffee",
     "brunch bucuresti",
     "vibe caffe",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Vibe Caffe Team" }],
   openGraph: {
     title: "Vibe Caffe - Cafea de Specialitate",
-    description: "Cafea single-origin si brunch in inima Bucurestiului.",
+    description: "Cafea single-origin și brunch în inima Bucureștiului.",
     url: "https://vibe-website2.vercel.app",
     siteName: "Vibe Caffe",
     images: [

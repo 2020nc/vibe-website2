@@ -76,7 +76,7 @@ export function useSpeechRecognition() {
       setIsListening(false);
 
       if (event.error === 'not-allowed') {
-        setError('Microfonul este blocat in browser.');
+        setError('Microfonul este blocat în browser.');
         return;
       }
 
