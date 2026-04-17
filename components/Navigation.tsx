@@ -16,16 +16,17 @@ export default function Navigation() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
-
-  if (pathname?.startsWith('/admin')) return null;
+  const isAdminRoute = pathname?.startsWith('/admin');
 
   useEffect(() => {
+    if (isAdminRoute) return;
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isAdminRoute]);
 
   useEffect(() => {
+    if (isAdminRoute) return;
     const observers: IntersectionObserver[] = [];
     NAV_SECTIONS.forEach((id) => {
       const el = document.getElementById(id);
@@ -38,7 +39,9 @@ export default function Navigation() {
       observers.push(obs);
     });
     return () => observers.forEach((o) => o.disconnect());
-  }, []);
+  }, [isAdminRoute]);
+
+  if (isAdminRoute) return null;
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 py-4 transition-all duration-300" style={{ backgroundColor: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(12px)', boxShadow: '0 1px 8px rgba(0,0,0,0.08)' }}>
@@ -64,14 +67,14 @@ export default function Navigation() {
 
         {/* Menu Links */}
         <div className="hidden md:flex items-center gap-6">
-          <a
+          <Link
             href="/meniu"
             className="font-semibold transition-all duration-200 px-3 py-1.5 rounded-full hover:text-primary"
             style={{ color: '#111827' }}
           >
             Meniu
-          </a>
-          <a
+          </Link>
+          <Link
             href="/#de-ce-vibe"
             className={`font-semibold transition-all duration-200 px-3 py-1.5 rounded-full ${
               activeSection === 'de-ce-vibe' ? 'bg-primary text-white shadow-sm' : 'hover:text-primary'
@@ -79,34 +82,34 @@ export default function Navigation() {
             style={{ color: activeSection === 'de-ce-vibe' ? undefined : '#111827' }}
           >
             De ce Vibe?
-          </a>
-          <a
+          </Link>
+          <Link
             href="/locatie"
             className="font-semibold transition-all duration-200 px-3 py-1.5 rounded-full hover:text-primary"
             style={{ color: '#111827' }}
           >
             Locație
-          </a>
+          </Link>
 
           {/* DARK MODE TOGGLE */}
           <ThemeToggle />
 
           <div className="flex flex-col items-center gap-1">
-            <a
+            <Link
               href="/rezervari"
               className="px-6 py-3 rounded-full font-semibold transition-all duration-300 bg-primary text-white hover:bg-primary-dark"
             >
               Rezervă Masă
-            </a>
+            </Link>
             <div className="flex gap-2">
-              <a href="tel:+40721234567" className="text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-100 text-orange-600 hover:bg-orange-200 transition-colors">📞 Sună</a>
+              <a href="tel:+40721234567" className="text-xs font-semibold px-2.5 py-1 rounded-full bg-orange-200 text-orange-900 hover:bg-orange-300 transition-colors">📞 Sună</a>
               <a href="https://wa.me/40721234567" target="_blank" rel="noopener noreferrer" className="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-700 hover:bg-green-200 transition-colors">💬 WhatsApp</a>
             </div>
           </div>
         </div>
 
         {/* Mobile Menu Button */}
-        <button className="md:hidden text-gray-900">
+        <button type="button" aria-label="Deschide meniul de navigare" className="md:hidden text-gray-900">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>

@@ -95,26 +95,27 @@ export async function POST(request: NextRequest) {
         outputTokens: response.usage?.output_tokens,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as { message?: string; status?: number; type?: string };
     console.error('Anthropic API Error:', {
-      message: error?.message,
-      status: error?.status,
-      type: error?.type,
+      message: err?.message,
+      status: err?.status,
+      type: err?.type,
       model: process.env.ANTHROPIC_MODEL?.trim() || 'claude-sonnet-4-20250514',
     });
 
-    if (error.status === 401) {
+    if (err?.status === 401) {
       return NextResponse.json(
         { error: 'Invalid ANTHROPIC_API_KEY. Verifica .env.local' },
         { status: 401 }
       );
     }
 
-    if (error?.status === 400) {
+    if (err?.status === 400) {
       return NextResponse.json(
         {
           error: 'Anthropic request invalid',
-          details: error?.message || 'Verifica modelul si payload-ul trimis',
+          details: err?.message || 'Verifica modelul si payload-ul trimis',
         },
         { status: 400 }
       );
@@ -123,9 +124,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error: 'Failed to get response from Claude',
-        details: error?.message || 'Unknown Anthropic error',
+        details: err?.message || 'Unknown Anthropic error',
       },
-      { status: error?.status || 500 }
+      { status: err?.status || 500 }
     );
   }
 }

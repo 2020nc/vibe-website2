@@ -564,7 +564,7 @@ function WizardModal({
                 </div>
                 {form.image_url && (
                   <div className="mt-3 rounded-xl overflow-hidden" style={{ aspectRatio: '4/3', maxHeight: 160 }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    { }
                     <img
                       src={form.image_url}
                       alt="preview"
@@ -1450,7 +1450,7 @@ export default function AdminPage() {
                           <td className="px-4 py-3">
                             {item.image_url ? (
                               <>
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                { }
                                 <img src={item.image_url} alt={item.name}
                                   className="w-12 h-12 object-cover rounded-lg"
                                   onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
@@ -1786,7 +1786,7 @@ export default function AdminPage() {
                             <td className="px-4 py-3">
                               {item.image_url
                                 ? (
-                                  /* eslint-disable-next-line @next/next/no-img-element */
+                                   
                                   <img src={item.image_url} alt={item.name} className="w-10 h-10 object-cover rounded-lg" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                                 )
                                 : <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-300 text-lg">☕</div>

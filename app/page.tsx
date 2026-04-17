@@ -1,8 +1,6 @@
-import HeroStarter from '@/components/HeroStarter';
-import FeaturesStarter from '@/components/FeaturesStarter';
+import Image from 'next/image';
 import About from '@/components/About';
 import FooterStarter from '@/components/FooterStarter';
-import Preloader from '@/components/Preloader';
 import ReviewBar from '@/components/ReviewBar';
 import ScrollAnimations from '@/components/ScrollAnimations';
 import DayAtVibe from '@/components/DayAtVibe';
@@ -44,8 +42,7 @@ const seasonalPreview = [
 export default function Home() {
   return (
     <>
-      <Preloader />
-
+      <main>
       {/* Hero SSR */}
       <section className="relative min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center text-center px-6">
         <div className="relative z-10 max-w-4xl mx-auto">
@@ -119,10 +116,14 @@ export default function Home() {
             {previewItems.map((item) => (
               <div key={item.name} className="bg-white rounded-2xl shadow-sm overflow-hidden group">
                 <div className="h-40 overflow-hidden bg-gray-100">
-                  <img
+                  <Image
                     src={item.image}
                     alt={item.alt}
+                    width={600}
+                    height={320}
+                    sizes="(max-width: 768px) 50vw, 33vw"
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    loading="lazy"
                   />
                 </div>
                 <div className="p-4 flex justify-between items-center">
@@ -149,10 +150,14 @@ export default function Home() {
             {seasonalPreview.map((item) => (
               <div key={item.name} className="bg-white rounded-2xl shadow-sm overflow-hidden border border-teal-100 group">
                 <div className="h-48 overflow-hidden bg-gray-100">
-                  <img
+                  <Image
                     src={item.image}
                     alt={item.alt}
+                    width={600}
+                    height={384}
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    loading="lazy"
                   />
                 </div>
                 <div className="p-6">
@@ -226,6 +231,7 @@ export default function Home() {
         <About />
       </div>
       <FooterStarter />
+      </main>
 
       {/* JSON-LD LocalBusiness */}
       <script

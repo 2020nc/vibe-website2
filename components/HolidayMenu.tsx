@@ -90,7 +90,11 @@ function HolidayCard({
   function toggleAddOn(id: string) {
     setSelected((prev) => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
       return next;
     });
   }
@@ -255,7 +259,13 @@ export default function HolidayMenu({ holidayLabel }: { holidayLabel: string }) 
     };
     const stopConfetti = () => { if (intervalId) { clearInterval(intervalId); intervalId = null; } };
     const observer = new IntersectionObserver(
-      ([entry]) => { entry.isIntersecting ? startConfetti() : stopConfetti(); },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          startConfetti();
+        } else {
+          stopConfetti();
+        }
+      },
       { threshold: 0.2 }
     );
     if (sectionRef.current) observer.observe(sectionRef.current);

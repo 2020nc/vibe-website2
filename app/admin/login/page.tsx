@@ -1,12 +1,14 @@
 'use client'
-import { useState } from 'react'
+
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function AdminLogin() {
-  const [email, setEmail]       = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError]       = useState('')
-  const [loading, setLoading]   = useState(false)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   async function handleLogin(e: React.FormEvent) {
@@ -26,31 +28,33 @@ export default function AdminLogin() {
       router.push('/admin')
     } else {
       const { error: msg } = await res.json()
-      setError(msg ?? 'Email sau parolă incorectă.')
+      setError(msg ?? 'Email sau parola incorecta.')
     }
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950">
-      <form onSubmit={handleLogin}
-        className="bg-gray-900 p-8 rounded-2xl shadow-xl w-full max-w-sm space-y-4">
+      <form
+        onSubmit={handleLogin}
+        className="bg-gray-900 p-8 rounded-2xl shadow-xl w-full max-w-sm space-y-4"
+      >
         <div className="text-center mb-2">
-          <span className="text-white text-2xl font-bold">Vibe Caffè</span>
+          <span className="text-white text-2xl font-bold">Vibe Caffe</span>
           <p className="text-gray-400 text-sm mt-1">Panou de administrare</p>
         </div>
         <input
           type="email"
           placeholder="Email admin"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
           required
           className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
         />
         <input
           type="password"
-          placeholder="Parolă"
+          placeholder="Parola"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           required
           className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
         />
@@ -60,10 +64,12 @@ export default function AdminLogin() {
           disabled={loading}
           className="w-full py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-lg font-semibold transition"
         >
-          {loading ? 'Se verifică…' : 'Intră în admin'}
+          {loading ? 'Se verifica...' : 'Intra in admin'}
         </button>
         <p className="text-center">
-          <a href="/" className="text-gray-500 text-xs hover:text-gray-300">← Înapoi la site</a>
+          <Link href="/" className="text-gray-500 text-xs hover:text-gray-300">
+            Inapoi la site
+          </Link>
         </p>
       </form>
     </div>

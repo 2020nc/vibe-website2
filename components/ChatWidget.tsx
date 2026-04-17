@@ -161,7 +161,7 @@ export default function ChatWidget() {
       stop();
       setSpeakingId(null);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, [isOpen]);
 
   useEffect(() => {

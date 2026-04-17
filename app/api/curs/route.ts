@@ -58,7 +58,7 @@ export async function GET() {
     cache = { data, fetchedAt: Date.now() };
 
     return NextResponse.json({ data });
-  } catch (err) {
+  } catch {
     // Dacă avem cache expirat, îl returnăm ca fallback
     if (cache) {
       return NextResponse.json({ data: cache.data, stale: true });

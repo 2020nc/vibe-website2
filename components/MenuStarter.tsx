@@ -169,7 +169,11 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
   function toggleAddOn(itemId: string, addOnId: string) {
     setSelected((prev) => {
       const current = new Set(prev[itemId] ?? []);
-      current.has(addOnId) ? current.delete(addOnId) : current.add(addOnId);
+      if (current.has(addOnId)) {
+        current.delete(addOnId);
+      } else {
+        current.add(addOnId);
+      }
       return { ...prev, [itemId]: current };
     });
   }
@@ -213,7 +217,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
       // Dacă BNR nu răspunde, folosim rate de fallback
       setCurs(cursRes.data ?? { EUR: 4.97, USD: 4.56, updatedAt: '' });
     }).finally(() => setLoading(false));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, []);
 
   function toDisplayPrice(ron: number): string {
