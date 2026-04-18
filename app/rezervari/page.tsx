@@ -177,15 +177,23 @@ export default function RezervariPage() {
                   {(() => {
                     const azi = new Date().toISOString().split('T')[0];
                     const maine = new Date(Date.now() + 86400000).toISOString().split('T')[0];
-                    const shortcuts = [
+                    const isAltaZi = form.data && form.data !== azi && form.data !== maine;
+                    const shortcuts: { label: string; value: string | null }[] = [
                       { label: 'Azi', value: azi },
                       { label: 'Mâine', value: maine },
-                      { label: 'Altă zi', value: null as string | null },
+                      { label: 'Altă zi', value: null },
                     ];
                     return (
-                      <div className="grid grid-cols-3 gap-2 mb-3">
+                      <div className="grid grid-cols-3 gap-2">
                         {shortcuts.map(({ label, value }) => {
-                          const isActive = value !== null && form.data === value;
+                          const isActive = value !== null
+                            ? form.data === value
+                            : !!isAltaZi;
+                          const displayDate = value !== null
+                            ? new Date(value + 'T00:00:00').toLocaleDateString('ro-RO', { day: '2-digit', month: 'short' })
+                            : isAltaZi
+                              ? new Date(form.data + 'T00:00:00').toLocaleDateString('ro-RO', { day: '2-digit', month: 'short' })
+                              : null;
                           return (
                             <button
                               key={label}
@@ -205,9 +213,9 @@ export default function RezervariPage() {
                               }`}
                             >
                               <span className="block font-semibold">{label}</span>
-                              {value && (
+                              {displayDate && (
                                 <span className={`block text-[11px] mt-0.5 ${isActive ? 'text-teal-100' : 'text-gray-400 dark:text-gray-500'}`}>
-                                  {new Date(value + 'T00:00:00').toLocaleDateString('ro-RO', { day: '2-digit', month: 'short' })}
+                                  {displayDate}
                                 </span>
                               )}
                             </button>
@@ -216,7 +224,7 @@ export default function RezervariPage() {
                       </div>
                     );
                   })()}
-                  <label htmlFor="rez-data" className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Data rezervării</label>
+                  {/* Input nativ ascuns — sursa de adevar pentru state si showPicker() */}
                   <input
                     id="rez-data"
                     type="date"
@@ -226,7 +234,7 @@ export default function RezervariPage() {
                     required
                     aria-required="true"
                     min={new Date().toISOString().split('T')[0]}
-                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-sm"
+                    className="sr-only"
                   />
                 </div>
 
