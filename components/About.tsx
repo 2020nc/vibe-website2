@@ -14,32 +14,44 @@ export default function About() {
   const [hasImageError, setHasImageError] = useState(false);
   const imageFrameRef = useRef<HTMLDivElement>(null);
 
-  // Parallax-ul ruleaza doar pe desktop si actualizeaza direct transform-ul.
+  // Parallax-ul ruleaza doar pe desktop, doar cand sectiunea este relevanta in viewport.
   useEffect(() => {
     const frame = imageFrameRef.current;
-    if (!frame) return;
+    const section = elementRef.current;
+    if (!frame || !section) return;
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const activeRef = { current: false };
+    const lastOffsetRef = { current: 0 };
     let rafId = 0;
     let ticking = false;
+
+    const resetTransform = () => {
+      if (lastOffsetRef.current === 0) return;
+      lastOffsetRef.current = 0;
+      frame.style.transform = 'translate3d(0, 0, 0)';
+    };
 
     const applyParallax = () => {
       ticking = false;
 
-      const element = elementRef.current;
       const isMobile = window.innerWidth < 768;
-
-      if (!element || isMobile || prefersReducedMotion.matches) {
-        frame.style.transform = 'translate3d(0, 0, 0)';
+      if (!activeRef.current || isMobile || prefersReducedMotion.matches) {
+        resetTransform();
         return;
       }
 
-      const rect = element.getBoundingClientRect();
+      const rect = section.getBoundingClientRect();
       const scrollProgress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
       const clampedProgress = Math.min(Math.max(scrollProgress, 0), 1);
-      const offset = clampedProgress * 36 - 18;
+      const offset = Math.round((clampedProgress * 36 - 18) * 10) / 10;
 
-      frame.style.transform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
+      if (Math.abs(offset - lastOffsetRef.current) < 0.5) {
+        return;
+      }
+
+      lastOffsetRef.current = offset;
+      frame.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
     };
 
     const requestParallax = () => {
@@ -48,17 +60,52 @@ export default function About() {
       rafId = window.requestAnimationFrame(applyParallax);
     };
 
-    applyParallax();
+    const syncParallaxState = () => {
+      if (prefersReducedMotion.matches || window.innerWidth < 768 || !activeRef.current) {
+        resetTransform();
+        return;
+      }
+
+      requestParallax();
+    };
+
+    const viewportObserver = new IntersectionObserver(
+      ([entry]) => {
+        activeRef.current = entry.isIntersecting;
+
+        if (!entry.isIntersecting) {
+          if (rafId) {
+            window.cancelAnimationFrame(rafId);
+            rafId = 0;
+          }
+          ticking = false;
+          resetTransform();
+          return;
+        }
+
+        syncParallaxState();
+      },
+      { threshold: 0.15, rootMargin: '10% 0px 10% 0px' }
+    );
+
+    viewportObserver.observe(section);
     window.addEventListener('scroll', requestParallax, { passive: true });
-    window.addEventListener('resize', requestParallax);
-    prefersReducedMotion.addEventListener('change', requestParallax);
+    window.addEventListener('resize', syncParallaxState);
+    prefersReducedMotion.addEventListener('change', syncParallaxState);
+
+    syncParallaxState();
 
     return () => {
+      viewportObserver.disconnect();
       window.removeEventListener('scroll', requestParallax);
-      window.removeEventListener('resize', requestParallax);
-      prefersReducedMotion.removeEventListener('change', requestParallax);
-      window.cancelAnimationFrame(rafId);
-      frame.style.transform = 'translate3d(0, 0, 0)';
+      window.removeEventListener('resize', syncParallaxState);
+      prefersReducedMotion.removeEventListener('change', syncParallaxState);
+
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+      }
+
+      resetTransform();
     };
   }, [elementRef]);
 
@@ -79,17 +126,14 @@ export default function About() {
                   </span>
                 </div>
               ) : (
-                <div
-                  ref={imageFrameRef}
-                  className="h-full w-full transition-transform duration-700 will-change-transform"
-                >
+                <div ref={imageFrameRef} className="h-full w-full will-change-transform">
                   <Image
                     src="https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop"
                     alt="Interior cafenea modern si primitor"
                     width={800}
                     height={600}
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    quality={72}
+                    quality={65}
                     className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
                     onError={() => setHasImageError(true)}
                   />
@@ -112,8 +156,8 @@ export default function About() {
             </h2>
 
             <p className="mb-4 text-lg leading-relaxed text-gray-700">
-              Am deschis Vibe Caffe cu o singura regula: nicio ceasca nu pleaca la masa daca nu
-              am fi bucurosi s-o bem noi insine. De atunci, Andreea M. ne-a dat 5 stele de 3 ori,
+              Am deschis Vibe Caffe cu o singura regula: nicio ceasca nu pleaca la masa daca nu am
+              fi bucurosi s-o bem noi insine. De atunci, Andreea M. ne-a dat 5 stele de 3 ori,
               Mihai T. vine in fiecare dimineata de marti si Raluca D. si-a scris teza de doctorat
               la masa din coltul din dreapta.
             </p>

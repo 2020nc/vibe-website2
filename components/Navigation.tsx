@@ -5,10 +5,14 @@
 
 'use client';
 
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import ThemeToggle from './ThemeToggle';
+
+const ThemeToggle = dynamic(() => import('./ThemeToggle'), {
+  ssr: false,
+});
 
 const NAV_SECTIONS = ['menu', 'de-ce-vibe', 'features', 'sarbatori', 'footer'];
 
@@ -19,6 +23,7 @@ export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isAdminRoute = pathname?.startsWith('/admin');
+  const isHomePage = pathname === '/';
   const isReservationRoute = pathname?.startsWith('/rezervari');
   const shouldRenderNav = !isAdminRoute && !isReservationRoute;
   const shouldReserveSpace = shouldRenderNav && pathname !== '/';
@@ -37,32 +42,35 @@ export default function Navigation() {
   }, [pathname]);
 
   useEffect(() => {
-    if (!shouldRenderNav) return;
+    if (!shouldRenderNav || !isHomePage) {
+      setActiveSection('');
+      return;
+    }
 
     const observers: IntersectionObserver[] = [];
     NAV_SECTIONS.forEach((id) => {
-      const el = document.getElementById(id);
-      if (!el) return;
+      const element = document.getElementById(id);
+      if (!element) return;
 
-      const obs = new IntersectionObserver(
+      const observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) setActiveSection(id);
         },
         { threshold: 0.1, rootMargin: '-60px 0px -40% 0px' }
       );
 
-      obs.observe(el);
-      observers.push(obs);
+      observer.observe(element);
+      observers.push(observer);
     });
 
     return () => observers.forEach((observer) => observer.disconnect());
-  }, [shouldRenderNav]);
+  }, [isHomePage, shouldRenderNav]);
 
   if (!shouldRenderNav) return null;
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-100 bg-white/95 py-4 shadow-sm backdrop-blur-md transition-all duration-300 dark:border-[#5A3A22] dark:bg-[#1A120C]/95">
+      <nav className="fixed left-0 right-0 top-0 z-50 border-b border-gray-100 bg-white/95 py-4 shadow-sm backdrop-blur-md transition-all duration-300 dark:border-[#5A3A22] dark:bg-[#1A120C]/95">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
           <Link href="/" className="group flex items-center gap-2">
             <svg
@@ -89,7 +97,7 @@ export default function Navigation() {
           </Link>
 
           <div className="hidden items-center gap-6 text-gray-900 dark:text-gray-100 md:flex">
-            <Link href="/meniu" className="rounded-full px-3 py-1.5 font-semibold transition-all duration-200 hover:text-primary">
+            <Link href="/meniu#produse" className="rounded-full px-3 py-1.5 font-semibold transition-all duration-200 hover:text-primary">
               Meniu
             </Link>
 
@@ -103,7 +111,7 @@ export default function Navigation() {
               De ce Vibe?
             </Link>
 
-            <Link href="/locatie" className="rounded-full px-3 py-1.5 font-semibold transition-all duration-200 hover:text-primary">
+            <Link href="/locatie#harta" className="rounded-full px-3 py-1.5 font-semibold transition-all duration-200 hover:text-primary">
               Locație
             </Link>
 
@@ -138,7 +146,7 @@ export default function Navigation() {
 
           <button
             type="button"
-            aria-label={isMobileMenuOpen ? 'Inchide meniul de navigare' : 'Deschide meniul de navigare'}
+            aria-label={isMobileMenuOpen ? 'Închide meniul de navigare' : 'Deschide meniul de navigare'}
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-navigation-menu"
             onClick={() => setIsMobileMenuOpen((value) => !value)}
@@ -160,13 +168,13 @@ export default function Navigation() {
             className="border-t border-gray-100 bg-white/95 px-6 py-4 shadow-sm dark:border-[#5A3A22] dark:bg-[#1A120C]/95 md:hidden"
           >
             <div className="flex flex-col gap-3 text-gray-900 dark:text-gray-100">
-              <Link href="/meniu" className="rounded-xl px-3 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-[#2D1A0A]">
+              <Link href="/meniu#produse" className="rounded-xl px-3 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-[#2D1A0A]">
                 Meniu
               </Link>
               <Link href="/#de-ce-vibe" className="rounded-xl px-3 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-[#2D1A0A]">
                 De ce Vibe?
               </Link>
-              <Link href="/locatie" className="rounded-xl px-3 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-[#2D1A0A]">
+              <Link href="/locatie#harta" className="rounded-xl px-3 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-[#2D1A0A]">
                 Locație
               </Link>
               <Link href="/rezervari" className="rounded-xl bg-primary px-3 py-3 text-center font-semibold text-white hover:bg-primary-dark">

@@ -116,13 +116,13 @@ export default async function SarbatoriPage() {
             </span>
           )}
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            Oferte <span className="text-primary">Sezoniere</span>
+            Oferte <span className="text-teal-300">Sezoniere</span>
           </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Produse speciale și reduceri disponibile în această perioadă la Vibe Caffè
           </p>
           {cfg && (
-            <p className="mt-4 text-primary font-semibold text-lg">
+            <p className="mt-4 text-teal-300 font-semibold text-lg">
               {getDiscountBadge(cfg)} la toate băuturile din meniu
             </p>
           )}

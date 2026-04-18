@@ -144,6 +144,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
   const [activeTab, setActiveTab] = useState(initialItems?.[0]?.category ?? '');
   const [visible, setVisible]     = useState(true);
   const [cols, setCols]           = useState<ColCount>(3);
+  const [colsReady, setColsReady] = useState(false);
   const [promo, setPromo]         = useState<PromoConfig | null>(null);
   const [currency, setCurrency]   = useState<Currency>('RON');
   const [curs, setCurs]           = useState<CursValutar | null>(null);
@@ -155,10 +156,11 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
   const [showCurrencyToggle, setShowCurrencyToggle] = useState(false);
   const [showColumnToggle, setShowColumnToggle]     = useState(false);
 
-  // Citește preferința din localStorage la mount
+  // Citește preferința din localStorage după mount (evită hydration mismatch)
   useEffect(() => {
     const saved = localStorage.getItem('menu_cols');
     if (saved === '4' || saved === '5') setCols(Number(saved) as ColCount);
+    setColsReady(true);
   }, []);
 
   function changeCols(n: ColCount) {
@@ -337,7 +339,8 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
 
             {/* Grid produse */}
             <div
-              className={`grid ${COL_CLASSES[cols]} gap-6 transition-opacity duration-200`}
+              suppressHydrationWarning
+              className={`grid ${colsReady ? COL_CLASSES[cols] : COL_CLASSES[3]} gap-6 transition-opacity duration-200`}
               style={{ opacity: visible ? 1 : 0 }}
             >
               {tabItems.map((item) => {

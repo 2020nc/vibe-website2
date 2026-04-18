@@ -10,7 +10,7 @@ const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin", "latin-ext"],
   weight: ["600", "700", "800"],
   display: "swap",
-  preload: true,
+  preload: false,
 });
 
 const playfair = Playfair_Display({
@@ -32,7 +32,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://vibe-website2.vercel.app"),
   title: {
-    default: "Vibe Caffe - Cafea de Specialitate în București",
+    default: "Vibe Caffè - Cafea de Specialitate în București",
     template: "%s | Vibe Caffe",
   },
   description:
@@ -108,11 +108,12 @@ export default function RootLayout({
   `;
 
   return (
-    <html lang="ro">
+    <html lang="ro" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body
+        suppressHydrationWarning
         className={`${plusJakarta.variable} ${inter.variable} ${playfair.variable} antialiased`}
       >
         <Navigation />

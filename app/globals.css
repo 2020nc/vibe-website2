@@ -425,3 +425,10 @@ html.lenis-smooth {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Input date — iconiță calendar vizibilă în dark mode */
+[data-theme='dark'] input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.5);
+  cursor: pointer;
+}
+

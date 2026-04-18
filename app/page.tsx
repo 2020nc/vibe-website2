@@ -1,9 +1,11 @@
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import About from '@/components/About';
-import FooterStarter from '@/components/FooterStarter';
 import ReviewBar from '@/components/ReviewBar';
-import ScrollAnimations from '@/components/ScrollAnimations';
-import DayAtVibe from '@/components/DayAtVibe';
+
+const About = dynamic(() => import('@/components/About'));
+const DayAtVibe = dynamic(() => import('@/components/DayAtVibe'));
+const FooterStarter = dynamic(() => import('@/components/FooterStarter'));
+const ScrollAnimations = dynamic(() => import('@/components/ScrollAnimations'));
 
 export const metadata = {
   title: 'Vibe Caffè — Cafea de Specialitate în București',
@@ -22,218 +24,305 @@ export const metadata = {
   },
 };
 
-// Primele 6 produse pentru preview SSR
 const previewItems = [
-  { name: 'Flat White', price: 17, alt: 'Flat White servit în ceașcă albă pe farfurioară de lemn, 17 lei', image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?w=600&auto=format&fit=crop' },
-  { name: 'Cappuccino', price: 16, alt: 'Cappuccino cu spumă de lapte cremoasă, 16 lei', image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&auto=format&fit=crop' },
-  { name: 'Cold Brew Tonic', price: 22, alt: 'Cold Brew Tonic cu portocală și gheață, 22 lei', image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&auto=format&fit=crop' },
-  { name: 'Cheesecake', price: 22, alt: 'Felie de Cheesecake New York cu sos de fructe, 22 lei', image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=600&auto=format&fit=crop' },
-  { name: 'Croissant cu Unt', price: 14, alt: 'Croissant cu unt proaspăt, crocant, 14 lei', image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600&auto=format&fit=crop' },
-  { name: 'Brownie', price: 18, alt: 'Brownie cu ciocolată neagră și nuci, 18 lei', image: 'https://images.unsplash.com/photo-1564355808539-22fda35bed7e?w=600&auto=format&fit=crop' },
+  {
+    name: 'Flat White',
+    price: 17,
+    alt: 'Flat White servit în ceașcă albă pe farfurioară de lemn, 17 lei',
+    image: 'https://images.unsplash.com/photo-1577968897966-3d4325b36b61?auto=format&fit=crop',
+  },
+  {
+    name: 'Cappuccino',
+    price: 16,
+    alt: 'Cappuccino cu spumă de lapte cremoasă, 16 lei',
+    image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop',
+  },
+  {
+    name: 'Cold Brew Tonic',
+    price: 22,
+    alt: 'Cold Brew Tonic cu portocală și gheață, 22 lei',
+    image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop',
+  },
+  {
+    name: 'Cheesecake',
+    price: 22,
+    alt: 'Felie de Cheesecake New York cu sos de fructe, 22 lei',
+    image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop',
+  },
+  {
+    name: 'Croissant cu Unt',
+    price: 14,
+    alt: 'Croissant cu unt proaspăt, crocant, 14 lei',
+    image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop',
+  },
+  {
+    name: 'Brownie',
+    price: 18,
+    alt: 'Brownie cu ciocolată neagră și nuci, 18 lei',
+    image: 'https://images.unsplash.com/photo-1564355808539-22fda35bed7e?auto=format&fit=crop',
+  },
 ];
 
-// Produse sezoniere pentru preview SSR
 const seasonalPreview = [
-  { name: 'Latte de Lavandă', price: 20, alt: 'Latte de Lavandă cu sirop artizanal, 20 lei', desc: 'Espresso, lapte microspumat și sirop de lavandă. Disponibil: aprilie–iunie.', image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&auto=format&fit=crop' },
-  { name: 'Cold Brew Tonic', price: 22, alt: 'Cold Brew Tonic cu portocală și gheață, 22 lei', desc: 'Cold brew, apă tonică și portocală proaspătă. Disponibil: tot sezonul.', image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&auto=format&fit=crop' },
-  { name: 'Brunch Festiv de Weekend', price: 36, alt: 'Brunch Festiv de Weekend cu Eggs Benedict, granola și cafea de specialitate, 36 lei', desc: 'Eggs Benedict, granola, fresh și cafea de specialitate. Disponibil: sâmbătă și duminică.', image: 'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=600&auto=format&fit=crop' },
+  {
+    name: 'Latte de Lavandă',
+    price: 20,
+    alt: 'Latte de Lavandă cu sirop artizanal, 20 lei',
+    desc: 'Espresso, lapte microspumat și sirop de lavandă. Disponibil: aprilie–iunie.',
+    image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop',
+  },
+  {
+    name: 'Cold Brew Tonic',
+    price: 22,
+    alt: 'Cold Brew Tonic cu portocală și gheață, 22 lei',
+    desc: 'Cold brew, apă tonică și portocală proaspătă. Disponibil: tot sezonul.',
+    image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop',
+  },
+  {
+    name: 'Brunch Festiv de Weekend',
+    price: 36,
+    alt: 'Brunch Festiv de Weekend cu Eggs Benedict, granola și cafea de specialitate, 36 lei',
+    desc: 'Eggs Benedict, granola, fresh și cafea de specialitate. Disponibil: sâmbătă și duminică.',
+    image: 'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop',
+  },
+];
+
+const benefits = [
+  {
+    title: 'Cafea de specialitate',
+    desc: 'Boabe selectate din origini single-origin, preparate după rețete calibrate pentru consistență în fiecare ceașcă.',
+    icon: '☕',
+  },
+  {
+    title: 'Spațiu de lucru',
+    desc: 'Wi-Fi stabil, prize la fiecare masă și o atmosferă care face munca mai plăcută. Potrivit pentru întâlniri și sesiuni de lucru.',
+    icon: '💻',
+  },
+  {
+    title: 'Deserturi de weekend',
+    desc: 'Meniu special disponibil în fiecare weekend, cu ingrediente proaspete și deserturi de patiserie artizanală.',
+    icon: '🍰',
+  },
+  {
+    title: 'Locație centrală',
+    desc: 'Bld. Regina Elisabeta 30, Sector 5 — ușor de găsit, aproape de centrul Bucureștiului, cu acces facil din mai multe zone.',
+    icon: '📍',
+  },
 ];
 
 export default function Home() {
   return (
     <>
       <main>
-      {/* Hero SSR */}
-      <section className="relative min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center text-center px-6">
-        <div className="relative z-10 max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 font-[family-name:var(--font-playfair)]">
-            Cafea bună. Oameni buni. Un loc al tău.
-          </h1>
-          <p className="text-xl text-gray-200 mb-10 max-w-2xl mx-auto">
-            Meniu clar, rezervări rapide și locație ușor de găsit în centrul Bucureștiului.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/meniu" className="px-8 py-4 bg-espresso-800 hover:bg-espresso-900 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105">
-              Vezi meniul
-            </a>
-            <a href="/rezervari" className="px-8 py-4 bg-oliv-600 hover:bg-oliv-800 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105">
-              Rezervă masă
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <ScrollAnimations />
-
-      <ReviewBar />
-
-      <DayAtVibe />
-
-      {/* Beneficii SSR */}
-      <section id="de-ce-vibe" className="py-20 px-6 bg-white animate-on-scroll">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-4 font-[family-name:var(--font-playfair)]">De ce Vibe?</h2>
-          <p className="text-lg text-gray-500 text-center mb-12">Diferențiatori concreți, nu afirmații vagi.</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                title: 'Cafea de specialitate',
-                desc: 'Boabe selectate din origini single-origin, preparate după rețete calibrate pentru consistență în fiecare ceașcă.',
-                icon: '☕',
-              },
-              {
-                title: 'Spațiu de lucru',
-                desc: 'Wi-Fi stabil, prize la fiecare masă și o atmosferă care face munca mai plăcută. Potrivit pentru întâlniri și sesiuni de lucru.',
-                icon: '💻',
-              },
-              {
-                title: 'Deserturi de weekend',
-                desc: 'Meniu special disponibil în fiecare weekend, cu ingrediente proaspete și deserturi de patiserie artizanală.',
-                icon: '🥐',
-              },
-              {
-                title: 'Locație centrală',
-                desc: 'Bld. Regina Elisabeta 30, Sector 5 — ușor de găsit, aproape de centrul Bucureștiului, cu acces facil din mai multe zone.',
-                icon: '📍',
-              },
-            ].map((card) => (
-              <div key={card.title} className="bg-gray-50 rounded-2xl p-6 border border-gray-100 hover:shadow-md transition-shadow">
-                <div className="text-4xl mb-4">{card.icon}</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{card.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{card.desc}</p>
+        <section className="relative min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 px-6 text-center">
+          <div className="relative z-10 mx-auto flex min-h-screen max-w-4xl items-center justify-center">
+            <div>
+              <h1 className="mb-6 text-5xl font-bold text-white md:text-7xl font-[family-name:var(--font-playfair)]">
+                Cafea bună. Oameni buni. Un loc al tău.
+              </h1>
+              <p className="mx-auto mb-10 max-w-2xl text-xl text-gray-200">
+                Meniu clar, rezervări rapide și locație ușor de găsit în centrul Bucureștiului.
+              </p>
+              <div className="flex flex-col justify-center gap-4 sm:flex-row">
+                <a
+                  href="/meniu"
+                  className="rounded-full bg-espresso-800 px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-espresso-900"
+                >
+                  Vezi meniul
+                </a>
+                <a
+                  href="/rezervari"
+                  className="rounded-full bg-oliv-600 px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-oliv-800"
+                >
+                  Rezervă masă
+                </a>
               </div>
-            ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Preview Meniu SSR */}
-      <section className="py-20 px-6 bg-gray-50 animate-on-scroll">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-4 font-[family-name:var(--font-playfair)]">Din meniul nostru</h2>
-          <p className="text-lg text-gray-500 text-center mb-12">Cafea bună. Oameni buni. Un loc al tău.</p>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10">
-            {previewItems.map((item) => (
-              <div key={item.name} className="bg-white rounded-2xl shadow-sm overflow-hidden group">
-                <div className="h-40 overflow-hidden bg-gray-100">
-                  <Image
-                    src={item.image}
-                    alt={item.alt}
-                    width={600}
-                    height={320}
-                    sizes="(max-width: 768px) 50vw, 33vw"
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="p-4 flex justify-between items-center">
-                  <span className="font-semibold text-gray-900">{item.name}</span>
-                  <span className="text-teal-600 font-bold">{item.price} lei</span>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="text-center">
-            <a href="/meniu" className="px-8 py-4 bg-espresso-800 hover:bg-espresso-900 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 inline-block">
-              Vezi meniul complet
-            </a>
-          </div>
-        </div>
-      </section>
+        <ScrollAnimations />
+        <ReviewBar />
+        <DayAtVibe />
 
-      {/* Oferte sezoniere SSR */}
-      <section className="py-20 px-6 bg-white animate-on-scroll">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-4 font-[family-name:var(--font-playfair)]">Oferte sezoniere</h2>
-          <p className="text-lg text-gray-500 text-center mb-12">Produse disponibile în această perioadă.</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            {seasonalPreview.map((item) => (
-              <div key={item.name} className="bg-white rounded-2xl shadow-sm overflow-hidden border border-teal-100 group">
-                <div className="h-48 overflow-hidden bg-gray-100">
-                  <Image
-                    src={item.image}
-                    alt={item.alt}
-                    width={600}
-                    height={384}
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-xl font-bold text-gray-900">{item.name}</h3>
-                    <span className="text-teal-600 font-bold whitespace-nowrap ml-2">{item.price} lei</span>
+        <section id="de-ce-vibe" className="animate-on-scroll bg-white px-6 py-20">
+          <div className="mx-auto max-w-7xl">
+            <h2 className="mb-4 text-center text-4xl font-bold text-gray-900 md:text-5xl font-[family-name:var(--font-playfair)]">
+              De ce Vibe?
+            </h2>
+            <p className="mb-12 text-center text-lg text-gray-500">
+              Diferențiatori concreți, nu afirmații vagi.
+            </p>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {benefits.map((card) => (
+                <div
+                  key={card.title}
+                  className="rounded-2xl border border-gray-100 bg-gray-50 p-6 transition-shadow hover:shadow-md"
+                >
+                  <div className="mb-4 text-4xl" aria-hidden="true">
+                    {card.icon}
                   </div>
-                  <p className="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
+                  <h3 className="mb-2 text-xl font-bold text-gray-900">{card.title}</h3>
+                  <p className="leading-relaxed text-gray-600">{card.desc}</p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-          <div className="text-center">
-            <a href="/sarbatori" className="px-8 py-4 bg-oliv-600 hover:bg-oliv-800 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 inline-block">
-              Vezi toate ofertele sezoniere
+        </section>
+
+        <section className="animate-on-scroll bg-gray-50 px-6 py-20">
+          <div className="mx-auto max-w-7xl">
+            <h2 className="mb-4 text-center text-4xl font-bold text-gray-900 md:text-5xl font-[family-name:var(--font-playfair)]">
+              Din meniul nostru
+            </h2>
+            <p className="mb-12 text-center text-lg text-gray-500">
+              Cafea bună. Oameni buni. Un loc al tău.
+            </p>
+            <div className="mb-10 grid grid-cols-2 gap-4 md:grid-cols-3">
+              {previewItems.map((item) => (
+                <div key={item.name} className="group overflow-hidden rounded-2xl bg-white shadow-sm">
+                  <div className="h-40 overflow-hidden bg-gray-100">
+                    <Image
+                      src={item.image}
+                      alt={item.alt}
+                      width={600}
+                      height={320}
+                      quality={60}
+                      sizes="(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between p-4">
+                    <span className="font-semibold text-gray-900">{item.name}</span>
+                    <span className="font-bold text-teal-600">{item.price} lei</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="text-center">
+              <a
+                href="/meniu"
+                className="inline-block rounded-full bg-espresso-800 px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-espresso-900"
+              >
+                Vezi meniul complet
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section className="animate-on-scroll bg-white px-6 py-20">
+          <div className="mx-auto max-w-7xl">
+            <h2 className="mb-4 text-center text-4xl font-bold text-gray-900 md:text-5xl font-[family-name:var(--font-playfair)]">
+              Oferte sezoniere
+            </h2>
+            <p className="mb-12 text-center text-lg text-gray-500">
+              Produse disponibile în această perioadă.
+            </p>
+            <div className="mb-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+              {seasonalPreview.map((item) => (
+                <div
+                  key={item.name}
+                  className="group overflow-hidden rounded-2xl border border-teal-100 bg-white shadow-sm"
+                >
+                  <div className="h-48 overflow-hidden bg-gray-100">
+                    <Image
+                      src={item.image}
+                      alt={item.alt}
+                      width={600}
+                      height={384}
+                      quality={60}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 33vw, 28vw"
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <div className="mb-3 flex items-start justify-between">
+                      <h3 className="text-xl font-bold text-gray-900">{item.name}</h3>
+                      <span className="ml-2 whitespace-nowrap font-bold text-teal-600">
+                        {item.price} lei
+                      </span>
+                    </div>
+                    <p className="text-sm leading-relaxed text-gray-600">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="text-center">
+              <a
+                href="/sarbatori"
+                className="inline-block rounded-full bg-oliv-600 px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-oliv-800"
+              >
+                Vezi toate ofertele sezoniere
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-espresso-800 px-6 py-16 text-center dark:bg-espresso-900">
+          <h2 className="mb-3 text-2xl font-bold text-white font-[family-name:var(--font-playfair)]">
+            Ți-a plăcut ce ai văzut?
+          </h2>
+          <p className="mx-auto mb-8 max-w-md text-base text-crem-100">
+            Rezervă o masă acum și garantăm locul tău.
+          </p>
+          <a
+            href="/rezervari"
+            className="inline-block rounded-full bg-oliv-600 px-8 py-4 text-lg font-bold text-white transition-colors duration-200 hover:bg-oliv-800"
+          >
+            Rezervă masă
+          </a>
+        </section>
+
+        <section className="animate-on-scroll bg-gray-900 px-6 py-20 text-white">
+          <div className="mx-auto max-w-4xl text-center">
+            <h2 className="mb-8 text-4xl font-bold md:text-5xl font-[family-name:var(--font-playfair)]">
+              Unde ne găsești
+            </h2>
+            <div className="mb-10 grid grid-cols-1 gap-8 md:grid-cols-3">
+              <div>
+                <div className="mb-3 text-3xl" aria-hidden="true">
+                  📍
+                </div>
+                <p className="text-lg font-semibold">Adresă</p>
+                <p className="text-gray-200">Bld. Regina Elisabeta 30, Sector 5, București</p>
+              </div>
+              <div>
+                <div className="mb-3 text-3xl" aria-hidden="true">
+                  🕒
+                </div>
+                <p className="text-lg font-semibold">Program</p>
+                <p className="text-gray-200">Luni–Vineri 08:00–22:00</p>
+                <p className="text-gray-200">Sâmbătă–Duminică 09:00–23:00</p>
+              </div>
+              <div>
+                <div className="mb-3 text-3xl" aria-hidden="true">
+                  📞
+                </div>
+                <p className="text-lg font-semibold">Telefon</p>
+                <a href="tel:+40721234567" className="text-teal-400 hover:text-teal-300">
+                  +40 721 234 567
+                </a>
+              </div>
+            </div>
+            <a
+              href="https://maps.google.com/?q=Bld.+Regina+Elisabeta+30+Bucuresti"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block rounded-full bg-espresso-800 px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-espresso-900"
+            >
+              Deschide în Google Maps
             </a>
           </div>
+        </section>
+
+        <div className="animate-on-scroll">
+          <About />
         </div>
-      </section>
-
-      {/* CTA secundar rezervare */}
-      <section className="bg-espresso-800 dark:bg-espresso-900 py-16 px-6 text-center">
-        <h2 className="text-2xl font-bold text-white mb-3 font-[family-name:var(--font-playfair)]">
-          Ți-a plăcut ce ai văzut?
-        </h2>
-        <p className="text-crem-100 mb-8 text-base max-w-md mx-auto">
-          Rezervă o masă acum și garantăm locul tău.
-        </p>
-        <a
-          href="/rezervari"
-          className="inline-block bg-oliv-600 hover:bg-oliv-800 text-white font-bold px-8 py-4 rounded-full text-lg transition-colors duration-200"
-        >
-          Rezervă masă
-        </a>
-      </section>
-
-      {/* Locație rapidă SSR */}
-      <section className="py-20 px-6 bg-gray-900 text-white animate-on-scroll">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8 font-[family-name:var(--font-playfair)]">Unde ne găsești</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-            <div>
-              <div className="text-3xl mb-3">📍</div>
-              <p className="font-semibold text-lg">Adresă</p>
-              <p className="text-gray-200">Bld. Regina Elisabeta 30, Sector 5, București</p>
-            </div>
-            <div>
-              <div className="text-3xl mb-3">🕐</div>
-              <p className="font-semibold text-lg">Program</p>
-              <p className="text-gray-200">Luni–Vineri 08:00–22:00</p>
-              <p className="text-gray-200">Sâmbătă–Duminică 09:00–23:00</p>
-            </div>
-            <div>
-              <div className="text-3xl mb-3">📞</div>
-              <p className="font-semibold text-lg">Telefon</p>
-              <a href="tel:+40721234567" className="text-teal-400 hover:text-teal-300">+40 721 234 567</a>
-            </div>
-          </div>
-          <a
-            href="https://maps.google.com/?q=Bld.+Regina+Elisabeta+30+Bucuresti"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-8 py-4 bg-espresso-800 hover:bg-espresso-900 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 inline-block"
-          >
-            Deschide în Google Maps
-          </a>
-        </div>
-      </section>
-
-      <div className="animate-on-scroll">
-        <About />
-      </div>
-      <FooterStarter />
+        <FooterStarter />
       </main>
 
-      {/* JSON-LD LocalBusiness */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

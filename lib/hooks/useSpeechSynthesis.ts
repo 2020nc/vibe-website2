@@ -1,19 +1,24 @@
-﻿'use client';
+'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 function normalizeSpeechText(text: string) {
   return text
     .replace(/\*\*([^*]+)\*\*/g, '$1')
     .replace(/\*([^*]+)\*/g, '$1')
     .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    // Corecții diacritice frecvente (când Claude omite accente)
-    .replace(/\bcosta\b/g, 'costă')
-    .replace(/\bexista\b/g, 'există')
-    .replace(/\bpoti\b/g, 'poți')
-    .replace(/\bpoti\b/gi, 'poți')
+    .replace(/\b([01]?\d|2[0-3]):([0-5]\d)\b/g, (_match, hours, minutes) => {
+      const normalizedHours = String(Number(hours));
+      if (minutes === '00') {
+        return `ora ${normalizedHours}`;
+      }
+
+      return `ora ${normalizedHours} si ${minutes}`;
+    })
+    .replace(/\bcosta\b/g, 'costa')
+    .replace(/\bexista\b/g, 'exista')
+    .replace(/\bpoti\b/gi, 'poti')
     .replace(/\bvrei\b/gi, 'vrei')
-    // Cuvinte englezești din contextul cafenelei
     .replace(/\bonline\b/gi, 'onlain')
     .replace(/\bcold brew\b/gi, 'cold bru')
     .replace(/\bnitro cold brew\b/gi, 'nitro cold bru')
@@ -44,7 +49,7 @@ function normalizeSpeechText(text: string) {
     .replace(/\bBld\.\s*/gi, 'Bulevardul ')
     .replace(/\bBd\.\s*/gi, 'Bulevardul ')
     .replace(/\bStr\.\s*/gi, 'Strada ')
-    .replace(/\bNr\.\s*/gi, 'numărul ')
+    .replace(/\bNr\.\s*/gi, 'numarul ')
     .replace(/\bbl\.\s*/gi, 'blocul ')
     .replace(/\bsc\.\s*/gi, 'scara ')
     .replace(/\bap\.\s*/gi, 'apartamentul ')
@@ -61,18 +66,28 @@ function normalizeSpeechText(text: string) {
     .replace(/(\d+)\s*kg\b/gi, '$1 kilograme')
     .replace(/(\d+)\s*min\b/gi, '$1 minute')
     .replace(/(\d+)\s*h\b/gi, '$1 ore')
-    .replace(/\bL-V\b/gi, 'Luni până Vineri')
-    .replace(/\bS-D\b/gi, 'Sâmbătă până Duminică')
+    .replace(/\bL-V\b/gi, 'Luni pana Vineri')
+    .replace(/\bS-D\b/gi, 'Sambata pana Duminica')
     .replace(/\s*([!?])\s*/g, '$1 ')
     .replace(/\s*([,:;])\s*/g, '$1 ')
     .replace(/\s+/g, ' ')
     .trim();
 }
 
+type SpeakOptions = {
+  onBoundary?: (
+    event: SpeechSynthesisEvent,
+    progress: { spokenText: string; spokenWordCount: number }
+  ) => void;
+  onEnd?: () => void;
+  onStart?: () => void;
+};
+
 export function useSpeechSynthesis() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
   const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
+  const speakOptionsRef = useRef<SpeakOptions | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
@@ -97,13 +112,13 @@ export function useSpeechSynthesis() {
   }, []);
 
   const speak = useCallback(
-    (text: string) => {
+    (text: string, options?: SpeakOptions) => {
       if (!isSupported) return;
 
       window.speechSynthesis.cancel();
+      speakOptionsRef.current = options ?? null;
 
       const cleanText = normalizeSpeechText(text.replace(/\n/g, ' '));
-
       const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.lang = 'ro-RO';
       utterance.rate = 0.82;
@@ -123,9 +138,29 @@ export function useSpeechSynthesis() {
         utterance.voice = selectedVoice;
       }
 
-      utterance.onstart = () => setIsSpeaking(true);
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
+      utterance.onstart = () => {
+        setIsSpeaking(true);
+        speakOptionsRef.current?.onStart?.();
+      };
+      utterance.onboundary = (event) => {
+        const spokenLength = event.charIndex + (event.charLength ?? 0);
+        const spokenText = cleanText.slice(0, spokenLength);
+        const spokenWordCount = (spokenText.match(/\S+\s*/g) ?? []).length;
+
+        speakOptionsRef.current?.onBoundary?.(event, {
+          spokenText,
+          spokenWordCount,
+        });
+      };
+      utterance.onend = () => {
+        setIsSpeaking(false);
+        speakOptionsRef.current?.onEnd?.();
+        speakOptionsRef.current = null;
+      };
+      utterance.onerror = () => {
+        setIsSpeaking(false);
+        speakOptionsRef.current = null;
+      };
 
       window.speechSynthesis.speak(utterance);
     },
@@ -136,6 +171,7 @@ export function useSpeechSynthesis() {
     if (!isSupported) return;
     window.speechSynthesis.cancel();
     setIsSpeaking(false);
+    speakOptionsRef.current = null;
   }, [isSupported]);
 
   return { speak, stop, isSpeaking, isSupported };

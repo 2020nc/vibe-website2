@@ -65,7 +65,9 @@ export default async function MeniuPage() {
       </div>
 
       {/* Meniu interactiv — conținut SSR-at cu date server-side */}
-      <MenuStarter initialItems={initialItems} />
+      <div id="produse">
+        <MenuStarter initialItems={initialItems} />
+      </div>
 
       {/* CTA */}
       <div className="text-center py-12 px-6 bg-white border-t border-gray-100">

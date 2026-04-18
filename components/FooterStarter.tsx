@@ -51,7 +51,7 @@ export default function FooterStarter() {
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 md:grid-cols-3">
           <div>
             <h3 className="mb-3 text-2xl font-bold text-white">
-              Vibe <span className="text-primary">Caffe</span>
+              Vibe <span className="text-teal-300">Caffe</span>
             </h3>
             <p className="mb-6 leading-relaxed text-gray-200">
               Cafea de specialitate intr-un ambient modern si relaxant. Te asteptam la Bld.
@@ -91,11 +91,11 @@ export default function FooterStarter() {
           <div>
             <h4 className="mb-4 text-lg font-semibold text-white">Navigare</h4>
             <ul className="space-y-3">
-              <li><Link href="/meniu" className="text-gray-200 transition-colors duration-200 hover:text-primary">Meniu</Link></li>
-              <li><Link href="/rezervari" className="text-gray-200 transition-colors duration-200 hover:text-primary">Rezervari</Link></li>
-              <li><Link href="/locatie" className="text-gray-200 transition-colors duration-200 hover:text-primary">Locatie</Link></li>
-              <li><a href="/#de-ce-vibe" className="text-gray-200 transition-colors duration-200 hover:text-primary">De ce Vibe?</a></li>
-              <li><Link href="/sarbatori" className="text-gray-200 transition-colors duration-200 hover:text-primary">Oferte Sarbatori</Link></li>
+              <li><Link href="/meniu" className="text-gray-200 transition-colors duration-200 hover:text-teal-300">Meniu</Link></li>
+              <li><Link href="/rezervari" className="text-gray-200 transition-colors duration-200 hover:text-teal-300">Rezervari</Link></li>
+              <li><Link href="/locatie" className="text-gray-200 transition-colors duration-200 hover:text-teal-300">Locatie</Link></li>
+              <li><a href="/#de-ce-vibe" className="text-gray-200 transition-colors duration-200 hover:text-teal-300">De ce Vibe?</a></li>
+              <li><Link href="/sarbatori" className="text-gray-200 transition-colors duration-200 hover:text-teal-300">Oferte Sarbatori</Link></li>
             </ul>
 
             <h4 className="mt-8 mb-3 text-lg font-semibold text-white">Contact</h4>
@@ -104,7 +104,7 @@ export default function FooterStarter() {
               <br />
               Sector 5, Bucuresti
               <br />
-              <a href="tel:+40721234567" className="transition-colors hover:text-primary">
+              <a href="tel:+40721234567" className="transition-colors hover:text-teal-300">
                 +40 721 234 567
               </a>
             </p>
@@ -150,19 +150,19 @@ export default function FooterStarter() {
         <div className="mx-auto mt-12 max-w-7xl space-y-2 border-t border-gray-700 pt-6 text-center text-sm text-gray-400">
           <div>© 2026 Vibe Caffe. Cafea buna, oameni buni, un loc al tau.</div>
           <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
-            <a href="/confidentialitate" className="text-gray-200 transition-colors hover:text-primary">
+            <a href="/confidentialitate" className="text-gray-200 transition-colors hover:text-teal-300">
               Politica de confidentialitate
             </a>
             <span>|</span>
-            <a href="/cookies" className="text-gray-200 transition-colors hover:text-primary">
+            <a href="/cookies" className="text-gray-200 transition-colors hover:text-teal-300">
               Cookies
             </a>
             <span>|</span>
-            <a href="/termeni" className="text-gray-200 transition-colors hover:text-primary">
+            <a href="/termeni" className="text-gray-200 transition-colors hover:text-teal-300">
               Termeni
             </a>
             <span>|</span>
-            <a href="mailto:contact@vibecaffe.ro" className="text-gray-200 transition-colors hover:text-primary">
+            <a href="mailto:contact@vibecaffe.ro" className="text-gray-200 transition-colors hover:text-teal-300">
               Contact
             </a>
           </div>
