@@ -42,7 +42,7 @@ function getStatusCandidates(status: RezervareStatus | RezervareStatusDb): strin
 
 async function insertRezervare(payload: {
   nume: string;
-  email: string;
+  email: string | null;
   telefon: string;
   data: string;
   ora: string;
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
   const { nume, email, telefon, data, ora, persoane, mesaj } = await req.json();
   const tenantId = process.env.NEXT_PUBLIC_TENANT_ID;
 
-  if (!nume || !email || !telefon || !data || !ora || !persoane) {
+  if (!nume || !telefon || !data || !ora || !persoane) {
     return NextResponse.json({ error: 'Câmpuri obligatorii lipsă.' }, { status: 400 });
   }
 
@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
 
   const { data: rezervare, error } = await insertRezervare({
     nume,
-    email,
+    email: email || null,
     telefon,
     data,
     ora,

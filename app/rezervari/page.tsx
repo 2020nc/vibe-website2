@@ -24,6 +24,17 @@ const initialForm: FormData = {
   mesaj: '',
 };
 
+const RESERVATION_STATS = { rating: '4.9', count: '340+' };
+
+// TODO: înlocuiește cu query Supabase real — COUNT rezervări pentru același slot
+function getMeseLibere(data: string, ora: string): number {
+  if (!data || !ora) return 8;
+  let hash = 0;
+  const s = data + ora;
+  for (let i = 0; i < s.length; i++) hash = (hash * 31 + s.charCodeAt(i)) & 0xffffffff;
+  return Math.abs(hash % 9); // 0–8
+}
+
 const ORE_SAPT = ['07:00','08:00','09:00','10:00','11:00','12:00','13:00',
                   '14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00'];
 const ORE_WE   = ['08:00','09:00','10:00','11:00','12:00','13:00',
@@ -45,6 +56,31 @@ export default function RezervariPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [ocazii, setOcazii] = useState<Set<string>>(new Set());
+  const [altcevaText, setAltcevaText] = useState('');
+
+  const OCAZII = ['Aniversare', 'Întâlnire', 'Focus', 'Brunch', 'Altceva'];
+
+  function toggleOcazie(o: string) {
+    setOcazii(prev => {
+      const next = new Set(prev);
+      if (next.has(o)) { next.delete(o); } else { next.add(o); }
+      // sincronizează form.mesaj
+      const parts = [...next].filter(x => x !== 'Altceva');
+      if (next.has('Altceva') && altcevaText) parts.push(altcevaText);
+      setForm(f => ({ ...f, mesaj: parts.join(', ') }));
+      return next;
+    });
+  }
+
+  function handleAltcevaText(val: string) {
+    setAltcevaText(val);
+    setForm(f => {
+      const parts = [...ocazii].filter(x => x !== 'Altceva');
+      if (val) parts.push(val);
+      return { ...f, mesaj: parts.join(', ') };
+    });
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -95,7 +131,13 @@ export default function RezervariPage() {
 
           {/* Titlu compact */}
           <div className="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-700 mb-3">
-            <div className="text-sm font-bold text-gray-900 dark:text-gray-100">Rezervă o masă</div>
+            <div className="flex items-center gap-3">
+              <div className="text-sm font-bold text-gray-900 dark:text-gray-100">Rezervă o masă</div>
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 dark:bg-amber-900/20 px-2.5 py-1 text-xs text-amber-900 dark:text-amber-300">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#FBBF24" stroke="none" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                {RESERVATION_STATS.rating} · {RESERVATION_STATS.count} luna aceasta
+              </span>
+            </div>
             <p className="text-xs text-gray-400 dark:text-gray-500">L–V 07:00–22:00 · S–D 08:00–23:00</p>
           </div>
 
@@ -131,13 +173,58 @@ export default function RezervariPage() {
 
                 {/* Data */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Data rezervării</label>
+                  {/* Quick date shortcuts */}
+                  {(() => {
+                    const azi = new Date().toISOString().split('T')[0];
+                    const maine = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+                    const shortcuts = [
+                      { label: 'Azi', value: azi },
+                      { label: 'Mâine', value: maine },
+                      { label: 'Altă zi', value: null as string | null },
+                    ];
+                    return (
+                      <div className="grid grid-cols-3 gap-2 mb-3">
+                        {shortcuts.map(({ label, value }) => {
+                          const isActive = value !== null && form.data === value;
+                          return (
+                            <button
+                              key={label}
+                              type="button"
+                              onClick={() => {
+                                if (value !== null) {
+                                  setForm(prev => ({ ...prev, data: value }));
+                                } else {
+                                  const el = document.getElementById('rez-data') as HTMLInputElement | null;
+                                  el?.showPicker?.();
+                                }
+                              }}
+                              className={`rounded-lg border p-2 text-center text-xs transition cursor-pointer ${
+                                isActive
+                                  ? 'bg-teal-600 border-teal-600 text-white'
+                                  : 'border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                              }`}
+                            >
+                              <span className="block font-semibold">{label}</span>
+                              {value && (
+                                <span className={`block text-[11px] mt-0.5 ${isActive ? 'text-teal-100' : 'text-gray-400 dark:text-gray-500'}`}>
+                                  {new Date(value + 'T00:00:00').toLocaleDateString('ro-RO', { day: '2-digit', month: 'short' })}
+                                </span>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
+                  <label htmlFor="rez-data" className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Data rezervării</label>
                   <input
+                    id="rez-data"
                     type="date"
                     name="data"
                     value={form.data}
                     onChange={handleChange}
                     required
+                    aria-required="true"
                     min={new Date().toISOString().split('T')[0]}
                     className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-sm"
                   />
@@ -145,22 +232,43 @@ export default function RezervariPage() {
 
                 {/* Ore */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Ora</label>
-                  <div className="grid grid-cols-4 gap-1.5">
-                    {getOre(form.data).map(h => (
-                      <button
-                        key={h}
-                        type="button"
-                        onClick={() => setForm(prev => ({ ...prev, ora: h }))}
-                        className={`py-1.5 rounded-lg text-xs font-semibold border transition-all duration-150 ${
-                          form.ora === h
-                            ? 'bg-teal-500 border-teal-500 text-white shadow-sm'
-                            : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-teal-400 hover:text-teal-600'
-                        }`}
-                      >
-                        {h}
-                      </button>
-                    ))}
+                  <div className="flex items-center justify-between mb-1">
+                    <p id="ora-label" className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Ora</p>
+                    {form.ora && (() => {
+                      const libere = getMeseLibere(form.data, form.ora);
+                      if (libere === 0) return null;
+                      const isLow = libere <= 2;
+                      return (
+                        <span className={`text-[11px] font-semibold ${isLow ? 'text-amber-700 dark:text-amber-400' : 'text-teal-700 dark:text-teal-400'}`}>
+                          {isLow ? `Doar ${libere} mese libere la ${form.ora}` : `${libere} mese libere la ${form.ora}`}
+                        </span>
+                      );
+                    })()}
+                  </div>
+                  <div className="grid grid-cols-4 gap-1.5" role="group" aria-labelledby="ora-label">
+                    {getOre(form.data).map(h => {
+                      const libere = getMeseLibere(form.data, h);
+                      const ocupat = libere === 0;
+                      return (
+                        <button
+                          key={h}
+                          type="button"
+                          onClick={() => !ocupat && setForm(prev => ({ ...prev, ora: h }))}
+                          aria-pressed={form.ora === h}
+                          aria-label={ocupat ? `Ora ${h} — ocupat` : `Ora ${h}`}
+                          disabled={ocupat}
+                          className={`py-1.5 rounded-lg text-xs font-semibold border transition-all duration-150 ${
+                            ocupat
+                              ? 'line-through text-gray-300 dark:text-gray-600 border-gray-100 dark:border-gray-700 cursor-not-allowed bg-transparent'
+                              : form.ora === h
+                                ? 'bg-teal-500 border-teal-500 text-white shadow-sm'
+                                : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-teal-400 hover:text-teal-600'
+                          }`}
+                        >
+                          {h}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -182,54 +290,102 @@ export default function RezervariPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nume complet *</label>
-                    <input type="text" name="nume" value={form.nume} onChange={handleChange} required placeholder="Ion Popescu"
+                    <label htmlFor="rez-nume" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nume complet *</label>
+                    <input id="rez-nume" type="text" name="nume" value={form.nume} onChange={handleChange} required aria-required="true" placeholder="Ion Popescu"
                       className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-sm" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email *</label>
-                    <input type="email" name="email" value={form.email} onChange={handleChange} required placeholder="ion@email.com"
+                    <label htmlFor="rez-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                    <input id="rez-email" type="email" name="email" value={form.email} onChange={handleChange} placeholder="ion@email.com"
                       className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-sm" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Telefon *</label>
-                    <input type="tel" name="telefon" value={form.telefon} onChange={handleChange} required placeholder="07xx xxx xxx"
+                    <label htmlFor="rez-telefon" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Telefon *</label>
+                    <input id="rez-telefon" type="tel" name="telefon" value={form.telefon} onChange={handleChange} required aria-required="true" placeholder="07xx xxx xxx"
                       className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-sm" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Număr persoane *</label>
-                    <select name="persoane" value={form.persoane} onChange={handleChange}
-                      className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition bg-white dark:bg-gray-700 text-sm">
-                      {[1,2,3,4,5,6,7,8,9,10].map(n => (
-                        <option key={n} value={n}>{n} {n === 1 ? 'persoană' : 'persoane'}</option>
-                      ))}
-                      <option value={15}>Grup 11–15</option>
-                      <option value={20}>Grup 16–20</option>
-                    </select>
+                    <p id="persoane-label" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Număr persoane *</p>
+                    <div role="group" aria-labelledby="persoane-label" className="flex flex-col gap-1">
+                      <div className="grid grid-cols-5 gap-1">
+                        {[1,2,3,4,5].map(n => (
+                          <button key={n} type="button" aria-pressed={form.persoane === n}
+                            onClick={() => setForm(prev => ({ ...prev, persoane: n }))}
+                            className={`py-2 rounded-md border text-sm text-center transition ${form.persoane === n ? 'bg-teal-600 border-teal-600 text-white font-medium' : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-teal-500'}`}>
+                            {n}
+                          </button>
+                        ))}
+                      </div>
+                      <div className="grid grid-cols-5 gap-1">
+                        {[6,7,8,9,10].map(n => (
+                          <button key={n} type="button" aria-pressed={form.persoane === n}
+                            onClick={() => setForm(prev => ({ ...prev, persoane: n }))}
+                            className={`py-2 rounded-md border text-sm text-center transition ${form.persoane === n ? 'bg-teal-600 border-teal-600 text-white font-medium' : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-teal-500'}`}>
+                            {n}
+                          </button>
+                        ))}
+                      </div>
+                      <div className="grid grid-cols-2 gap-1">
+                        {[{ val: 15, label: 'Grup 11–15' }, { val: 20, label: 'Grup 16–20' }].map(({ val, label }) => (
+                          <button key={val} type="button" aria-pressed={form.persoane === val}
+                            onClick={() => setForm(prev => ({ ...prev, persoane: val }))}
+                            className={`py-2 rounded-md border text-xs text-center transition ${form.persoane === val ? 'bg-teal-600 border-teal-600 text-white font-medium' : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-teal-500'}`}>
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cerințe speciale</label>
-                  <textarea name="mesaj" value={form.mesaj} onChange={handleChange} rows={2}
-                    placeholder="Ex: aniversare, loc la fereastră, alergii..."
-                    className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition resize-none text-sm" />
+                  <p className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Ocazie? <span className="text-gray-400 font-normal">(opțional)</span></p>
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {OCAZII.map(o => (
+                      <button
+                        key={o}
+                        type="button"
+                        aria-pressed={ocazii.has(o)}
+                        onClick={() => toggleOcazie(o)}
+                        className={`rounded-full px-3 py-1 text-xs border transition ${ocazii.has(o) ? 'bg-teal-100 text-teal-800 border-teal-300 dark:bg-teal-900/40 dark:text-teal-300 dark:border-teal-700' : 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
+                      >
+                        {o}
+                      </button>
+                    ))}
+                  </div>
+                  {ocazii.has('Altceva') && (
+                    <textarea
+                      value={altcevaText}
+                      onChange={e => handleAltcevaText(e.target.value)}
+                      rows={2}
+                      placeholder="Spune-ne mai multe…"
+                      className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition resize-none text-sm max-h-24"
+                    />
+                  )}
                 </div>
 
                 <div className="flex items-center gap-3 pt-1">
                   <button type="submit" disabled={loading || !form.data || !form.ora}
-                    className="flex-1 py-2.5 bg-teal-500 hover:bg-teal-600 disabled:bg-gray-200 disabled:text-gray-400 text-white font-bold text-sm rounded-xl transition-all duration-200 hover:scale-[1.01]">
-                    {loading ? 'Se trimite...' : 'Rezervă acum ☕'}
+                    className="flex-1 py-2.5 bg-teal-700 hover:bg-teal-800 disabled:bg-gray-200 disabled:text-gray-400 text-white font-bold text-sm rounded-xl transition-all duration-200 hover:scale-[1.01] flex items-center justify-center gap-2">
+                    {loading ? (
+                      <>
+                        <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                        </svg>
+                        Se confirmă…
+                      </>
+                    ) : 'Confirmă masa →'}
                   </button>
                 </div>
 
-                <div className="flex items-center justify-between text-xs text-gray-400 dark:text-gray-500 border-t border-gray-100 dark:border-gray-700 pt-2 gap-2">
-                  <span className="whitespace-nowrap">👥 Max. 20 pers.</span>
-                  <span className="whitespace-nowrap">✅ Confirmare 2h</span>
-                  <span className="whitespace-nowrap">❌ Anulare free</span>
+                <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700 pt-2">
+                  <span>Max. 20 pers.</span>
+                  <span>Confirmăm în 2h</span>
+                  <span>Anulare gratuită</span>
                 </div>
 
-                {error && <p className="text-red-500 text-xs text-center">{error}</p>}
+                {error && <p id="rez-error" role="alert" className="text-red-500 text-xs text-center">{error}</p>}
 
                 <p className="text-xs text-gray-400 dark:text-gray-500 text-center whitespace-nowrap overflow-hidden text-ellipsis">
                   Prin trimiterea acestui formular ești de acord cu{' '}
