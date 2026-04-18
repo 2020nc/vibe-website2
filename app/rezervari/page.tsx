@@ -171,11 +171,11 @@ export default function RezervariPage() {
             <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-3 items-start flex-1 min-h-0">
 
               {/* ── COLOANA STÂNGA ── */}
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 p-4 flex flex-col gap-3">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 p-3 lg:p-4 flex flex-col gap-3">
 
-                {/* Data */}
-                <div>
-                  {/* Quick date shortcuts */}
+                {/* CÂND */}
+                <div className="border-b border-gray-100 dark:border-gray-700 pb-3 lg:border-0 lg:pb-0">
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-medium mb-2">Când</p>
                   {(() => {
                     const azi = new Date().toISOString().split('T')[0];
                     const maine = new Date(Date.now() + 86400000).toISOString().split('T')[0];
@@ -188,9 +188,7 @@ export default function RezervariPage() {
                     return (
                       <div className="grid grid-cols-3 gap-2">
                         {shortcuts.map(({ label, value }) => {
-                          const isActive = value !== null
-                            ? form.data === value
-                            : !!isAltaZi;
+                          const isActive = value !== null ? form.data === value : !!isAltaZi;
                           const displayDate = value !== null
                             ? new Date(value + 'T00:00:00').toLocaleDateString('ro-RO', { day: '2-digit', month: 'short' })
                             : isAltaZi
@@ -226,7 +224,6 @@ export default function RezervariPage() {
                       </div>
                     );
                   })()}
-                  {/* Input nativ ascuns — sursa de adevar pentru state si showPicker() */}
                   <input
                     id="rez-data"
                     type="date"
@@ -240,22 +237,22 @@ export default function RezervariPage() {
                   />
                 </div>
 
-                {/* Ore */}
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <p id="ora-label" className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Ora</p>
+                {/* ORA */}
+                <div className="border-b border-gray-100 dark:border-gray-700 pb-3 lg:border-0 lg:pb-0">
+                  <div className="flex items-center justify-between mb-2">
+                    <p id="ora-label" className="text-[10px] uppercase tracking-wider text-gray-400 font-medium">Ora</p>
                     {form.ora && (() => {
                       const libere = getMeseLibere(form.data, form.ora);
                       if (libere === 0) return null;
                       const isLow = libere <= 2;
                       return (
                         <span className={`text-[11px] font-semibold ${isLow ? 'text-amber-700 dark:text-amber-400' : 'text-teal-700 dark:text-teal-400'}`}>
-                          {isLow ? `Doar ${libere} mese libere la ${form.ora}` : `${libere} mese libere la ${form.ora}`}
+                          {isLow ? `Doar ${libere} mese libere` : `${libere} mese libere`}
                         </span>
                       );
                     })()}
                   </div>
-                  <div className="grid grid-cols-4 gap-1.5" role="group" aria-labelledby="ora-label">
+                  <div className="grid grid-cols-4 gap-1" role="group" aria-labelledby="ora-label">
                     {getOre(form.data).map(h => {
                       const libere = getMeseLibere(form.data, h);
                       const ocupat = libere === 0;
@@ -267,7 +264,7 @@ export default function RezervariPage() {
                           aria-pressed={form.ora === h}
                           aria-label={ocupat ? `Ora ${h} — ocupat` : `Ora ${h}`}
                           disabled={ocupat}
-                          className={`py-1.5 rounded-lg text-xs font-semibold border transition-all duration-150 ${
+                          className={`py-2 lg:py-1.5 rounded-lg text-[11px] font-semibold border transition-all duration-150 ${
                             ocupat
                               ? 'line-through text-gray-300 dark:text-gray-600 border-gray-100 dark:border-gray-700 cursor-not-allowed bg-transparent'
                               : form.ora === h
@@ -282,93 +279,78 @@ export default function RezervariPage() {
                   </div>
                 </div>
 
-                {/* Ticket sumar */}
-                {form.data && form.ora && (
-                  <div className="flex items-center gap-2 rounded-lg border border-teal-400 bg-teal-50 dark:bg-teal-900/20 px-3 py-2">
-                    <span className="text-teal-500 text-sm">☕</span>
-                    <span className="text-teal-700 dark:text-teal-300 font-semibold text-sm capitalize">{formatData(form.data)}</span>
-                    <span className="text-teal-400 text-xs">·</span>
-                    <span className="text-teal-700 dark:text-teal-300 font-bold text-sm">{form.ora}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* ── COLOANA DREAPTA ── */}
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 p-4 flex flex-col gap-3">
-
-                <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Date de contact</div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label htmlFor="rez-nume" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nume complet *</label>
-                    <input id="rez-nume" type="text" name="nume" value={form.nume} onChange={handleChange} required aria-required="true" placeholder="Ion Popescu"
-                      className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-sm" />
-                  </div>
-                  <div className="col-span-2">
-                    <label htmlFor="rez-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
-                    <input id="rez-email" type="email" name="email" value={form.email} onChange={handleChange} placeholder="ion@email.com"
-                      className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-sm" />
-                    {/* Promisiune de valoare — mereu vizibilă */}
-                    <div className="flex items-start gap-1.5 mt-1.5">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 flex-shrink-0" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                      <span className="text-[11px] text-teal-800 dark:text-teal-400 leading-snug">Primești ofertele sezoniere și 10% la prima rezervare</span>
+                {/* PERSOANE */}
+                <div>
+                  <p id="persoane-label" className="text-[10px] uppercase tracking-wider text-gray-400 font-medium mb-2">Persoane</p>
+                  <div role="group" aria-labelledby="persoane-label" className="flex flex-col gap-1">
+                    <div className="grid grid-cols-5 lg:grid-cols-10 gap-1">
+                      {[1,2,3,4,5,6,7,8,9,10].map(n => (
+                        <button key={n} type="button" aria-pressed={form.persoane === n}
+                          onClick={() => setForm(prev => ({ ...prev, persoane: n }))}
+                          className={`py-2 lg:py-1.5 rounded border text-[11px] text-center transition ${form.persoane === n ? 'bg-teal-600 border-teal-600 text-white font-medium' : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-teal-500'}`}>
+                          {n}
+                        </button>
+                      ))}
                     </div>
-                    {/* Checkbox GDPR — apare doar când email completat */}
-                    {form.email.length > 0 && (
-                      <label className="flex items-start gap-2 mt-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={marketingConsent}
-                          onChange={e => setMarketingConsent(e.target.checked)}
-                          className="mt-0.5 accent-teal-600"
-                        />
-                        <span className="text-[11px] text-gray-600 dark:text-gray-400 leading-snug">
-                          Da, vreau să primesc ofertele sezoniere prin email. Mă pot dezabona oricând.
-                        </span>
-                      </label>
-                    )}
-                  </div>
-                  <div>
-                    <label htmlFor="rez-telefon" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Telefon *</label>
-                    <input id="rez-telefon" type="tel" name="telefon" value={form.telefon} onChange={handleChange} required aria-required="true" placeholder="07xx xxx xxx"
-                      className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-sm" />
-                  </div>
-                  <div>
-                    <p id="persoane-label" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Număr persoane *</p>
-                    <div role="group" aria-labelledby="persoane-label" className="flex flex-col gap-1">
-                      <div className="grid grid-cols-5 gap-1">
-                        {[1,2,3,4,5].map(n => (
-                          <button key={n} type="button" aria-pressed={form.persoane === n}
-                            onClick={() => setForm(prev => ({ ...prev, persoane: n }))}
-                            className={`py-2 rounded-md border text-sm text-center transition ${form.persoane === n ? 'bg-teal-600 border-teal-600 text-white font-medium' : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-teal-500'}`}>
-                            {n}
-                          </button>
-                        ))}
-                      </div>
-                      <div className="grid grid-cols-5 gap-1">
-                        {[6,7,8,9,10].map(n => (
-                          <button key={n} type="button" aria-pressed={form.persoane === n}
-                            onClick={() => setForm(prev => ({ ...prev, persoane: n }))}
-                            className={`py-2 rounded-md border text-sm text-center transition ${form.persoane === n ? 'bg-teal-600 border-teal-600 text-white font-medium' : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-teal-500'}`}>
-                            {n}
-                          </button>
-                        ))}
-                      </div>
-                      <div className="grid grid-cols-2 gap-1">
-                        {[{ val: 15, label: 'Grup 11–15' }, { val: 20, label: 'Grup 16–20' }].map(({ val, label }) => (
-                          <button key={val} type="button" aria-pressed={form.persoane === val}
-                            onClick={() => setForm(prev => ({ ...prev, persoane: val }))}
-                            className={`py-2 rounded-md border text-xs text-center transition ${form.persoane === val ? 'bg-teal-600 border-teal-600 text-white font-medium' : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-teal-500'}`}>
-                            {label}
-                          </button>
-                        ))}
-                      </div>
+                    <div className="grid grid-cols-2 gap-1">
+                      {[{ val: 15, label: 'Grup 11–15' }, { val: 20, label: 'Grup 16–20' }].map(({ val, label }) => (
+                        <button key={val} type="button" aria-pressed={form.persoane === val}
+                          onClick={() => setForm(prev => ({ ...prev, persoane: val }))}
+                          className={`py-2 lg:py-1.5 rounded border text-[11px] text-center transition ${form.persoane === val ? 'bg-teal-600 border-teal-600 text-white font-medium' : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-teal-500'}`}>
+                          {label}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>
 
+              </div>
+
+              {/* ── COLOANA DREAPTA ── */}
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 p-3 lg:p-4 flex flex-col gap-3">
+
+                {/* CINE */}
                 <div>
-                  <p className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Ocazie? <span className="text-gray-400 font-normal">(opțional)</span></p>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-medium mb-2">Cine</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label htmlFor="rez-nume" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nume complet *</label>
+                      <input id="rez-nume" type="text" name="nume" value={form.nume} onChange={handleChange} required aria-required="true" placeholder="Ion Popescu"
+                        className="w-full px-3 py-2.5 lg:py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-sm" />
+                    </div>
+                    <div>
+                      <label htmlFor="rez-telefon" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Telefon *</label>
+                      <input id="rez-telefon" type="tel" name="telefon" value={form.telefon} onChange={handleChange} required aria-required="true" placeholder="07xx xxx xxx"
+                        className="w-full px-3 py-2.5 lg:py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-sm" />
+                    </div>
+                    <div className="col-span-full">
+                      <label htmlFor="rez-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                      <input id="rez-email" type="email" name="email" value={form.email} onChange={handleChange} placeholder="ion@email.com"
+                        className="w-full px-3 py-2.5 lg:py-2 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-sm" />
+                      <div className="flex items-start gap-1.5 mt-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 flex-shrink-0" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        <span className="text-[11px] text-teal-800 dark:text-teal-400 leading-snug">Primești ofertele sezoniere și 10% la prima rezervare</span>
+                      </div>
+                      {form.email.length > 0 && (
+                        <label className="flex items-start gap-2 mt-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={marketingConsent}
+                            onChange={e => setMarketingConsent(e.target.checked)}
+                            className="mt-0.5 accent-teal-600"
+                          />
+                          <span className="text-[11px] text-gray-600 dark:text-gray-400 leading-snug">
+                            Da, vreau să primesc ofertele sezoniere prin email. Mă pot dezabona oricând.
+                          </span>
+                        </label>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* OCAZIE */}
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gray-400 font-medium mb-2">Ocazie <span className="normal-case font-normal">(opțional)</span></p>
                   <div className="flex flex-wrap gap-1.5 mb-2">
                     {OCAZII.map(o => (
                       <button
@@ -376,7 +358,7 @@ export default function RezervariPage() {
                         type="button"
                         aria-pressed={ocazii.has(o)}
                         onClick={() => toggleOcazie(o)}
-                        className={`rounded-full px-3 py-1 text-xs border transition ${ocazii.has(o) ? 'bg-teal-100 text-teal-800 border-teal-300 dark:bg-teal-900/40 dark:text-teal-300 dark:border-teal-700' : 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
+                        className={`rounded-full px-2.5 py-1 text-[11px] border transition ${ocazii.has(o) ? 'bg-teal-100 text-teal-800 border-teal-300 dark:bg-teal-900/40 dark:text-teal-300 dark:border-teal-700' : 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
                       >
                         {o}
                       </button>
@@ -393,20 +375,30 @@ export default function RezervariPage() {
                   )}
                 </div>
 
-                <div className="flex items-center gap-3 pt-1">
-                  <button type="submit" disabled={loading || !form.data || !form.ora}
-                    className="flex-1 py-2.5 bg-teal-700 hover:bg-teal-800 disabled:bg-gray-200 disabled:text-gray-400 text-white font-bold text-sm rounded-xl transition-all duration-200 hover:scale-[1.01] flex items-center justify-center gap-2">
-                    {loading ? (
-                      <>
-                        <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                        </svg>
-                        Se confirmă…
-                      </>
-                    ) : 'Confirmă masa →'}
-                  </button>
-                </div>
+                {/* Summary pill + CTA */}
+                {form.data && form.ora && (
+                  <div className="flex items-center gap-2 rounded-lg border border-teal-400 bg-teal-50 dark:bg-teal-900/20 px-3 py-2">
+                    <span className="text-teal-500 text-sm">☕</span>
+                    <span className="text-teal-700 dark:text-teal-300 font-semibold text-sm capitalize">{formatData(form.data)}</span>
+                    <span className="text-teal-400 text-xs">·</span>
+                    <span className="text-teal-700 dark:text-teal-300 font-bold text-sm">{form.ora}</span>
+                    <span className="text-teal-400 text-xs">·</span>
+                    <span className="text-teal-700 dark:text-teal-300 text-sm">{form.persoane} {form.persoane === 1 ? 'pers.' : 'pers.'}</span>
+                  </div>
+                )}
+
+                <button type="submit" disabled={loading || !form.data || !form.ora}
+                  className="w-full min-h-[44px] py-2.5 bg-teal-700 hover:bg-teal-800 disabled:bg-gray-200 disabled:text-gray-400 text-white font-bold text-sm rounded-xl transition-all duration-200 hover:scale-[1.01] flex items-center justify-center gap-2">
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                      </svg>
+                      Se confirmă…
+                    </>
+                  ) : 'Confirmă masa →'}
+                </button>
 
                 <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700 pt-2">
                   <span>Max. 20 pers.</span>
@@ -416,7 +408,7 @@ export default function RezervariPage() {
 
                 {error && <p id="rez-error" role="alert" className="text-red-500 text-xs text-center">{error}</p>}
 
-                <p className="text-xs text-gray-400 dark:text-gray-500 text-center whitespace-nowrap overflow-hidden text-ellipsis">
+                <p className="text-[10px] text-gray-400 dark:text-gray-500 text-center opacity-60">
                   Prin trimiterea acestui formular ești de acord cu{' '}
                   <a href="/confidentialitate" className="underline hover:text-gray-600">Politica de confidențialitate</a>.
                 </p>
