@@ -83,7 +83,7 @@ async function updateRezervareStatusWithCompatibleStatus(id: string, tenantId: s
 
 // POST /api/rezervari — creează o rezervare nouă
 export async function POST(req: NextRequest) {
-  const { nume, email, telefon, data, ora, persoane, mesaj } = await req.json();
+  const { nume, email, telefon, data, ora, persoane, mesaj, marketingConsent } = await req.json();
   const tenantId = process.env.NEXT_PUBLIC_TENANT_ID;
 
   if (!nume || !telefon || !data || !ora || !persoane) {
@@ -94,9 +94,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Lipsește configurarea tenant-ului.' }, { status: 500 });
   }
 
+  const emailValue: string | null = email || null;
+
   const { data: rezervare, error } = await insertRezervare({
     nume,
-    email: email || null,
+    email: emailValue,
     telefon,
     data,
     ora,
@@ -107,6 +109,23 @@ export async function POST(req: NextRequest) {
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  // GDPR: inserează în marketing_subscribers doar cu consimțământ explicit
+  if (marketingConsent === true && emailValue) {
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+      ?? req.headers.get('x-real-ip')
+      ?? null;
+
+    // upsert cu ignoreDuplicates — dacă emailul există deja, nu suprascrie consented_at original
+    await getSupabase()
+      .from('marketing_subscribers')
+      .upsert([{
+        email: emailValue,
+        source: 'rezervari',
+        consented_at: new Date().toISOString(),
+        ip_address: ip,
+      }], { onConflict: 'email', ignoreDuplicates: true });
   }
 
   return NextResponse.json({ success: true, rezervare });

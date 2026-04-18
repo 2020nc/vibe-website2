@@ -58,6 +58,7 @@ export default function RezervariPage() {
   const [error, setError] = useState('');
   const [ocazii, setOcazii] = useState<Set<string>>(new Set());
   const [altcevaText, setAltcevaText] = useState('');
+  const [marketingConsent, setMarketingConsent] = useState(false);
 
   const OCAZII = ['Aniversare', 'Întâlnire', 'Focus', 'Brunch', 'Altceva'];
 
@@ -97,7 +98,7 @@ export default function RezervariPage() {
       const res = await fetch('/api/rezervari', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, marketingConsent }),
       });
 
       const data = await res.json();
@@ -108,6 +109,7 @@ export default function RezervariPage() {
 
       setSuccess(true);
       setForm(initialForm);
+      setMarketingConsent(false);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'A apărut o eroare neașteptată.';
       setError(`Eroare: ${message}`);
@@ -302,10 +304,29 @@ export default function RezervariPage() {
                     <input id="rez-nume" type="text" name="nume" value={form.nume} onChange={handleChange} required aria-required="true" placeholder="Ion Popescu"
                       className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-sm" />
                   </div>
-                  <div>
+                  <div className="col-span-2">
                     <label htmlFor="rez-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
                     <input id="rez-email" type="email" name="email" value={form.email} onChange={handleChange} placeholder="ion@email.com"
                       className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-sm" />
+                    {/* Promisiune de valoare — mereu vizibilă */}
+                    <div className="flex items-start gap-1.5 mt-1.5">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 flex-shrink-0" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                      <span className="text-[11px] text-teal-800 dark:text-teal-400 leading-snug">Primești ofertele sezoniere și 10% la prima rezervare</span>
+                    </div>
+                    {/* Checkbox GDPR — apare doar când email completat */}
+                    {form.email.length > 0 && (
+                      <label className="flex items-start gap-2 mt-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={marketingConsent}
+                          onChange={e => setMarketingConsent(e.target.checked)}
+                          className="mt-0.5 accent-teal-600"
+                        />
+                        <span className="text-[11px] text-gray-600 dark:text-gray-400 leading-snug">
+                          Da, vreau să primesc ofertele sezoniere prin email. Mă pot dezabona oricând.
+                        </span>
+                      </label>
+                    )}
                   </div>
                   <div>
                     <label htmlFor="rez-telefon" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Telefon *</label>
