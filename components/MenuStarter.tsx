@@ -112,6 +112,8 @@ function LazyProductImage({ src, alt }: { src: string; alt: string }) {
         ref={imgRef}
         src={src}
         alt={alt}
+        loading="lazy"
+        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 33vw, 25vw"
         onLoad={() => setLoaded(true)}
         onError={(e) => {
           const img = e.target as HTMLImageElement;

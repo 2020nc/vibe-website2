@@ -162,6 +162,7 @@ export default async function SarbatoriPage() {
                           height={384}
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                           quality={60}
+                          loading="lazy"
                           className="h-full w-full object-cover"
                         />
                       </div>
@@ -205,7 +206,7 @@ export default async function SarbatoriPage() {
           )}
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {staticOffersFiltered.map((offer) => (
+            {staticOffersFiltered.map((offer, idx) => (
               <div
                 key={offer.title}
                 className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-gray-800"
@@ -218,6 +219,7 @@ export default async function SarbatoriPage() {
                     height={448}
                     sizes="(max-width: 768px) 100vw, 50vw"
                     quality={60}
+                    {...(idx === 0 ? { priority: true } : { loading: 'lazy' })}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                 </div>
