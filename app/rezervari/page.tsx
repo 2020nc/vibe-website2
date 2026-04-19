@@ -177,8 +177,8 @@ export default function RezervariPage() {
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 shadow-sm backdrop-blur-md dark:bg-gray-900/95">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-2">
-          <Link href="/" className="text-xl font-bold text-teal-500">Vibe Caffè</Link>
-          <Link href="/" className="text-sm text-gray-600 transition-colors hover:text-teal-500 dark:text-gray-300">
+          <Link href="/" className="text-xl font-bold text-teal-700">Vibe Caffè</Link>
+          <Link href="/" className="text-sm text-gray-700 transition-colors hover:text-teal-700 dark:text-gray-300">
             ← Înapoi acasă
           </Link>
         </div>
@@ -201,8 +201,8 @@ export default function RezervariPage() {
             <div className="rounded-2xl border border-teal-200 bg-teal-50 p-8 text-center">
               <div className="mb-4 text-5xl">☕</div>
               <h2 className="mb-2 text-2xl font-bold text-teal-700">Rezervare trimisă!</h2>
-              <p className="mb-1 text-teal-600">Te vom contacta în cel mult 2 ore pentru confirmare.</p>
-              <p className="mb-6 text-sm text-teal-500">
+              <p className="mb-1 text-teal-700">Te vom contacta în cel mult 2 ore pentru confirmare.</p>
+              <p className="mb-6 text-sm text-teal-700">
                 Dacă nu primești răspuns, sună la <a href="tel:+40721234567" className="font-semibold underline">+40 721 234 567</a>.
               </p>
               <div className="flex flex-col justify-center gap-3 sm:flex-row">
@@ -214,7 +214,7 @@ export default function RezervariPage() {
                 </button>
                 <Link
                   href="/"
-                  className="rounded-full border border-teal-300 bg-white px-6 py-2.5 font-semibold text-teal-600 transition-colors hover:bg-teal-50"
+                  className="rounded-full border border-teal-300 bg-white px-6 py-2.5 font-semibold text-teal-700 transition-colors hover:bg-teal-50"
                 >
                   Înapoi la pagina principală
                 </Link>
@@ -330,7 +330,7 @@ export default function RezervariPage() {
                               ? 'cursor-not-allowed border-gray-100 bg-transparent text-gray-300 line-through dark:border-gray-700 dark:text-gray-600'
                               : form.ora === h
                                 ? 'border-teal-500 bg-teal-500 text-white shadow-sm'
-                                : 'border-gray-200 bg-gray-50 text-gray-600 hover:border-teal-400 hover:text-teal-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300'
+                                : 'border-gray-200 bg-gray-50 text-gray-700 hover:border-teal-500 hover:text-teal-700 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300'
                           }`}
                         >
                           {h}
@@ -438,7 +438,7 @@ export default function RezervariPage() {
                             tabIndex={form.email.length > 0 ? 0 : -1}
                             aria-hidden={form.email.length > 0 ? undefined : true}
                           />
-                          <span className="text-[10px] leading-snug text-gray-600 dark:text-gray-400">
+                          <span className="text-[10px] leading-snug text-gray-700 dark:text-gray-400">
                             Da, vreau să primesc ofertele sezoniere prin email. Mă pot dezabona oricând.
                           </span>
                         </label>
@@ -510,15 +510,15 @@ export default function RezervariPage() {
                 <div className="mt-0.5 lg:pb-6">
                   {form.data && form.ora && (
                     <div className="flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-teal-400 bg-teal-50 px-2.5 py-1.5 dark:bg-teal-900/20">
-                      <span className="text-[13px] text-teal-500">☕</span>
+                      <span className="text-[13px] text-teal-700">☕</span>
                       <span className="text-[11px] font-semibold capitalize text-teal-700 dark:text-teal-300">{formatData(form.data)}</span>
-                      <span className="text-xs text-teal-400">·</span>
+                      <span className="text-xs text-teal-600 dark:text-teal-400">·</span>
                       <span className="text-[11px] font-bold text-teal-700 dark:text-teal-300">{form.ora}</span>
-                      <span className="text-xs text-teal-400">·</span>
+                      <span className="text-xs text-teal-600 dark:text-teal-400">·</span>
                       <span className="text-[11px] text-teal-700 dark:text-teal-300">{form.persoane} pers.</span>
                       {summaryOcazie && (
                         <>
-                          <span className="text-xs text-teal-400">·</span>
+                          <span className="text-xs text-teal-600 dark:text-teal-400">·</span>
                           <span
                             className="max-w-full break-words text-[11px] font-medium text-teal-700 dark:text-teal-300 sm:max-w-[220px] sm:truncate"
                             title={ocazie === 'Altceva' ? (altcevaText.trim() || 'Altă ocazie') : summaryOcazie}
@@ -529,7 +529,7 @@ export default function RezervariPage() {
                       )}
                       {summaryPreferinte && (
                         <>
-                          <span className="text-xs text-teal-400">·</span>
+                          <span className="text-xs text-teal-600 dark:text-teal-400">·</span>
                           <span className="max-w-full break-words text-[11px] font-medium text-teal-700 dark:text-teal-300">
                             {summaryPreferinte}
                           </span>
@@ -566,7 +566,7 @@ export default function RezervariPage() {
                     <span>Anulare gratuită</span>
                   </div>
 
-                  <p className="mt-0.5 text-center text-[9px] leading-tight text-gray-500 dark:text-gray-400">
+                  <p className="mt-0.5 text-center text-[10px] leading-tight text-gray-600 dark:text-gray-400">
                     Continuând, accepți <a href="/confidentialitate" className="underline hover:text-gray-600">termenii</a>
                   </p>
 
