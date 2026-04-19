@@ -295,7 +295,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                 {/* Valută */}
                 {showCurrencyToggle ? (
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-500 font-medium">Preț în:</span>
+                    <span className="text-xs text-gray-600 font-medium">Preț în:</span>
                     {(['RON', 'EUR', 'USD'] as Currency[]).map((c) => (
                       <button
                         key={c}
@@ -310,7 +310,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                       </button>
                     ))}
                     {curs && (
-                      <span className="text-xs text-gray-500 ml-1">
+                      <span className="text-xs text-gray-600 ml-1">
                         1€={curs.EUR.toFixed(2)} RON · 1$={curs.USD.toFixed(2)} RON
                         {!curs.updatedAt && <span className="text-amber-700"> (estimativ)</span>}
                       </span>
@@ -321,7 +321,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                 {/* Coloane — vizibil doar pe desktop */}
                 {showColumnToggle && (
                   <div className="hidden md:flex items-center gap-2">
-                    <span className="text-xs text-gray-500 font-medium mr-1">Coloane:</span>
+                    <span className="text-xs text-gray-600 font-medium mr-1">Coloane:</span>
                     {([3, 4, 5] as ColCount[]).map((n) => (
                       <button
                         key={n}
