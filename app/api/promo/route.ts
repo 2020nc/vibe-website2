@@ -34,7 +34,8 @@ export async function GET() {
     .single();
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    // Fallback dacă tabelul nu există încă — promoție dezactivată
+    return NextResponse.json({ data: null });
   }
 
   return NextResponse.json({ data });

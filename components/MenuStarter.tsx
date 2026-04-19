@@ -244,10 +244,11 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
   return (
     <section id="menu" className="py-20 px-6 bg-white">
       <div className="max-w-7xl mx-auto">
+        <h2 className="sr-only">{activeTab ? `Produse — ${CATEGORIE_TRADUCERI[activeTab] ?? activeTab}` : 'Produsele din meniu'}</h2>
 
         {/* Loading — spinner discret fără text, doar când nu există date server-side */}
         {loading && (
-          <div className="text-center py-20 text-gray-400">
+          <div className="text-center py-20 text-gray-500">
             <div className="inline-block w-8 h-8 border-4 border-amber-200 border-t-amber-600 rounded-full animate-spin" />
           </div>
         )}
@@ -292,7 +293,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                 {/* Valută */}
                 {showCurrencyToggle ? (
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-400 font-medium">Preț în:</span>
+                    <span className="text-xs text-gray-500 font-medium">Preț în:</span>
                     {(['RON', 'EUR', 'USD'] as Currency[]).map((c) => (
                       <button
                         key={c}
@@ -300,16 +301,16 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                         className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                           currency === c
                             ? 'bg-amber-600 text-white shadow-sm'
-                            : 'bg-gray-100 text-gray-500 hover:bg-amber-100 hover:text-amber-700'
+                            : 'bg-gray-100 text-gray-700 hover:bg-amber-100 hover:text-amber-800'
                         }`}
                       >
                         {c}
                       </button>
                     ))}
                     {curs && (
-                      <span className="text-xs text-gray-400 ml-1">
+                      <span className="text-xs text-gray-500 ml-1">
                         1€={curs.EUR.toFixed(2)} RON · 1$={curs.USD.toFixed(2)} RON
-                        {!curs.updatedAt && <span className="text-amber-400"> (estimativ)</span>}
+                        {!curs.updatedAt && <span className="text-amber-700"> (estimativ)</span>}
                       </span>
                     )}
                   </div>
@@ -318,7 +319,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                 {/* Coloane — vizibil doar pe desktop */}
                 {showColumnToggle && (
                   <div className="hidden md:flex items-center gap-2">
-                    <span className="text-xs text-gray-400 font-medium mr-1">Coloane:</span>
+                    <span className="text-xs text-gray-500 font-medium mr-1">Coloane:</span>
                     {([3, 4, 5] as ColCount[]).map((n) => (
                       <button
                         key={n}
@@ -326,7 +327,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                         className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
                           cols === n
                             ? 'bg-amber-600 text-white shadow-sm'
-                            : 'bg-gray-100 text-gray-500 hover:bg-amber-100 hover:text-amber-700'
+                            : 'bg-gray-100 text-gray-700 hover:bg-amber-100 hover:text-amber-800'
                         }`}
                       >
                         {n}
