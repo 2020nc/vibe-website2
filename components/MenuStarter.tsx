@@ -54,7 +54,7 @@ const TAG_STYLES: Record<string, string> = {
   'Bestseller': 'bg-amber-100 text-amber-800',
   'Sezonier':   'bg-green-100 text-green-800',
   'Signature':  'bg-teal-100 text-teal-800',
-  'Staff Pick': 'bg-orange-100 text-orange-700',
+  'Staff Pick': 'bg-orange-100 text-orange-800',
   'New':        'bg-blue-100 text-blue-800',
 };
 
@@ -381,7 +381,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                               {toDisplayPrice(item.price)}
                             </span>
                           )}
-                          <span className={`font-bold ${hasDiscount ? 'text-red-500' : 'text-amber-600'}`}>
+                          <span className={`font-bold ${hasDiscount ? 'text-red-600' : 'text-amber-700'}`}>
                             {toDisplayPrice(finalPrice)}
                           </span>
                         </div>
@@ -391,7 +391,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                       {/* Buton toggle personalizare */}
                       <button
                         onClick={() => setOpenCard(isOpen ? null : item.id)}
-                        className="text-xs font-semibold text-amber-600 hover:text-amber-800 flex items-center gap-1 transition-colors"
+                        className="text-xs font-semibold text-amber-700 hover:text-amber-900 flex items-center gap-1 transition-colors"
                       >
                         <span>{isOpen ? '▲' : '▼'}</span>
                         Personalizează comanda
@@ -425,7 +425,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                                   />
                                   {addon.name}
                                 </span>
-                                <span className="text-xs font-semibold text-amber-600">
+                                <span className="text-xs font-semibold text-amber-700">
                                   +{toDisplayPrice(addon.price)}
                                 </span>
                               </label>

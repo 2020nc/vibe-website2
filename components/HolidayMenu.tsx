@@ -182,7 +182,7 @@ function HolidayCard({
         {/* Buton toggle personalizare */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="text-xs font-semibold text-rose-500 hover:text-rose-700 flex items-center gap-1 transition-colors"
+          className="text-xs font-semibold text-rose-700 hover:text-rose-900 flex items-center gap-1 transition-colors"
         >
           <span>{isOpen ? '▲' : '▼'}</span>
           Personalizează comanda
@@ -207,7 +207,7 @@ function HolidayCard({
                   />
                   {addon.name}
                 </span>
-                <span className="text-xs font-semibold text-rose-500">+{addon.price} RON</span>
+                <span className="text-xs font-semibold text-rose-700">+{addon.price} RON</span>
               </label>
             ))}
           </div>
@@ -297,7 +297,7 @@ export default function HolidayMenu({ holidayLabel }: { holidayLabel: string }) 
 
         {/* Titlu */}
         <div className="text-center mb-12">
-          <div className="inline-block bg-rose-100 text-rose-600 font-semibold px-4 py-1.5 rounded-full text-sm mb-4">
+          <div className="inline-block bg-rose-100 text-rose-700 font-semibold px-4 py-1.5 rounded-full text-sm mb-4">
             🎉 Ofertă specială
           </div>
           <h2 className="text-5xl font-bold text-gray-900 mb-4">

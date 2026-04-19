@@ -166,7 +166,7 @@ export default async function SarbatoriPage() {
                           <span className="text-gray-400 line-through text-sm block">
                             {item.price} lei
                           </span>
-                          <span className="text-2xl font-bold text-secondary">
+                          <span className="text-2xl font-bold text-orange-700 dark:text-orange-400">
                             {finalPrice} lei
                           </span>
                         </div>
@@ -219,8 +219,8 @@ export default async function SarbatoriPage() {
                       {offer.title}
                     </h2>
                     <p className="text-gray-600 dark:text-gray-400 mb-2">{offer.description}</p>
-                    <p className="text-primary font-bold text-xl mb-1">{offer.price}</p>
-                    <p className="text-gray-400 text-sm mb-6">{offer.available}</p>
+                    <p className="text-teal-700 dark:text-teal-400 font-bold text-xl mb-1">{offer.price}</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">{offer.available}</p>
                   </div>
                   <a
                     href={offer.ctaHref}

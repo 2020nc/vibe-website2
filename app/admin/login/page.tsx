@@ -33,32 +33,43 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950">
+    <main className="min-h-screen flex items-center justify-center bg-gray-950">
       <form
         onSubmit={handleLogin}
         className="bg-gray-900 p-8 rounded-2xl shadow-xl w-full max-w-sm space-y-4"
+        aria-label="Formular autentificare admin"
       >
         <div className="text-center mb-2">
           <span className="text-white text-2xl font-bold">Vibe Caffe</span>
           <p className="text-gray-400 text-sm mt-1">Panou de administrare</p>
         </div>
-        <input
-          type="email"
-          placeholder="Email admin"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
-        />
-        <input
-          type="password"
-          placeholder="Parolă"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
-        />
-        {error && <p className="text-red-400 text-sm">{error}</p>}
+        <div>
+          <label htmlFor="admin-email" className="sr-only">Email admin</label>
+          <input
+            id="admin-email"
+            type="email"
+            placeholder="Email admin"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            aria-required="true"
+            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
+          />
+        </div>
+        <div>
+          <label htmlFor="admin-password" className="sr-only">Parolă</label>
+          <input
+            id="admin-password"
+            type="password"
+            placeholder="Parolă"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            aria-required="true"
+            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
+          />
+        </div>
+        {error && <p role="alert" className="text-red-400 text-sm">{error}</p>}
         <button
           type="submit"
           disabled={loading}
@@ -72,6 +83,6 @@ export default function AdminLogin() {
           </Link>
         </p>
       </form>
-    </div>
+    </main>
   )
 }

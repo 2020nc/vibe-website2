@@ -144,7 +144,7 @@ export default function DayAtVibe() {
                 {/* Time label */}
                 <p
                   className={`text-sm font-semibold mb-1 ${
-                    isActive ? 'text-espresso-800' : 'text-gray-400'
+                    isActive ? 'text-espresso-800' : 'text-gray-600'
                   }`}
                 >
                   {card.time}
@@ -169,7 +169,7 @@ export default function DayAtVibe() {
                   className={`
                     inline-block text-sm font-semibold underline-offset-2 hover:underline
                     focus-visible:ring-2 focus-visible:ring-espresso-800 focus-visible:ring-offset-2 rounded
-                    ${isActive ? 'text-espresso-800' : 'text-gray-500 hover:text-gray-800'}
+                    ${isActive ? 'text-espresso-800' : 'text-gray-600 hover:text-gray-900'}
                   `}
                 >
                   → {card.cta}

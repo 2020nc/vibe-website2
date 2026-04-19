@@ -56,6 +56,7 @@ export default function LocatiePage() {
 
   return (
     <div className="min-h-screen">
+      <main>
       <section className="relative flex h-[34vh] min-h-[260px] items-center justify-center overflow-hidden md:h-[42vh] md:min-h-[320px]">
         <div
           className="absolute inset-0 z-0"
@@ -116,7 +117,7 @@ export default function LocatiePage() {
                     <br />
                     Sâmbătă - Duminică: 08:00 - 23:00
                   </p>
-                  <p className="mt-2 font-semibold text-secondary">
+                  <p className="mt-2 font-bold text-orange-700 dark:text-orange-400">
                     Happy Hour: 16:00 - 18:00 (reducere 20%)
                   </p>
                 </div>
@@ -186,11 +187,11 @@ export default function LocatiePage() {
                 <div>
                   <h3 className="mb-2 text-xl font-semibold text-primary">Facilități</h3>
                   <div className="flex flex-wrap gap-2">
-                    <span className="rounded-full bg-primary/10 px-4 py-2 text-sm text-primary">Wi-Fi gratuit</span>
-                    <span className="rounded-full bg-primary/10 px-4 py-2 text-sm text-primary">Prize la fiecare masă</span>
-                    <span className="rounded-full bg-primary/10 px-4 py-2 text-sm text-primary">Acces facil</span>
-                    <span className="rounded-full bg-primary/10 px-4 py-2 text-sm text-primary">Parcare în apropiere</span>
-                    <span className="rounded-full bg-primary/10 px-4 py-2 text-sm text-primary">Pet-friendly</span>
+                    <span className="rounded-full bg-teal-100 px-4 py-2 text-sm text-teal-700 dark:bg-teal-900/30 dark:text-teal-300">Wi-Fi gratuit</span>
+                    <span className="rounded-full bg-teal-100 px-4 py-2 text-sm text-teal-700 dark:bg-teal-900/30 dark:text-teal-300">Prize la fiecare masă</span>
+                    <span className="rounded-full bg-teal-100 px-4 py-2 text-sm text-teal-700 dark:bg-teal-900/30 dark:text-teal-300">Acces facil</span>
+                    <span className="rounded-full bg-teal-100 px-4 py-2 text-sm text-teal-700 dark:bg-teal-900/30 dark:text-teal-300">Parcare în apropiere</span>
+                    <span className="rounded-full bg-teal-100 px-4 py-2 text-sm text-teal-700 dark:bg-teal-900/30 dark:text-teal-300">Pet-friendly</span>
                   </div>
                 </div>
               </div>
@@ -279,6 +280,7 @@ export default function LocatiePage() {
         </div>
       </section>
 
+      </main>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
