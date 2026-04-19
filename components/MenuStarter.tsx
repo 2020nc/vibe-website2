@@ -280,7 +280,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                   onClick={() => handleTabChange(cat)}
                   className={`px-6 py-2.5 rounded-full font-semibold transition-all duration-300 ${
                     activeTab === cat
-                      ? 'bg-amber-600 text-white shadow-lg scale-105'
+                      ? 'bg-teal-700 text-white shadow-lg scale-105'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800'
                   }`}
                 >
