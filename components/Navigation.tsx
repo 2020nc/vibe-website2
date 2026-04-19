@@ -1,6 +1,6 @@
 /**
  * NAVIGATION - Sticky navigation cu blur effect
- * MODERN: Position fixed, backdrop-filter blur, shrink on scroll
+ * Position fixed, backdrop blur, shrink on scroll și cost client-side redus.
  */
 
 'use client';
@@ -15,12 +15,29 @@ const ThemeToggle = dynamic(() => import('./ThemeToggle'), {
 });
 
 const NAV_SECTIONS = ['menu', 'de-ce-vibe', 'features', 'sarbatori', 'footer'];
+const THEME_TOGGLE_EVENTS: Array<keyof WindowEventMap> = ['pointerdown', 'keydown', 'touchstart'];
+
+type IdleCallbackHandle = number;
+
+type IdleCallbackDeadline = {
+  didTimeout: boolean;
+  timeRemaining: () => number;
+};
+
+type WindowWithIdleCallback = Window & {
+  cancelIdleCallback?: (handle: IdleCallbackHandle) => void;
+  requestIdleCallback?: (
+    callback: (deadline: IdleCallbackDeadline) => void,
+    options?: { timeout: number }
+  ) => IdleCallbackHandle;
+};
 
 export default function Navigation() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [shouldMountThemeToggle, setShouldMountThemeToggle] = useState(false);
 
   const isAdminRoute = pathname?.startsWith('/admin');
   const isHomePage = pathname === '/';
@@ -31,11 +48,75 @@ export default function Navigation() {
   useEffect(() => {
     if (!shouldRenderNav) return;
 
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
+    let frameId: number | null = null;
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    const updateScrolledState = () => {
+      frameId = null;
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    const handleScroll = () => {
+      if (frameId !== null) return;
+      frameId = window.requestAnimationFrame(updateScrolledState);
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+      }
+    };
   }, [shouldRenderNav]);
+
+  useEffect(() => {
+    if (!shouldRenderNav || shouldMountThemeToggle) return;
+
+    const windowWithIdleCallback = window as WindowWithIdleCallback;
+    let mounted = false;
+    let timeoutId: number | null = null;
+    let idleId: IdleCallbackHandle | null = null;
+
+    const mountThemeToggle = () => {
+      if (mounted) return;
+      mounted = true;
+      setShouldMountThemeToggle(true);
+    };
+
+    const cleanupInteractionListeners = () => {
+      THEME_TOGGLE_EVENTS.forEach((eventName) => {
+        window.removeEventListener(eventName, mountThemeToggle);
+      });
+    };
+
+    THEME_TOGGLE_EVENTS.forEach((eventName) => {
+      window.addEventListener(eventName, mountThemeToggle, { passive: true, once: true });
+    });
+
+    if (typeof windowWithIdleCallback.requestIdleCallback === 'function') {
+      idleId = windowWithIdleCallback.requestIdleCallback(() => {
+        mountThemeToggle();
+      }, { timeout: 1500 });
+    }
+
+    timeoutId = window.setTimeout(() => {
+      mountThemeToggle();
+    }, 1500);
+
+    return () => {
+      cleanupInteractionListeners();
+
+      if (idleId !== null && typeof windowWithIdleCallback.cancelIdleCallback === 'function') {
+        windowWithIdleCallback.cancelIdleCallback(idleId);
+      }
+
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+      }
+    };
+  }, [shouldMountThemeToggle, shouldRenderNav]);
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -115,7 +196,7 @@ export default function Navigation() {
               Locație
             </Link>
 
-            <ThemeToggle />
+            {shouldMountThemeToggle ? <ThemeToggle /> : <div aria-hidden="true" className="h-10 w-10" />}
 
             <div className="flex flex-col items-center gap-1">
               <Link
@@ -181,7 +262,7 @@ export default function Navigation() {
                 Rezervă Masă
               </Link>
               <div className="flex items-center justify-between pt-2">
-                <ThemeToggle />
+                {shouldMountThemeToggle ? <ThemeToggle /> : <div aria-hidden="true" className="h-10 w-10" />}
                 <div className="flex gap-2">
                   <a href="tel:+40721234567" className="rounded-full bg-orange-200 px-3 py-1.5 text-xs font-semibold text-orange-900">
                     Sună

@@ -1,12 +1,11 @@
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import DeferredScrollAnimations from '@/components/DeferredScrollAnimations';
 import ReviewBar from '@/components/ReviewBar';
 
 const About = dynamic(() => import('@/components/About'));
 const DayAtVibe = dynamic(() => import('@/components/DayAtVibe'));
 const FooterStarter = dynamic(() => import('@/components/FooterStarter'));
-const ScrollAnimations = dynamic(() => import('@/components/ScrollAnimations'));
-
 export const metadata = {
   title: 'Vibe Caffè — Cafea de Specialitate în București',
   description:
@@ -141,7 +140,7 @@ export default function Home() {
           </div>
         </section>
 
-        <ScrollAnimations />
+        <DeferredScrollAnimations />
         <ReviewBar />
         <DayAtVibe />
 

@@ -3,7 +3,7 @@ import { Inter, Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import DeferredChatWidget from "@/components/DeferredChatWidget";
-import FABContact from "@/components/FABContact";
+import DeferredFABContact from "@/components/DeferredFABContact";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-heading",
@@ -32,7 +32,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://vibe-website2.vercel.app"),
   title: {
-    default: "Vibe Caffè - Cafea de Specialitate în București",
+    default: "Vibe Caffè - Cafea de specialitate în București",
     template: "%s | Vibe Caffe",
   },
   description:
@@ -41,12 +41,12 @@ export const metadata: Metadata = {
     "cafea specialitate",
     "cafenea bucurești",
     "specialty coffee",
-    "brunch bucuresti",
+    "brunch bucurești",
     "vibe caffe",
   ],
   authors: [{ name: "Vibe Caffe Team" }],
   openGraph: {
-    title: "Vibe Caffe - Cafea de Specialitate",
+    title: "Vibe Caffe - Cafea de specialitate",
     description: "Cafea single-origin și brunch în inima Bucureștiului.",
     url: "https://vibe-website2.vercel.app",
     siteName: "Vibe Caffe",
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vibe Caffe - Cafea de Specialitate",
+    title: "Vibe Caffe - Cafea de specialitate",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -119,7 +119,7 @@ export default function RootLayout({
         <Navigation />
         {children}
         <DeferredChatWidget />
-        <FABContact />
+        <DeferredFABContact />
       </body>
     </html>
   );

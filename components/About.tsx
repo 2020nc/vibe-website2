@@ -14,7 +14,6 @@ export default function About() {
   const [hasImageError, setHasImageError] = useState(false);
   const imageFrameRef = useRef<HTMLDivElement>(null);
 
-  // Parallax-ul ruleaza doar pe desktop, doar cand sectiunea este relevanta in viewport.
   useEffect(() => {
     const frame = imageFrameRef.current;
     const section = elementRef.current;
@@ -129,7 +128,7 @@ export default function About() {
                 <div ref={imageFrameRef} className="h-full w-full will-change-transform">
                   <Image
                     src="https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop"
-                    alt="Interior cafenea modern si primitor"
+                    alt="Interior cafenea modern și primitor"
                     width={800}
                     height={600}
                     sizes="(max-width: 768px) 100vw, 50vw"
@@ -148,7 +147,7 @@ export default function About() {
             }`}
           >
             <div className="mb-4 inline-block rounded-full bg-secondary/10 px-4 py-2 font-semibold text-secondary">
-              Despre Noi
+              Despre noi
             </div>
 
             <h2 className="mb-6 text-4xl leading-tight font-bold text-foreground md:text-5xl">
@@ -156,22 +155,22 @@ export default function About() {
             </h2>
 
             <p className="mb-4 text-lg leading-relaxed text-gray-700">
-              Am deschis Vibe Caffe cu o singura regula: nicio ceasca nu pleaca la masa daca nu am
-              fi bucurosi s-o bem noi insine. De atunci, Andreea M. ne-a dat 5 stele de 3 ori,
-              Mihai T. vine in fiecare dimineata de marti si Raluca D. si-a scris teza de doctorat
-              la masa din coltul din dreapta.
+              Am deschis Vibe Caffe cu o singură regulă: nicio ceașcă nu pleacă la masă dacă nu am
+              fi bucuroși s-o bem noi înșine. De atunci, Andreea M. ne-a dat 5 stele de 3 ori,
+              Mihai T. vine în fiecare dimineață de marți, iar Raluca D. și-a scris teza de
+              doctorat la masa din colțul din dreapta.
             </p>
 
             <p className="mb-8 text-lg leading-relaxed text-gray-700">
-              Colaboram direct cu plantatii din America de Sud si Africa, selectand doar cele mai
-              bune boabe, prajite saptamanal in micul nostru atelier din Bucuresti.
+              Colaborăm direct cu plantații din America de Sud și Africa, selectând doar cele mai
+              bune boabe, prăjite săptămânal în micul nostru atelier din București.
             </p>
 
             <a
               href="/rezervari"
               className="inline-block rounded-full bg-primary px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-primary-dark hover:shadow-xl"
             >
-              Programeaza o Vizita
+              Programează o vizită
             </a>
           </div>
         </div>

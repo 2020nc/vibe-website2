@@ -51,11 +51,11 @@ const TAG_TRADUCERI: Record<string, string> = {
 };
 
 const TAG_STYLES: Record<string, string> = {
-  'Bestseller': 'bg-amber-100 text-amber-800',
-  'Sezonier':   'bg-green-100 text-green-800',
-  'Signature':  'bg-teal-100 text-teal-800',
-  'Staff Pick': 'bg-orange-100 text-orange-800',
-  'New':        'bg-blue-100 text-blue-800',
+  'Bestseller': 'bg-amber-200 text-amber-950',
+  'Sezonier':   'bg-green-200 text-green-950',
+  'Signature':  'bg-teal-200 text-teal-950',
+  'Staff Pick': 'bg-orange-200 text-orange-950',
+  'New':        'bg-blue-200 text-blue-950',
 };
 
 function calcFinalPrice(item: MenuItem): number {
@@ -359,7 +359,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                     {/* Imagine cu CoffeeLoader placeholder */}
                     <div className="relative overflow-hidden rounded-xl mx-3 mt-3" style={{ aspectRatio: '4/3' }}>
                       {hasDiscount && (
-                        <div className="absolute top-2 left-2 z-10 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow">
+                        <div className="absolute top-2 left-2 z-10 bg-red-700 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow">
                           {badge}
                         </div>
                       )}
@@ -377,7 +377,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                         <h3 className="text-lg font-bold text-gray-900">{item.name}</h3>
                         <div className="text-right">
                           {hasDiscount && (
-                            <span className="block text-xs text-gray-400 line-through">
+                            <span className="block text-xs text-gray-600 line-through">
                               {toDisplayPrice(item.price)}
                             </span>
                           )}
@@ -386,7 +386,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                           </span>
                         </div>
                       </div>
-                      <p className="text-gray-500 text-sm leading-relaxed mb-3">{item.description}</p>
+                      <p className="text-gray-700 text-sm leading-relaxed mb-3">{item.description}</p>
 
                       {/* Buton toggle personalizare */}
                       <button
@@ -405,7 +405,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                     {/* Panel add-on-uri (expandabil) */}
                     {isOpen && (
                       <div className="px-5 pb-5 border-t border-gray-200 pt-4">
-                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                        <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-3">
                           Adaugă la comandă
                         </p>
                         <div className="space-y-2">
@@ -440,7 +440,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                             {toDisplayPrice(total)}
                           </span>
                         </div>
-                        <p className="text-xs text-gray-400 mt-1">
+                        <p className="text-xs text-gray-600 mt-1">
                           * Menționează opțiunile dorite la comandă
                         </p>
                       </div>

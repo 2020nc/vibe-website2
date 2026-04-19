@@ -35,20 +35,29 @@ function getMeseLibere(data: string, ora: string): number {
   return Math.abs(hash % 9); // 0–8
 }
 
-const ORE_SAPT = ['07:00','08:00','09:00','10:00','11:00','12:00','13:00',
-                  '14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00'];
-const ORE_WE   = ['08:00','09:00','10:00','11:00','12:00','13:00',
-                  '14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
+const ORE_SAPT = [
+  '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00',
+  '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00',
+];
+const ORE_WE = [
+  '08:00', '09:00', '10:00', '11:00', '12:00', '13:00',
+  '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00',
+];
 
 function getOre(data: string) {
   if (!data) return ORE_SAPT;
   const zi = new Date(data).getDay();
-  return (zi === 0 || zi === 6) ? ORE_WE : ORE_SAPT;
+  return zi === 0 || zi === 6 ? ORE_WE : ORE_SAPT;
 }
 
 function formatData(data: string) {
   if (!data) return '';
-  return new Date(data).toLocaleDateString('ro-RO', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+  return new Date(data).toLocaleDateString('ro-RO', {
+    weekday: 'long',
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
 }
 
 export default function RezervariPage() {
@@ -72,7 +81,7 @@ export default function RezervariPage() {
       parts.push(nextOcazie);
     }
     if (nextPreferinte.size > 0) {
-      parts.push(...TIPURI_VIZITA.filter(preferinta => nextPreferinte.has(preferinta)));
+      parts.push(...TIPURI_VIZITA.filter((preferinta) => nextPreferinte.has(preferinta)));
     }
     return parts.join(', ');
   }
@@ -85,27 +94,27 @@ export default function RezervariPage() {
   }
 
   const summaryOcazie = getSummaryOcazieLabel();
-  const summaryPreferinte = TIPURI_VIZITA.filter(preferinta => preferinte.has(preferinta)).join(', ');
+  const summaryPreferinte = TIPURI_VIZITA.filter((preferinta) => preferinte.has(preferinta)).join(', ');
   const isSubmitDisabled = loading || !form.data || !form.ora;
 
   function selectOcazie(nextOcazie: string) {
     const resolvedOcazie = ocazie === nextOcazie ? null : nextOcazie;
     setOcazie(resolvedOcazie);
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
       mesaj: buildMesaj(resolvedOcazie, preferinte, altcevaText),
     }));
   }
 
   function togglePreferinta(preferinta: string) {
-    setPreferinte(prev => {
+    setPreferinte((prev) => {
       const next = new Set(prev);
       if (next.has(preferinta)) {
         next.delete(preferinta);
       } else {
         next.add(preferinta);
       }
-      setForm(f => ({
+      setForm((f) => ({
         ...f,
         mesaj: buildMesaj(ocazie, next, altcevaText),
       }));
@@ -115,20 +124,25 @@ export default function RezervariPage() {
 
   function handleAltcevaText(val: string) {
     setAltcevaText(val);
-    setForm(f => ({
+    setForm((f) => ({
       ...f,
       mesaj: buildMesaj(ocazie, preferinte, val),
     }));
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: name === 'persoane' ? Number(value) : value }));
+    setForm((prev) => ({ ...prev, [name]: name === 'persoane' ? Number(value) : value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.ora) { setError('Te rugăm să alegi o oră.'); return; }
+    if (!form.ora) {
+      setError('Te rugăm să alegi o oră.');
+      return;
+    }
     setLoading(true);
     setError('');
 
@@ -161,62 +175,58 @@ export default function RezervariPage() {
 
   return (
     <>
-      {/* Header */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 shadow-sm backdrop-blur-md dark:bg-gray-900/95">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-2">
           <Link href="/" className="text-xl font-bold text-teal-500">Vibe Caffè</Link>
-          <Link href="/" className="text-sm text-gray-600 dark:text-gray-300 hover:text-teal-500 transition-colors">← Înapoi acasă</Link>
+          <Link href="/" className="text-sm text-gray-600 transition-colors hover:text-teal-500 dark:text-gray-300">
+            ← Înapoi acasă
+          </Link>
         </div>
       </nav>
 
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-14 pb-4 px-4">
-        <div className="max-w-6xl w-full mx-auto">
-
-          {/* Titlu compact */}
-          <div className="flex items-center justify-between py-1.5 border-b border-gray-200 dark:border-gray-700 mb-2">
+      <main className="min-h-screen bg-gray-50 px-4 pt-14 pb-4 dark:bg-gray-900">
+        <div className="mx-auto w-full max-w-6xl">
+          <div className="mb-2 flex items-center justify-between border-b border-gray-200 py-1.5 dark:border-gray-700">
             <div className="flex items-center gap-3">
               <div className="text-sm font-bold text-gray-900 dark:text-gray-100">Rezervă o masă</div>
-              <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 dark:bg-amber-900/20 px-2 py-0.5 text-[11px] text-amber-900 dark:text-amber-300">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#FBBF24" stroke="none" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] text-amber-900 dark:bg-amber-900/20 dark:text-amber-300">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#FBBF24" stroke="none" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
                 {RESERVATION_STATS.rating} · {RESERVATION_STATS.count} luna aceasta
               </span>
             </div>
-            <p className="text-[11px] text-gray-400 dark:text-gray-500">L–V 07:00–22:00 · S–D 08:00–23:00</p>
+            <p className="text-[11px] text-gray-600 dark:text-gray-300">L–V 07:00–22:00 · S–D 08:00–23:00</p>
           </div>
 
-          {/* Success */}
           {success && (
-            <div className="p-8 bg-teal-50 border border-teal-200 rounded-2xl text-center">
-              <div className="text-5xl mb-4">☕</div>
-              <h2 className="text-2xl font-bold text-teal-700 mb-2">Rezervare trimisă!</h2>
-              <p className="text-teal-600 mb-1">Te vom contacta în cel mult 2 ore pentru confirmare.</p>
-              <p className="text-sm text-teal-500 mb-6">
-                Dacă nu primești răspuns, sună la <a href="tel:+40721234567" className="underline font-semibold">+40 721 234 567</a>.
+            <div className="rounded-2xl border border-teal-200 bg-teal-50 p-8 text-center">
+              <div className="mb-4 text-5xl">☕</div>
+              <h2 className="mb-2 text-2xl font-bold text-teal-700">Rezervare trimisă!</h2>
+              <p className="mb-1 text-teal-600">Te vom contacta în cel mult 2 ore pentru confirmare.</p>
+              <p className="mb-6 text-sm text-teal-500">
+                Dacă nu primești răspuns, sună la <a href="tel:+40721234567" className="font-semibold underline">+40 721 234 567</a>.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <div className="flex flex-col justify-center gap-3 sm:flex-row">
                 <button
                   onClick={() => setSuccess(false)}
-                  className="px-6 py-2.5 bg-teal-500 hover:bg-teal-600 text-white rounded-full transition-colors font-semibold"
+                  className="rounded-full bg-teal-500 px-6 py-2.5 font-semibold text-white transition-colors hover:bg-teal-600"
                 >
                   Rezervare nouă
                 </button>
-                <Link href="/" className="px-6 py-2.5 bg-white border border-teal-300 text-teal-600 hover:bg-teal-50 rounded-full transition-colors font-semibold">
+                <Link
+                  href="/"
+                  className="rounded-full border border-teal-300 bg-white px-6 py-2.5 font-semibold text-teal-600 transition-colors hover:bg-teal-50"
+                >
                   Înapoi la pagina principală
                 </Link>
               </div>
             </div>
           )}
 
-          {/* Layout 2 coloane */}
           {!success && (
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-3 items-start lg:grid-cols-[2fr_3fr] lg:items-stretch">
-
-              {/* ── COLOANA STÂNGA ── */}
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 p-3 flex flex-col gap-1.5 lg:h-full">
-
-                {/* CÂND */}
-                <div className="border-b border-gray-100 dark:border-gray-700 pb-2 lg:border-0 lg:pb-0 mb-2">
-                  <p className="text-sm font-bold text-teal-800 dark:text-teal-300 mb-2">Când</p>
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 items-start gap-3 lg:grid-cols-[2fr_3fr] lg:items-stretch">
+              <div className="flex flex-col gap-1.5 rounded-2xl border border-gray-100 bg-white p-3 shadow-md dark:border-gray-700 dark:bg-gray-800 lg:h-full">
+                <div className="mb-2 border-b border-gray-100 pb-2 dark:border-gray-700 lg:border-0 lg:pb-0">
+                  <p className="mb-2 text-sm font-bold text-teal-800 dark:text-teal-300">Când</p>
                   {(() => {
                     const azi = new Date().toISOString().split('T')[0];
                     const maine = new Date(Date.now() + 86400000).toISOString().split('T')[0];
@@ -226,36 +236,39 @@ export default function RezervariPage() {
                       { label: 'Mâine', value: maine },
                       { label: 'Altă zi', value: null },
                     ];
+
                     return (
                       <div className="grid grid-cols-3 gap-1.5">
                         {shortcuts.map(({ label, value }) => {
                           const isActive = value !== null ? form.data === value : !!isAltaZi;
                           const displayDate = value !== null
-                            ? new Date(value + 'T00:00:00').toLocaleDateString('ro-RO', { day: '2-digit', month: 'short' })
+                            ? new Date(`${value}T00:00:00`).toLocaleDateString('ro-RO', { day: '2-digit', month: 'short' })
                             : isAltaZi
-                              ? new Date(form.data + 'T00:00:00').toLocaleDateString('ro-RO', { day: '2-digit', month: 'short' })
+                              ? new Date(`${form.data}T00:00:00`).toLocaleDateString('ro-RO', { day: '2-digit', month: 'short' })
                               : null;
+
                           return (
                             <button
                               key={label}
                               type="button"
                               onClick={() => {
                                 if (value !== null) {
-                                  setForm(prev => ({ ...prev, data: value }));
+                                  setForm((prev) => ({ ...prev, data: value }));
                                 } else {
                                   const el = document.getElementById('rez-data') as HTMLInputElement | null;
+                                  el?.focus();
                                   el?.showPicker?.();
                                 }
                               }}
-                              className={`rounded-lg border px-1 py-1.5 text-center transition cursor-pointer ${
+                              className={`cursor-pointer rounded-lg border px-1 py-1.5 text-center transition ${
                                 isActive
-                                  ? 'bg-teal-600 border-teal-600 text-white'
-                                  : 'border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                                  ? 'border-teal-600 bg-teal-600 text-white'
+                                  : 'border-gray-200 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700'
                               }`}
                             >
                               <span className="block text-[10px] font-semibold">{label}</span>
                               {displayDate && (
-                                <span className={`block text-[11px] mt-0.5 ${isActive ? 'text-teal-100' : 'text-gray-400 dark:text-gray-500'}`}>
+                                <span className={`mt-0.5 block text-[11px] ${isActive ? 'text-teal-100' : 'text-gray-600 dark:text-gray-300'}`}>
                                   {displayDate}
                                 </span>
                               )}
@@ -265,6 +278,13 @@ export default function RezervariPage() {
                       </div>
                     );
                   })()}
+
+                  <p id="rez-data-help" className="mt-3 text-xs leading-relaxed text-gray-700 dark:text-gray-300">
+                    Alege rapid o zi din butoanele de mai sus sau selectează direct data din calendar.
+                  </p>
+                  <label htmlFor="rez-data" className="sr-only">
+                    Data rezervării
+                  </label>
                   <input
                     id="rez-data"
                     type="date"
@@ -273,14 +293,14 @@ export default function RezervariPage() {
                     onChange={handleChange}
                     required
                     aria-required="true"
+                    aria-describedby="rez-data-help"
                     min={new Date().toISOString().split('T')[0]}
-                    className="sr-only"
+                    className="mt-2 w-full min-h-[44px] rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-teal-400 dark:focus:ring-teal-900/40"
                   />
                 </div>
 
-                {/* ORA */}
-                <div className="border-b border-gray-100 dark:border-gray-700 pb-2 lg:border-0 lg:pb-0 mb-2">
-                  <div className="flex items-center justify-between mb-2">
+                <div className="mb-2 border-b border-gray-100 pb-2 dark:border-gray-700 lg:border-0 lg:pb-0">
+                  <div className="mb-2 flex items-center justify-between">
                     <p id="ora-label" className="text-sm font-bold text-teal-800 dark:text-teal-300">Ora</p>
                     {form.ora && (() => {
                       const libere = getMeseLibere(form.data, form.ora);
@@ -294,23 +314,23 @@ export default function RezervariPage() {
                     })()}
                   </div>
                   <div className="grid grid-cols-4 gap-1" role="group" aria-labelledby="ora-label">
-                    {getOre(form.data).map(h => {
+                    {getOre(form.data).map((h) => {
                       const libere = getMeseLibere(form.data, h);
                       const ocupat = libere === 0;
                       return (
                         <button
                           key={h}
                           type="button"
-                          onClick={() => !ocupat && setForm(prev => ({ ...prev, ora: h }))}
+                          onClick={() => !ocupat && setForm((prev) => ({ ...prev, ora: h }))}
                           aria-pressed={form.ora === h}
                           aria-label={ocupat ? `Ora ${h} — ocupat` : `Ora ${h}`}
                           disabled={ocupat}
-                          className={`py-2.5 md:py-1 rounded-lg text-[11px] font-semibold border transition-all duration-150 ${
+                          className={`rounded-lg border py-2.5 text-[11px] font-semibold transition-all duration-150 md:py-1 ${
                             ocupat
-                              ? 'line-through text-gray-300 dark:text-gray-600 border-gray-100 dark:border-gray-700 cursor-not-allowed bg-transparent'
+                              ? 'cursor-not-allowed border-gray-100 bg-transparent text-gray-300 line-through dark:border-gray-700 dark:text-gray-600'
                               : form.ora === h
-                                ? 'bg-teal-500 border-teal-500 text-white shadow-sm'
-                                : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-teal-400 hover:text-teal-600'
+                                ? 'border-teal-500 bg-teal-500 text-white shadow-sm'
+                                : 'border-gray-200 bg-gray-50 text-gray-600 hover:border-teal-400 hover:text-teal-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300'
                           }`}
                         >
                           {h}
@@ -320,69 +340,105 @@ export default function RezervariPage() {
                   </div>
                 </div>
 
-                {/* PERSOANE */}
                 <div className="mb-0.5">
-                  <p id="persoane-label" className="text-sm font-bold text-teal-800 dark:text-teal-300 mb-2">Persoane</p>
+                  <p id="persoane-label" className="mb-2 text-sm font-bold text-teal-800 dark:text-teal-300">Persoane</p>
                   <div role="group" aria-labelledby="persoane-label" className="flex flex-col gap-1">
-                    <div className="grid grid-cols-5 lg:grid-cols-10 gap-1">
-                      {[1,2,3,4,5,6,7,8,9,10].map(n => (
-                        <button key={n} type="button" aria-pressed={form.persoane === n}
-                          onClick={() => setForm(prev => ({ ...prev, persoane: n }))}
-                          className={`py-2.5 md:py-1 rounded border text-[11px] text-center transition ${form.persoane === n ? 'bg-teal-600 border-teal-600 text-white font-medium' : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-teal-500'}`}>
+                    <div className="grid grid-cols-5 gap-1 lg:grid-cols-10">
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                        <button
+                          key={n}
+                          type="button"
+                          aria-pressed={form.persoane === n}
+                          onClick={() => setForm((prev) => ({ ...prev, persoane: n }))}
+                          className={`rounded border py-2.5 text-center text-[11px] transition md:py-1 ${
+                            form.persoane === n
+                              ? 'border-teal-600 bg-teal-600 font-medium text-white'
+                              : 'border-gray-200 text-gray-700 hover:border-teal-500 dark:border-gray-600 dark:text-gray-300'
+                          }`}
+                        >
                           {n}
                         </button>
                       ))}
                     </div>
                     <div className="grid grid-cols-2 gap-1">
                       {[{ val: 15, label: 'Grup 11–15' }, { val: 20, label: 'Grup 16–20' }].map(({ val, label }) => (
-                        <button key={val} type="button" aria-pressed={form.persoane === val}
-                          onClick={() => setForm(prev => ({ ...prev, persoane: val }))}
-                          className={`py-2.5 md:py-1 rounded border text-[10px] text-center transition ${form.persoane === val ? 'bg-teal-600 border-teal-600 text-white font-medium' : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-teal-500'}`}>
+                        <button
+                          key={val}
+                          type="button"
+                          aria-pressed={form.persoane === val}
+                          onClick={() => setForm((prev) => ({ ...prev, persoane: val }))}
+                          className={`rounded border py-2.5 text-center text-[10px] transition md:py-1 ${
+                            form.persoane === val
+                              ? 'border-teal-600 bg-teal-600 font-medium text-white'
+                              : 'border-gray-200 text-gray-700 hover:border-teal-500 dark:border-gray-600 dark:text-gray-300'
+                          }`}
+                        >
                           {label}
                         </button>
                       ))}
                     </div>
                   </div>
                 </div>
-
               </div>
 
-              {/* ── COLOANA DREAPTA ── */}
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 p-3 flex flex-col gap-1.5 lg:h-full">
-
-                {/* CINE */}
+              <div className="flex flex-col gap-1.5 rounded-2xl border border-gray-100 bg-white p-3 shadow-md dark:border-gray-700 dark:bg-gray-800 lg:h-full">
                 <div className="mb-1.5">
-                  <p className="text-sm font-bold text-teal-800 dark:text-teal-300 mb-2">Cine</p>
+                  <p className="mb-2 text-sm font-bold text-teal-800 dark:text-teal-300">Cine</p>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="mb-1.5">
-                      <label htmlFor="rez-nume" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nume complet *</label>
-                      <input id="rez-nume" type="text" name="nume" value={form.nume} onChange={handleChange} required aria-required="true" placeholder="Ion Popescu"
-                        className="w-full px-3 py-1.5 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-[12px]" />
+                      <label htmlFor="rez-nume" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Nume complet *</label>
+                      <input
+                        id="rez-nume"
+                        type="text"
+                        name="nume"
+                        value={form.nume}
+                        onChange={handleChange}
+                        required
+                        aria-required="true"
+                        placeholder="Ion Popescu"
+                        className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-[12px] transition focus:outline-none focus:ring-2 focus:ring-teal-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+                      />
                     </div>
                     <div className="mb-1.5">
-                      <label htmlFor="rez-telefon" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Telefon *</label>
-                      <input id="rez-telefon" type="tel" name="telefon" value={form.telefon} onChange={handleChange} required aria-required="true" placeholder="07xx xxx xxx"
-                        className="w-full px-3 py-1.5 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-[12px]" />
+                      <label htmlFor="rez-telefon" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Telefon *</label>
+                      <input
+                        id="rez-telefon"
+                        type="tel"
+                        name="telefon"
+                        value={form.telefon}
+                        onChange={handleChange}
+                        required
+                        aria-required="true"
+                        placeholder="07xx xxx xxx"
+                        className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-[12px] transition focus:outline-none focus:ring-2 focus:ring-teal-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+                      />
                     </div>
                     <div className="col-span-full mb-1">
-                      <label htmlFor="rez-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
-                      <input id="rez-email" type="email" name="email" value={form.email} onChange={handleChange} placeholder="ion@email.com"
-                        className="w-full px-3 py-1.5 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition text-[12px]" />
+                      <label htmlFor="rez-email" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                      <input
+                        id="rez-email"
+                        type="email"
+                        name="email"
+                        value={form.email}
+                        onChange={handleChange}
+                        placeholder="ion@email.com"
+                        className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-[12px] transition focus:outline-none focus:ring-2 focus:ring-teal-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+                      />
                       <div className="mt-0.5 flex items-start gap-1.5 rounded-lg bg-teal-50/85 px-2 py-1 dark:bg-teal-900/20">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 flex-shrink-0" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                        <span className="text-[10px] text-teal-800 dark:text-teal-400 leading-snug">Primești ofertele sezoniere și 10% la prima rezervare</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 flex-shrink-0" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                        <span className="text-[10px] leading-snug text-teal-800 dark:text-teal-400">Primești ofertele sezoniere și 10% la prima rezervare</span>
                       </div>
                       <div className="mt-0.5 min-h-[34px]">
                         <label className={`flex items-start gap-2 ${form.email.length > 0 ? 'cursor-pointer opacity-100' : 'pointer-events-none opacity-0'}`}>
                           <input
                             type="checkbox"
                             checked={marketingConsent}
-                            onChange={e => setMarketingConsent(e.target.checked)}
+                            onChange={(e) => setMarketingConsent(e.target.checked)}
                             className="mt-0.5 accent-teal-600"
                             tabIndex={form.email.length > 0 ? 0 : -1}
                             aria-hidden={form.email.length > 0 ? undefined : true}
                           />
-                          <span className="text-[10px] text-gray-600 dark:text-gray-400 leading-snug">
+                          <span className="text-[10px] leading-snug text-gray-600 dark:text-gray-400">
                             Da, vreau să primesc ofertele sezoniere prin email. Mă pot dezabona oricând.
                           </span>
                         </label>
@@ -391,121 +447,134 @@ export default function RezervariPage() {
                   </div>
                 </div>
 
-                {/* OCAZIE */}
                 <div className="mb-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-bold text-teal-800 dark:text-teal-300 flex-shrink-0">
+                  <div className="mb-1 flex items-center gap-2">
+                    <span className="flex-shrink-0 text-sm font-bold text-teal-800 dark:text-teal-300">
                       Ocazie
                     </span>
-                    <div className="flex flex-wrap gap-1 min-w-0">
-                    {OCAZII_PRINCIPALE.map(o => (
-                      <button
-                        key={o}
-                        type="button"
-                        aria-pressed={ocazie === o}
-                        onClick={() => selectOcazie(o)}
-                        className={`rounded-full px-2 py-0.5 text-[10px] border transition ${ocazie === o ? 'bg-teal-600 text-white border-teal-600 shadow-sm dark:bg-teal-500 dark:border-teal-500' : 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
-                      >
-                        {o}
-                      </button>
-                    ))}
+                    <div className="min-w-0 flex flex-wrap gap-1">
+                      {OCAZII_PRINCIPALE.map((o) => (
+                        <button
+                          key={o}
+                          type="button"
+                          aria-pressed={ocazie === o}
+                          onClick={() => selectOcazie(o)}
+                          className={`rounded-full border px-2 py-0.5 text-[10px] transition ${
+                            ocazie === o
+                              ? 'border-teal-600 bg-teal-600 text-white shadow-sm dark:border-teal-500 dark:bg-teal-500'
+                              : 'border-gray-200 text-gray-600 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700'
+                          }`}
+                        >
+                          {o}
+                        </button>
+                      ))}
                     </div>
                   </div>
                   {ocazie === 'Altceva' && (
                     <textarea
                       value={altcevaText}
-                      onChange={e => handleAltcevaText(e.target.value)}
+                      onChange={(e) => handleAltcevaText(e.target.value)}
                       rows={1}
                       maxLength={120}
                       placeholder="Descrie pe scurt ocazia"
-                      className="w-full min-h-[44px] px-3 py-1.5 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 transition-[min-height,box-shadow] resize-none text-sm focus:min-h-[68px] max-h-24"
+                      className="max-h-24 min-h-[44px] w-full resize-none rounded-lg border border-gray-200 px-3 py-1.5 text-sm transition-[min-height,box-shadow] focus:min-h-[68px] focus:outline-none focus:ring-2 focus:ring-teal-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
                     />
                   )}
                 </div>
 
                 <div className="mb-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-bold text-teal-800 dark:text-teal-300 flex-shrink-0">
+                  <div className="mb-1 flex items-center gap-2">
+                    <span className="flex-shrink-0 text-sm font-bold text-teal-800 dark:text-teal-300">
                       Preferințe
                     </span>
-                    <div className="flex flex-wrap gap-1 min-w-0">
-                    {TIPURI_VIZITA.map(preferinta => (
-                      <button
-                        key={preferinta}
-                        type="button"
-                        aria-pressed={preferinte.has(preferinta)}
-                        onClick={() => togglePreferinta(preferinta)}
-                        className={`rounded-full px-2 py-0.5 text-[10px] border transition ${preferinte.has(preferinta) ? 'bg-teal-600 text-white border-teal-600 shadow-sm dark:bg-teal-500 dark:border-teal-500' : 'border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
-                      >
-                        {preferinta}
-                      </button>
-                    ))}
+                    <div className="min-w-0 flex flex-wrap gap-1">
+                      {TIPURI_VIZITA.map((preferinta) => (
+                        <button
+                          key={preferinta}
+                          type="button"
+                          aria-pressed={preferinte.has(preferinta)}
+                          onClick={() => togglePreferinta(preferinta)}
+                          className={`rounded-full border px-2 py-0.5 text-[10px] transition ${
+                            preferinte.has(preferinta)
+                              ? 'border-teal-600 bg-teal-600 text-white shadow-sm dark:border-teal-500 dark:bg-teal-500'
+                              : 'border-gray-200 text-gray-600 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-700'
+                          }`}
+                        >
+                          {preferinta}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>
 
                 <div className="mt-0.5 lg:pb-6">
-                {/* Summary pill + CTA */}
-                {form.data && form.ora && (
-                  <div className="flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-teal-400 bg-teal-50 dark:bg-teal-900/20 px-2.5 py-1.5">
-                    <span className="text-teal-500 text-[13px]">☕</span>
-                    <span className="text-teal-700 dark:text-teal-300 font-semibold text-[11px] capitalize">{formatData(form.data)}</span>
-                    <span className="text-teal-400 text-xs">·</span>
-                    <span className="text-teal-700 dark:text-teal-300 font-bold text-[11px]">{form.ora}</span>
-                    <span className="text-teal-400 text-xs">·</span>
-                    <span className="text-teal-700 dark:text-teal-300 text-[11px]">{form.persoane} {form.persoane === 1 ? 'pers.' : 'pers.'}</span>
-                    {summaryOcazie && (
+                  {form.data && form.ora && (
+                    <div className="flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-lg border border-teal-400 bg-teal-50 px-2.5 py-1.5 dark:bg-teal-900/20">
+                      <span className="text-[13px] text-teal-500">☕</span>
+                      <span className="text-[11px] font-semibold capitalize text-teal-700 dark:text-teal-300">{formatData(form.data)}</span>
+                      <span className="text-xs text-teal-400">·</span>
+                      <span className="text-[11px] font-bold text-teal-700 dark:text-teal-300">{form.ora}</span>
+                      <span className="text-xs text-teal-400">·</span>
+                      <span className="text-[11px] text-teal-700 dark:text-teal-300">{form.persoane} pers.</span>
+                      {summaryOcazie && (
+                        <>
+                          <span className="text-xs text-teal-400">·</span>
+                          <span
+                            className="max-w-full break-words text-[11px] font-medium text-teal-700 dark:text-teal-300 sm:max-w-[220px] sm:truncate"
+                            title={ocazie === 'Altceva' ? (altcevaText.trim() || 'Altă ocazie') : summaryOcazie}
+                          >
+                            {summaryOcazie}
+                          </span>
+                        </>
+                      )}
+                      {summaryPreferinte && (
+                        <>
+                          <span className="text-xs text-teal-400">·</span>
+                          <span className="max-w-full break-words text-[11px] font-medium text-teal-700 dark:text-teal-300">
+                            {summaryPreferinte}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitDisabled}
+                    className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded bg-teal-700 py-2.5 text-[13px] font-bold text-white transition-all duration-200 hover:scale-[1.01] hover:bg-teal-800 disabled:bg-gray-200 disabled:text-gray-400"
+                  >
+                    {loading ? (
                       <>
-                        <span className="text-teal-400 text-xs">·</span>
-                        <span className="max-w-full break-words text-teal-700 dark:text-teal-300 text-[11px] font-medium sm:max-w-[220px] sm:truncate" title={ocazie === 'Altceva' ? (altcevaText.trim() || 'Altă ocazie') : summaryOcazie}>{summaryOcazie}</span>
+                        <svg className="h-4 w-4 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z" />
+                        </svg>
+                        Se confirmă…
                       </>
-                    )}
-                    {summaryPreferinte && (
-                      <>
-                        <span className="text-teal-400 text-xs">·</span>
-                        <span className="max-w-full break-words text-teal-700 dark:text-teal-300 text-[11px] font-medium">{summaryPreferinte}</span>
-                      </>
-                    )}
+                    ) : 'Confirmă masa →'}
+                  </button>
+
+                  {isSubmitDisabled && !loading && (
+                    <p className="mt-2 text-center text-xs leading-tight text-gray-600 dark:text-gray-300">
+                      Completează informațiile necesare pentru a continua
+                    </p>
+                  )}
+
+                  <div className="mt-0.5 flex justify-between text-[10px] text-gray-600 dark:text-gray-300">
+                    <span>Max. 20 pers.</span>
+                    <span>Confirmare în 2h</span>
+                    <span>Anulare gratuită</span>
                   </div>
-                )}
 
-                <button type="submit" disabled={isSubmitDisabled}
-                  className="w-full min-h-[44px] py-2.5 bg-teal-700 hover:bg-teal-800 disabled:bg-gray-200 disabled:text-gray-400 text-white font-bold text-[13px] rounded transition-all duration-200 hover:scale-[1.01] flex items-center justify-center gap-2">
-                  {loading ? (
-                    <>
-                      <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                      </svg>
-                      Se confirmă…
-                    </>
-                  ) : 'Confirmă masa →'}
-                </button>
-
-                {isSubmitDisabled && !loading && (
-                  <p className="mt-2 text-center text-xs leading-tight text-gray-500 dark:text-gray-500">
-                    Completează informațiile necesare pentru a continua
+                  <p className="mt-0.5 text-center text-[9px] leading-tight text-gray-500 dark:text-gray-400">
+                    Continuând, accepți <a href="/confidentialitate" className="underline hover:text-gray-600">termenii</a>
                   </p>
-                )}
 
-                <div className="mt-0.5 flex justify-between text-[10px] text-gray-500 dark:text-gray-400">
-                  <span>Max. 20 pers.</span>
-                  <span>Confirmare în 2h</span>
-                  <span>Anulare gratuită</span>
+                  {error && <p id="rez-error" role="alert" className="text-center text-xs text-red-500">{error}</p>}
                 </div>
-
-                <p className="mt-0.5 text-center text-[9px] leading-tight text-gray-400/90 dark:text-gray-500">
-                  Continuând, accepți <a href="/confidentialitate" className="underline hover:text-gray-600">termenii</a>
-                </p>
-
-                {error && <p id="rez-error" role="alert" className="text-red-500 text-xs text-center">{error}</p>}
-                </div>
-
               </div>
-
             </form>
           )}
-
         </div>
       </main>
 
