@@ -6,32 +6,68 @@
 'use client';
 
 import { useScrollAnimation } from '@/lib/hooks/useScrollAnimation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 export default function Features() {
   const { elementRef, isVisible } = useScrollAnimation(0.15);
-  const [parallaxOffsets, setParallaxOffsets] = useState([0, 0, 0]);
-
-  // Efect parallax diferit pentru fiecare card.
+  // Parallax pur CSS via custom properties — zero getBoundingClientRect în scroll
   useEffect(() => {
-    const handleScroll = () => {
-      const scrolled = window.scrollY;
-      const element = elementRef.current;
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        const elementTop = rect.top + scrolled;
-        const baseOffset = scrolled - elementTop;
+    const element = elementRef.current;
+    if (!element) return;
 
-        setParallaxOffsets([
-          baseOffset * 0.2, // Card mare - mai lent
-          baseOffset * 0.15, // Card mic 1 - și mai lent
-          baseOffset * 0.25, // Card mic 2 - puțin mai rapid
-        ]);
-      }
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let ticking = false;
+    let rafId = 0;
+    let active = false;
+    let elementTop = 0;
+
+    const measure = () => {
+      elementTop = element.getBoundingClientRect().top + window.scrollY;
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const applyParallax = () => {
+      ticking = false;
+      if (!active || prefersReducedMotion.matches || window.innerWidth < 768) {
+        element.style.removeProperty('--p0');
+        element.style.removeProperty('--p1');
+        element.style.removeProperty('--p2');
+        return;
+      }
+      const base = window.scrollY - elementTop;
+      element.style.setProperty('--p0', `${(base * 0.2).toFixed(1)}px`);
+      element.style.setProperty('--p1', `${(base * 0.15).toFixed(1)}px`);
+      element.style.setProperty('--p2', `${(base * 0.25).toFixed(1)}px`);
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      rafId = requestAnimationFrame(applyParallax);
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        active = entry.isIntersecting;
+        if (!active) {
+          element.style.removeProperty('--p0');
+          element.style.removeProperty('--p1');
+          element.style.removeProperty('--p2');
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    measure();
+    observer.observe(element);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', measure, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', measure);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, [elementRef]);
 
   const features = [
@@ -84,11 +120,9 @@ export default function Features() {
               <img
                 src={features[0].image}
                 alt={features[0].title}
+                loading="lazy"
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                style={{
-                  transform: `translateY(${parallaxOffsets[0]}px) scale(1.1)`,
-                  transition: 'transform 0.1s ease-out',
-                }}
+                style={{ transform: 'translateY(var(--p0, 0px)) scale(1.1)', transition: 'transform 0.1s ease-out' }}
               />
             </div>
 
@@ -118,11 +152,9 @@ export default function Features() {
                 <img
                   src={features[1].image}
                   alt={features[1].title}
+                  loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  style={{
-                    transform: `translateY(${parallaxOffsets[1]}px) scale(1.1)`,
-                    transition: 'transform 0.1s ease-out',
-                  }}
+                  style={{ transform: 'translateY(var(--p1, 0px)) scale(1.1)', transition: 'transform 0.1s ease-out' }}
                 />
               </div>
 
@@ -150,11 +182,9 @@ export default function Features() {
                 <img
                   src={features[2].image}
                   alt={features[2].title}
+                  loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  style={{
-                    transform: `translateY(${parallaxOffsets[2]}px) scale(1.1)`,
-                    transition: 'transform 0.1s ease-out',
-                  }}
+                  style={{ transform: 'translateY(var(--p2, 0px)) scale(1.1)', transition: 'transform 0.1s ease-out' }}
                 />
               </div>
 

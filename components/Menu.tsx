@@ -379,25 +379,34 @@ export default function Menu() {
 
   // Auto-highlight tab la scroll
   useEffect(() => {
-    const handleScroll = () => {
-      const categoryElements = categories.map(cat => ({
-        category: cat,
-        element: document.getElementById(`category-${cat}`)
-      }));
+    let ticking = false;
+    let rafId = 0;
 
-      for (const { category, element } of categoryElements) {
-        if (element) {
-          const rect = element.getBoundingClientRect();
+    const checkActive = () => {
+      ticking = false;
+      for (const cat of categories) {
+        const el = document.getElementById(`category-${cat}`);
+        if (el) {
+          const rect = el.getBoundingClientRect();
           if (rect.top <= 250 && rect.bottom >= 250) {
-            setActiveCategory(category);
+            setActiveCategory(cat);
             break;
           }
         }
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      rafId = requestAnimationFrame(checkActive);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (
