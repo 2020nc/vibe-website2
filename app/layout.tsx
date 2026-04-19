@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
+import ThemeSync from "@/components/ThemeSync";
 import DeferredChatWidget from "@/components/DeferredChatWidget";
 import DeferredFABContact from "@/components/DeferredFABContact";
 
@@ -18,7 +19,7 @@ const playfair = Playfair_Display({
   subsets: ["latin", "latin-ext"],
   weight: ["700"],
   display: "swap",
-  preload: true,
+  preload: false,
 });
 
 const inter = Inter({
@@ -117,6 +118,7 @@ export default function RootLayout({
         className={`${plusJakarta.variable} ${inter.variable} ${playfair.variable} antialiased`}
       >
         <Navigation />
+        <ThemeSync />
         {children}
         <DeferredChatWidget />
         <DeferredFABContact />

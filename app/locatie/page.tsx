@@ -57,7 +57,7 @@ const galleryImages = [
 
 export default function LocatiePage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[var(--surface-page)]">
       <main>
         <section className="relative flex h-[34vh] min-h-[260px] items-center justify-center overflow-hidden md:h-[42vh] md:min-h-[320px]">
           <div className="absolute inset-0 z-0">
@@ -95,7 +95,7 @@ export default function LocatiePage() {
           </div>
         </section>
 
-        <section id="harta" className="bg-white px-6 py-12 dark:bg-gray-900 md:py-14">
+        <section id="harta" className="bg-[var(--surface-page,#fff)] px-6 py-12 md:py-14">
           <div className="mx-auto max-w-7xl">
             <div className="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-2">
               <div className="glass rounded-3xl p-8">

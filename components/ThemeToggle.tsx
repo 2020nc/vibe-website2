@@ -1,59 +1,47 @@
-/**
- * 🌓 THEME TOGGLE - Dark Mode Switch
- * Toggle între light și dark mode cu localStorage
- */
-
 'use client';
 
 import { useEffect, useState } from 'react';
 
+function applyTheme(dark: boolean) {
+  if (dark) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.documentElement.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+  }
+}
+
 export default function ThemeToggle() {
   const [isDark, setIsDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    // Citește preferința din localStorage
-    const savedTheme = localStorage.getItem('theme');
+    const saved = localStorage.getItem('theme');
+    const dark = saved === 'dark';
+    setIsDark(dark);
+    applyTheme(dark);
 
-    // DOAR folosește savedTheme, NU detecta automat OS dark mode
-    const shouldBeDark = savedTheme === 'dark';
-    setIsDark(shouldBeDark);
-
-    if (shouldBeDark) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      document.documentElement.classList.add('dark');
-    } else {
-      // Asigură-te că dark mode e complet dezactivat în light mode
-      document.documentElement.removeAttribute('data-theme');
-      document.documentElement.classList.remove('dark');
-    }
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === 'theme') setIsDark(e.newValue === 'dark');
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
   }, []);
 
   const toggleTheme = () => {
-    const newTheme = !isDark;
-    setIsDark(newTheme);
-
-    if (newTheme) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
+    const next = !isDark;
+    setIsDark(next);
+    applyTheme(next);
+    window.dispatchEvent(new StorageEvent('storage', { key: 'theme', newValue: next ? 'dark' : 'light' }));
   };
-
-  // Prevent hydration mismatch
-  if (!mounted) {
-    return <div className="w-14 h-8" />;
-  }
 
   return (
     <button
       onClick={toggleTheme}
-      className="relative w-14 h-8 bg-gray-300 dark:bg-gray-700 rounded-full p-1 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-primary"
+      suppressHydrationWarning
+      className="relative w-14 h-8 bg-gray-400 dark:bg-gray-600 rounded-full p-1 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-primary"
       aria-label="Toggle dark mode"
     >
       <div

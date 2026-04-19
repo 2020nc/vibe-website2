@@ -124,7 +124,11 @@ export default function Navigation() {
 
   return (
     <>
-      <nav className="fixed left-0 right-0 top-0 z-50 border-b border-gray-100 bg-white/95 py-4 shadow-sm backdrop-blur-md transition-all duration-300 dark:border-[#5A3A22] dark:bg-[#1A120C]/95">
+      <nav className={`fixed left-0 right-0 top-0 z-50 py-4 backdrop-blur-md transition-all duration-300 ${
+        isHomePage && !isScrolled
+          ? 'border-b border-white/10 bg-[#6B3A1F]/55 shadow-none'
+          : 'border-b border-gray-100 bg-white/95 shadow-sm dark:border-[#5A3A22] dark:bg-[#1A120C]/95'
+      }`}>
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
           <Link href="/" className="group flex items-center gap-2">
             <svg
@@ -143,14 +147,14 @@ export default function Navigation() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 18v3" />
             </svg>
             <span
-              className="text-xl font-bold text-gray-900 transition-all duration-300 dark:text-gray-100"
+              className={`text-xl font-bold transition-all duration-300 ${isHomePage && !isScrolled ? 'text-white' : 'text-gray-900 dark:text-gray-100'}`}
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               Vibe Caffè
             </span>
           </Link>
 
-          <div className="hidden items-center gap-6 text-gray-900 dark:text-gray-100 md:flex">
+          <div className={`hidden items-center gap-6 md:flex ${isHomePage && !isScrolled ? 'text-white' : 'text-gray-900 dark:text-gray-100'}`}>
             <Link href="/meniu#produse" className="rounded-full px-3 py-1.5 font-semibold transition-all duration-200 hover:text-primary">
               Meniu
             </Link>
@@ -181,7 +185,7 @@ export default function Navigation() {
               <div className="flex gap-2">
                 <a
                   href="tel:+40721234567"
-                  className="rounded-full bg-orange-200 px-2.5 py-1 text-xs font-semibold text-orange-900 transition-colors hover:bg-orange-300"
+                  className="rounded-full bg-orange-200 px-2.5 py-1 text-xs font-semibold text-orange-900 transition-colors hover:bg-orange-300 dark:bg-orange-900/60 dark:text-orange-200 dark:hover:bg-orange-800/60"
                 >
                   Sună
                 </a>
@@ -189,7 +193,7 @@ export default function Navigation() {
                   href="https://wa.me/40721234567"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700 transition-colors hover:bg-green-200"
+                  className="rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700 transition-colors hover:bg-green-200 dark:bg-green-900/50 dark:text-green-300 dark:hover:bg-green-800/50"
                 >
                   WhatsApp
                 </a>

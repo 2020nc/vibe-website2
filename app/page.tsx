@@ -113,7 +113,17 @@ export default function Home() {
   return (
     <>
       <main>
-        <section className="relative min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 px-6 text-center">
+        <section className="relative min-h-screen px-6 text-center">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 h-full w-full object-cover"
+          >
+            <source src="/hero-coffee 2_1.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-black/50" />
           <div className="relative z-10 mx-auto flex min-h-screen max-w-4xl items-center justify-center">
             <div>
               <h1 className="mb-6 text-5xl font-bold text-white md:text-7xl font-[family-name:var(--font-playfair)]">
@@ -138,6 +148,16 @@ export default function Home() {
               </div>
             </div>
           </div>
+
+          <a
+            href="#de-ce-vibe"
+            className="absolute bottom-10 left-1/2 z-10 -translate-x-1/2 animate-bounce text-white/75 transition-colors duration-300 hover:text-teal-300"
+            aria-label="Scroll în jos"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </a>
         </section>
 
         <DeferredScrollAnimations />
@@ -149,7 +169,7 @@ export default function Home() {
             <h2 className="mb-4 text-center text-4xl font-bold text-gray-900 md:text-5xl font-[family-name:var(--font-playfair)]">
               De ce Vibe?
             </h2>
-            <p className="mb-12 text-center text-lg text-gray-500">
+            <p className="mb-12 text-center text-lg text-gray-600">
               Diferențiatori concreți, nu afirmații vagi.
             </p>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -174,7 +194,7 @@ export default function Home() {
             <h2 className="mb-4 text-center text-4xl font-bold text-gray-900 md:text-5xl font-[family-name:var(--font-playfair)]">
               Din meniul nostru
             </h2>
-            <p className="mb-12 text-center text-lg text-gray-500">
+            <p className="mb-12 text-center text-lg text-gray-600">
               Cafea bună. Oameni buni. Un loc al tău.
             </p>
             <div className="mb-10 grid grid-cols-2 gap-4 md:grid-cols-3">
@@ -194,7 +214,7 @@ export default function Home() {
                   </div>
                   <div className="flex items-center justify-between p-4">
                     <span className="font-semibold text-gray-900">{item.name}</span>
-                    <span className="font-bold text-teal-600">{item.price} lei</span>
+                    <span className="font-bold text-teal-700">{item.price} lei</span>
                   </div>
                 </div>
               ))}
@@ -215,7 +235,7 @@ export default function Home() {
             <h2 className="mb-4 text-center text-4xl font-bold text-gray-900 md:text-5xl font-[family-name:var(--font-playfair)]">
               Oferte sezoniere
             </h2>
-            <p className="mb-12 text-center text-lg text-gray-500">
+            <p className="mb-12 text-center text-lg text-gray-600">
               Produse disponibile în această perioadă.
             </p>
             <div className="mb-10 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -239,7 +259,7 @@ export default function Home() {
                   <div className="p-6">
                     <div className="mb-3 flex items-start justify-between">
                       <h3 className="text-xl font-bold text-gray-900">{item.name}</h3>
-                      <span className="ml-2 whitespace-nowrap font-bold text-teal-600">
+                      <span className="ml-2 whitespace-nowrap font-bold text-teal-700">
                         {item.price} lei
                       </span>
                     </div>

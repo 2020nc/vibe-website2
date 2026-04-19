@@ -16,7 +16,7 @@ export default function HeroStarter({ showHoliday = false }: { showHoliday?: boo
         playsInline
         className="absolute inset-0 h-full w-full object-cover"
       >
-        <source src="/2853793-uhd_3840_2160_24fps.mp4" type="video/mp4" />
+        <source src="/hero-coffee 2.mp4" type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-black/50" />
 
