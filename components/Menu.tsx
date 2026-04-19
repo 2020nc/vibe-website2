@@ -377,36 +377,24 @@ export default function Menu() {
     }
   };
 
-  // Auto-highlight tab la scroll
+  // Auto-highlight tab la scroll — IntersectionObserver, zero getBoundingClientRect
   useEffect(() => {
-    let ticking = false;
-    let rafId = 0;
+    const observers: IntersectionObserver[] = [];
 
-    const checkActive = () => {
-      ticking = false;
-      for (const cat of categories) {
-        const el = document.getElementById(`category-${cat}`);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 250 && rect.bottom >= 250) {
-            setActiveCategory(cat);
-            break;
-          }
-        }
-      }
-    };
+    categories.forEach((cat) => {
+      const el = document.getElementById(`category-${cat}`);
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setActiveCategory(cat);
+        },
+        { rootMargin: '-200px 0px -60% 0px', threshold: 0 }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
 
-    const handleScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      rafId = requestAnimationFrame(checkActive);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (rafId) cancelAnimationFrame(rafId);
-    };
+    return () => observers.forEach((o) => o.disconnect());
   }, []);
 
   return (

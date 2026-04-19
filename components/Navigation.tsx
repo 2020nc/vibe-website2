@@ -14,7 +14,6 @@ const ThemeToggle = dynamic(() => import('./ThemeToggle'), {
   ssr: false,
 });
 
-const NAV_SECTIONS = ['menu', 'de-ce-vibe', 'features', 'sarbatori', 'footer'];
 const THEME_TOGGLE_EVENTS: Array<keyof WindowEventMap> = ['pointerdown', 'keydown', 'touchstart'];
 
 type IdleCallbackHandle = number;
@@ -35,7 +34,6 @@ type WindowWithIdleCallback = Window & {
 export default function Navigation() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [shouldMountThemeToggle, setShouldMountThemeToggle] = useState(false);
 
@@ -122,31 +120,6 @@ export default function Navigation() {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  useEffect(() => {
-    if (!shouldRenderNav || !isHomePage) {
-      setActiveSection('');
-      return;
-    }
-
-    const observers: IntersectionObserver[] = [];
-    NAV_SECTIONS.forEach((id) => {
-      const element = document.getElementById(id);
-      if (!element) return;
-
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActiveSection(id);
-        },
-        { threshold: 0.1, rootMargin: '-60px 0px -40% 0px' }
-      );
-
-      observer.observe(element);
-      observers.push(observer);
-    });
-
-    return () => observers.forEach((observer) => observer.disconnect());
-  }, [isHomePage, shouldRenderNav]);
-
   if (!shouldRenderNav) return null;
 
   return (
@@ -155,7 +128,7 @@ export default function Navigation() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
           <Link href="/" className="group flex items-center gap-2">
             <svg
-              className={`text-primary transition-all duration-300 ${isScrolled ? 'h-8 w-8' : 'h-10 w-10'}`}
+              className={`text-primary h-10 w-10 transition-[transform,color] duration-300 ${isScrolled ? 'scale-[0.8]' : 'scale-100'}`}
               fill="none"
               stroke="currentColor"
               strokeWidth="1.5"
@@ -185,9 +158,8 @@ export default function Navigation() {
             <Link
               href="/#de-ce-vibe"
               className={`rounded-full px-3 py-1.5 font-semibold transition-all duration-200 ${
-                activeSection === 'de-ce-vibe' ? 'bg-primary text-white shadow-sm' : 'hover:text-primary'
+                isHomePage ? 'bg-primary text-white shadow-sm' : 'hover:text-primary'
               }`}
-              style={{ color: activeSection === 'de-ce-vibe' ? undefined : 'inherit' }}
             >
               De ce Vibe?
             </Link>

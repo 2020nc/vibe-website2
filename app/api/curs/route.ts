@@ -63,9 +63,6 @@ export async function GET() {
     if (cache) {
       return NextResponse.json({ data: cache.data, stale: true });
     }
-    return NextResponse.json(
-      { error: 'Nu s-a putut obține cursul BNR. Încearcă din nou.' },
-      { status: 503 }
-    );
+    return NextResponse.json({ data: null });
   }
 }
