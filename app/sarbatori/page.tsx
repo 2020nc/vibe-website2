@@ -39,6 +39,11 @@ function getDiscountBadge(cfg: HolidayConfig): string {
     : `-${cfg.discount_amount} RON`;
 }
 
+const FALLBACK = { items: [] as MenuItem[], cfg: null };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const timeoutReject = (ms: number): Promise<any> =>
+  new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms));
+
 async function getHolidayData(): Promise<{ items: MenuItem[]; cfg: HolidayConfig | null }> {
   try {
     const supabase = createClient(
@@ -47,23 +52,27 @@ async function getHolidayData(): Promise<{ items: MenuItem[]; cfg: HolidayConfig
     );
 
     const tenantId = process.env.NEXT_PUBLIC_TENANT_ID!;
-    const [menuRes, holidayRes] = await Promise.all([
-      supabase
-        .from('menu_items')
-        .select('*')
-        .eq('available', true)
-        .eq('tenant_id', tenantId)
-        .order('category')
-        .order('sort_order'),
-      supabase.from('holiday_config').select('*').eq('id', 1).single(),
+    const result = await Promise.race([
+      Promise.all([
+        supabase
+          .from('menu_items')
+          .select('*')
+          .eq('available', true)
+          .eq('tenant_id', tenantId)
+          .order('category')
+          .order('sort_order'),
+        supabase.from('holiday_config').select('*').eq('id', 1).single(),
+      ]),
+      timeoutReject(800),
     ]);
 
+    const [menuRes, holidayRes] = result;
     return {
       items: (menuRes.data as MenuItem[]) ?? [],
       cfg: (holidayRes.data as HolidayConfig) ?? null,
     };
   } catch {
-    return { items: [], cfg: null };
+    return FALLBACK;
   }
 }
 
@@ -118,7 +127,7 @@ export default async function SarbatoriPage() {
       <main className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-20">
         <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 px-6 py-24 text-center text-white">
           {cfg && (
-            <span className="mb-6 inline-block rounded-full bg-orange-600 px-4 py-1 text-sm font-bold uppercase tracking-widest text-white">
+            <span className="mb-6 inline-block rounded-full bg-orange-700 px-4 py-1 text-sm font-bold uppercase tracking-widest text-white">
               {cfg.label}
             </span>
           )}

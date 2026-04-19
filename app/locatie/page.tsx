@@ -163,10 +163,10 @@ export default function LocatiePage() {
                     </a>
                     <Link
                       href="/rezervari"
-                      className="w-full rounded-2xl bg-orange-500 px-4 py-4 text-center font-semibold text-white shadow-sm transition-all duration-300 hover:scale-[1.02] hover:bg-orange-600"
+                      className="w-full rounded-2xl bg-orange-700 px-4 py-4 text-center font-semibold text-white shadow-sm transition-all duration-300 hover:scale-[1.02] hover:bg-orange-800"
                     >
                       <span className="block text-sm font-bold">Rezervă masă</span>
-                      <span className="mt-1 block text-xs text-white/90">
+                      <span className="mt-1 block text-xs text-white">
                         Ideal pentru weekend și grupuri
                       </span>
                     </Link>
@@ -290,7 +290,7 @@ export default function LocatiePage() {
                 </a>
                 <Link
                   href="/#menu"
-                  className="rounded-full bg-secondary px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-secondary-dark hover:shadow-xl"
+                  className="rounded-full bg-orange-700 px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-orange-800 hover:shadow-xl"
                 >
                   Vezi meniul
                 </Link>

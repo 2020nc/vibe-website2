@@ -302,7 +302,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                         onClick={() => setCurrency(c)}
                         className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                           currency === c
-                            ? 'bg-amber-600 text-white shadow-sm'
+                            ? 'bg-amber-700 text-white shadow-sm'
                             : 'bg-gray-100 text-gray-700 hover:bg-amber-100 hover:text-amber-800'
                         }`}
                       >
@@ -328,7 +328,7 @@ export default function MenuStarter({ initialItems }: { initialItems?: MenuItem[
                         onClick={() => changeCols(n)}
                         className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
                           cols === n
-                            ? 'bg-amber-600 text-white shadow-sm'
+                            ? 'bg-amber-700 text-white shadow-sm'
                             : 'bg-gray-100 text-gray-700 hover:bg-amber-100 hover:text-amber-800'
                         }`}
                       >

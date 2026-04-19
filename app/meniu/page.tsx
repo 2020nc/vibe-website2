@@ -74,7 +74,7 @@ export default async function MeniuPage() {
         <p className="text-lg text-gray-600 mb-6">Vrei să rezervi o masă?</p>
         <a
           href="/rezervari"
-          className="px-8 py-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 inline-block"
+          className="px-8 py-4 bg-teal-700 hover:bg-teal-800 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 inline-block"
         >
           Rezervă masă
         </a>
