@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export const metadata = {
   title: 'Politică Cookies | Vibe Caffè',
   description: 'Politica de cookies Vibe Caffè — ce cookies folosim și cum le poți gestiona.',
@@ -46,7 +48,7 @@ export default function CookiesPage() {
         </section>
 
         <div className="mt-10 pt-6 border-t border-gray-100">
-          <a href="/" className="text-teal-600 hover:underline font-semibold">← Înapoi la homepage</a>
+          <Link href="/" className="text-teal-600 hover:underline font-semibold">← Înapoi la homepage</Link>
         </div>
       </div>
     </main>

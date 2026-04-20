@@ -572,7 +572,7 @@ export default function RezervariPage() {
                   </div>
 
                   <p className="mt-0.5 text-center text-[10px] leading-tight text-gray-600 dark:text-gray-400">
-                    Continuând, accepți <a href="/confidentialitate" className="underline hover:text-gray-600">termenii</a>
+                    Continuând, accepți <Link href="/confidentialitate" className="underline hover:text-gray-600">termenii</Link>
                   </p>
 
                   {error && <p id="rez-error" role="alert" className="text-center text-xs text-red-500">{error}</p>}

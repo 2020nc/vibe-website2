@@ -94,7 +94,7 @@ export default function FooterStarter() {
               <li><Link href="/meniu" className="text-gray-200 transition-colors duration-200 hover:text-teal-300">Meniu</Link></li>
               <li><Link href="/rezervari" className="text-gray-200 transition-colors duration-200 hover:text-teal-300">Rezervări</Link></li>
               <li><Link href="/locatie" className="text-gray-200 transition-colors duration-200 hover:text-teal-300">Locație</Link></li>
-              <li><a href="/#de-ce-vibe" className="text-gray-200 transition-colors duration-200 hover:text-teal-300">De ce Vibe?</a></li>
+              <li><Link href="/#de-ce-vibe" className="text-gray-200 transition-colors duration-200 hover:text-teal-300">De ce Vibe?</Link></li>
               <li><Link href="/sarbatori" className="text-gray-200 transition-colors duration-200 hover:text-teal-300">Oferte sărbători</Link></li>
             </ul>
 
@@ -150,17 +150,17 @@ export default function FooterStarter() {
         <div className="mx-auto mt-12 max-w-7xl space-y-2 border-t border-gray-700 pt-6 text-center text-sm text-gray-300">
           <div>© 2026 Vibe Caffe. Cafea bună, oameni buni, un loc al tău.</div>
           <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
-            <a href="/confidentialitate" className="text-gray-200 transition-colors hover:text-teal-300">
+            <Link href="/confidentialitate" className="text-gray-200 transition-colors hover:text-teal-300">
               Politică de confidențialitate
-            </a>
+            </Link>
             <span>|</span>
-            <a href="/cookies" className="text-gray-200 transition-colors hover:text-teal-300">
+            <Link href="/cookies" className="text-gray-200 transition-colors hover:text-teal-300">
               Cookies
-            </a>
+            </Link>
             <span>|</span>
-            <a href="/termeni" className="text-gray-200 transition-colors hover:text-teal-300">
+            <Link href="/termeni" className="text-gray-200 transition-colors hover:text-teal-300">
               Termeni
-            </a>
+            </Link>
             <span>|</span>
             <a href="mailto:contact@vibecaffe.ro" className="text-gray-200 transition-colors hover:text-teal-300">
               Contact

@@ -1,5 +1,6 @@
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import Link from 'next/link';
 import DeferredScrollAnimations from '@/components/DeferredScrollAnimations';
 import ReviewBar from '@/components/ReviewBar';
 
@@ -133,23 +134,23 @@ export default function Home() {
                 Meniu clar, rezervări rapide și locație ușor de găsit în centrul Bucureștiului.
               </p>
               <div className="flex flex-col justify-center gap-4 sm:flex-row">
-                <a
+                <Link
                   href="/meniu"
                   className="rounded-full bg-espresso-800 px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-espresso-900"
                 >
                   Vezi meniul
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/rezervari"
                   className="rounded-full bg-oliv-600 px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-oliv-800"
                 >
                   Rezervă masă
-                </a>
+                </Link>
               </div>
             </div>
           </div>
 
-          <a
+          <Link
             href="#de-ce-vibe"
             className="absolute bottom-10 left-1/2 z-10 -translate-x-1/2 animate-bounce text-white/75 transition-colors duration-300 hover:text-teal-300"
             aria-label="Scroll în jos"
@@ -157,7 +158,7 @@ export default function Home() {
             <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="6 9 12 15 18 9" />
             </svg>
-          </a>
+          </Link>
         </section>
 
         <DeferredScrollAnimations />
@@ -220,12 +221,12 @@ export default function Home() {
               ))}
             </div>
             <div className="text-center">
-              <a
+              <Link
                 href="/meniu"
                 className="inline-block rounded-full bg-espresso-800 px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-espresso-900"
               >
                 Vezi meniul complet
-              </a>
+              </Link>
             </div>
           </div>
         </section>
@@ -269,12 +270,12 @@ export default function Home() {
               ))}
             </div>
             <div className="text-center">
-              <a
+              <Link
                 href="/sarbatori"
                 className="inline-block rounded-full bg-oliv-600 px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-oliv-800"
               >
                 Vezi toate ofertele sezoniere
-              </a>
+              </Link>
             </div>
           </div>
         </section>

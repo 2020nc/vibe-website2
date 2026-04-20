@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getSupabase } from '@/lib/supabase';
 import MenuStarter from '@/components/MenuStarter';
 
@@ -72,12 +73,12 @@ export default async function MeniuPage() {
       {/* CTA */}
       <div className="text-center py-12 px-6 bg-white border-t border-gray-100">
         <p className="text-lg text-gray-600 mb-6">Vrei să rezervi o masă?</p>
-        <a
+        <Link
           href="/rezervari"
           className="px-8 py-4 bg-teal-700 hover:bg-teal-800 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 inline-block"
         >
           Rezervă masă
-        </a>
+        </Link>
       </div>
     </main>
   );

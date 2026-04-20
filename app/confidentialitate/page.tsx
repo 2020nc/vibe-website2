@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export const metadata = {
   title: 'Politică de Confidențialitate | Vibe Caffè',
   description: 'Politica de confidențialitate Vibe Caffè — cum colectăm și folosim datele tale.',
@@ -57,7 +59,7 @@ export default function ConfidentialitatePage() {
         </section>
 
         <div className="mt-10 pt-6 border-t border-gray-100">
-          <a href="/" className="text-teal-600 hover:underline font-semibold">← Înapoi la homepage</a>
+          <Link href="/" className="text-teal-600 hover:underline font-semibold">← Înapoi la homepage</Link>
         </div>
       </div>
     </main>

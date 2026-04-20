@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import Image from 'next/image';
+import Link from 'next/link';
 import FooterStarter from '@/components/FooterStarter';
 
 export const metadata = {
@@ -241,24 +242,33 @@ export default async function SarbatoriPage() {
                     <p className="mb-1 text-xl font-bold text-teal-700 dark:text-teal-300">{offer.price}</p>
                     <p className="mb-6 text-sm text-gray-600 dark:text-gray-300">{offer.available}</p>
                   </div>
-                  <a
-                    href={offer.ctaHref}
-                    className="inline-block rounded-full bg-primary px-6 py-3 text-center font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-primary-dark"
-                  >
-                    {offer.ctaLabel}
-                  </a>
+                  {offer.ctaHref.startsWith('/') ? (
+                    <Link
+                      href={offer.ctaHref}
+                      className="inline-block rounded-full bg-primary px-6 py-3 text-center font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-primary-dark"
+                    >
+                      {offer.ctaLabel}
+                    </Link>
+                  ) : (
+                    <a
+                      href={offer.ctaHref}
+                      className="inline-block rounded-full bg-primary px-6 py-3 text-center font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-primary-dark"
+                    >
+                      {offer.ctaLabel}
+                    </a>
+                  )}
                 </div>
               </div>
             ))}
           </div>
 
           <div className="mt-12 text-center">
-            <a
+            <Link
               href="/#menu"
               className="inline-block rounded-full bg-gray-900 px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600"
             >
               Meniu complet
-            </a>
+            </Link>
           </div>
         </div>
       </main>

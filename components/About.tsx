@@ -6,6 +6,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useScrollAnimation } from '@/lib/hooks/useScrollAnimation';
 
@@ -166,12 +167,12 @@ export default function About() {
               bune boabe, prăjite săptămânal în micul nostru atelier din București.
             </p>
 
-            <a
+            <Link
               href="/rezervari"
               className="inline-block rounded-full bg-primary px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-primary-dark hover:shadow-xl"
             >
               Programează o vizită
-            </a>
+            </Link>
           </div>
         </div>
       </div>

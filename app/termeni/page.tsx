@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export const metadata = {
   title: 'Termeni și Condiții | Vibe Caffè',
   description: 'Termeni și condiții de utilizare Vibe Caffè — regulile pentru rezervări și folosirea site-ului.',
@@ -54,7 +56,7 @@ export default function TermeniPage() {
         </section>
 
         <div className="mt-10 pt-6 border-t border-gray-100">
-          <a href="/" className="text-teal-600 hover:underline font-semibold">← Înapoi la homepage</a>
+          <Link href="/" className="text-teal-600 hover:underline font-semibold">← Înapoi la homepage</Link>
         </div>
       </div>
     </main>
