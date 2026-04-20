@@ -96,9 +96,9 @@ function countRenderedWords(text: string) {
   return (text.match(/\S+\s*/g) ?? []).length;
 }
 
-export default function ChatWidget() {
+export default function ChatWidget({ initiallyOpen = false }: { initiallyOpen?: boolean }) {
   const chatPanelId = 'chat-widget-panel';
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(initiallyOpen);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',

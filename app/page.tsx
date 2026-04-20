@@ -121,7 +121,7 @@ export default function Home() {
             playsInline
             className="absolute inset-0 h-full w-full object-cover"
           >
-            <source src="/hero-coffee 2_1.mp4" type="video/mp4" />
+            <source src="/hero-coffee 2_1_3.mp4" type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-black/50" />
           <div className="relative z-10 mx-auto flex min-h-screen max-w-4xl items-center justify-center">

@@ -15,6 +15,7 @@ const ThemeToggle = dynamic(() => import('./ThemeToggle'), {
 });
 
 const THEME_TOGGLE_EVENTS: Array<keyof WindowEventMap> = ['pointerdown', 'keydown', 'touchstart'];
+const PRELOADER_EVENT = 'vibe-preloader:show';
 
 type IdleCallbackHandle = number;
 
@@ -122,6 +123,10 @@ export default function Navigation() {
 
   if (!shouldRenderNav) return null;
 
+  const handleLogoClick = () => {
+    window.dispatchEvent(new Event(PRELOADER_EVENT));
+  };
+
   return (
     <>
       <nav className={`fixed left-0 right-0 top-0 z-50 py-4 backdrop-blur-md transition-all duration-300 ${
@@ -130,7 +135,7 @@ export default function Navigation() {
           : 'border-b border-gray-100 bg-white/95 shadow-sm dark:border-[#5A3A22] dark:bg-[#1A120C]/95'
       }`}>
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
-          <Link href="/" className="group flex items-center gap-2">
+          <Link href="/" onClick={handleLogoClick} className="group flex items-center gap-2">
             <svg
               className={`text-primary h-10 w-10 transition-[transform,color] duration-300 ${isScrolled ? 'scale-[0.8]' : 'scale-100'}`}
               fill="none"

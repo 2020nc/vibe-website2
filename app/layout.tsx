@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
+import Preloader from "@/components/Preloader";
 import ThemeSync from "@/components/ThemeSync";
 import DeferredChatWidget from "@/components/DeferredChatWidget";
 import DeferredFABContact from "@/components/DeferredFABContact";
@@ -117,6 +118,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${plusJakarta.variable} ${inter.variable} ${playfair.variable} antialiased`}
       >
+        <Preloader />
         <Navigation />
         <ThemeSync />
         {children}

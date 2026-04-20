@@ -367,6 +367,40 @@ button:active, .btn:active {
   }
 }
 
+@keyframes preloaderFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes preloaderFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes preloaderBar {
+  0% {
+    transform: scaleX(0.08);
+    opacity: 0.9;
+  }
+  55% {
+    transform: scaleX(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0.95;
+  }
+}
+
 /* Smooth scroll behavior - dezactivat pentru Lenis */
 html.lenis {
   height: auto;
@@ -431,4 +465,3 @@ html.lenis-smooth {
   filter: invert(1) brightness(1.5);
   cursor: pointer;
 }
-

@@ -147,7 +147,7 @@ export default function FooterStarter() {
           </div>
         </div>
 
-        <div className="mx-auto mt-12 max-w-7xl space-y-2 border-t border-gray-700 pt-6 text-center text-sm text-gray-400">
+        <div className="mx-auto mt-12 max-w-7xl space-y-2 border-t border-gray-700 pt-6 text-center text-sm text-gray-300">
           <div>© 2026 Vibe Caffe. Cafea bună, oameni buni, un loc al tău.</div>
           <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
             <a href="/confidentialitate" className="text-gray-200 transition-colors hover:text-teal-300">

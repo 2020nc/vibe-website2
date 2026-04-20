@@ -25,6 +25,7 @@ const initialForm: FormData = {
 };
 
 const RESERVATION_STATS = { rating: '4.9', count: '340+' };
+const PRELOADER_EVENT = 'vibe-preloader:show';
 
 // TODO: înlocuiește cu query Supabase real — COUNT rezervări pentru același slot
 function getMeseLibere(data: string, ora: string): number {
@@ -173,11 +174,15 @@ export default function RezervariPage() {
     }
   };
 
+  function handleLogoClick() {
+    window.dispatchEvent(new Event(PRELOADER_EVENT));
+  }
+
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 shadow-sm backdrop-blur-md dark:bg-gray-900/95">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-2">
-          <Link href="/" className="text-xl font-bold text-teal-700">Vibe Caffè</Link>
+          <Link href="/" onClick={handleLogoClick} className="text-xl font-bold text-teal-700">Vibe Caffè</Link>
           <Link href="/" className="text-sm text-gray-700 transition-colors hover:text-teal-700 dark:text-gray-300">
             ← Înapoi acasă
           </Link>

@@ -1,118 +1,91 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+const INITIAL_SHOW_DURATION_MS = 700;
+const INITIAL_FADE_DURATION_MS = 250;
+const LOGO_SHOW_DURATION_MS = 450;
+const LOGO_FADE_DURATION_MS = 180;
+const PRELOADER_EVENT = 'vibe-preloader:show';
 
 export default function Preloader() {
-  const [hidden, setHidden] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [isLeaving, setIsLeaving] = useState(false);
+  const enterTimerRef = useRef<number | null>(null);
+  const exitTimerRef = useRef<number | null>(null);
+
+  const startSequence = (showDuration: number, fadeDuration: number) => {
+    if (enterTimerRef.current !== null) {
+      window.clearTimeout(enterTimerRef.current);
+    }
+
+    if (exitTimerRef.current !== null) {
+      window.clearTimeout(exitTimerRef.current);
+    }
+
+    setIsVisible(true);
+    setIsLeaving(false);
+
+    enterTimerRef.current = window.setTimeout(() => {
+      setIsLeaving(true);
+
+      exitTimerRef.current = window.setTimeout(() => {
+        setIsVisible(false);
+      }, fadeDuration);
+    }, showDuration);
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => setHidden(true), 3200);
-    return () => clearTimeout(timer);
+    const handleShowPreloader = () => {
+      startSequence(LOGO_SHOW_DURATION_MS, LOGO_FADE_DURATION_MS);
+    };
+
+    window.addEventListener(PRELOADER_EVENT, handleShowPreloader);
+
+    return () => {
+      window.removeEventListener(PRELOADER_EVENT, handleShowPreloader);
+
+      if (enterTimerRef.current !== null) {
+        window.clearTimeout(enterTimerRef.current);
+      }
+
+      if (exitTimerRef.current !== null) {
+        window.clearTimeout(exitTimerRef.current);
+      }
+    };
   }, []);
 
-  if (hidden) return null;
+  useEffect(() => {
+    startSequence(INITIAL_SHOW_DURATION_MS, INITIAL_FADE_DURATION_MS);
+  }, []);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted || !isVisible) return null;
 
   return (
-    <div className="preloader-overlay">
-      <div className="preloader-cup">
-        {/* Ceașcă SVG */}
-        <svg width="120" height="130" viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg">
-          {/* Clip path pentru lichidul din ceașcă */}
-          <defs>
-            <clipPath id="cupClip">
-              <path d="M18 40 Q16 95 20 105 Q30 118 60 118 Q90 118 100 105 Q104 95 102 40 Z" />
-            </clipPath>
-          </defs>
+    <div
+      className={`fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_38%,rgba(255,255,255,0.12),transparent_18%),linear-gradient(135deg,#28b8b2_0%,#1fa6a1_38%,#5db6a9_66%,#ff8b2a_100%)] transition-opacity duration-[180ms] ${
+        isLeaving ? 'pointer-events-none opacity-0' : 'pointer-events-auto opacity-100'
+      }`}
+      aria-hidden="true"
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_22%,rgba(255,255,255,0.14),transparent_28%),radial-gradient(circle_at_68%_58%,rgba(255,255,255,0.08),transparent_30%),radial-gradient(circle_at_82%_88%,rgba(255,201,120,0.24),transparent_24%)]" />
 
-          {/* Lichidul care se umple */}
-          <rect
-            x="10" y="0" width="110" height="120"
-            fill="#92400e"
-            clipPath="url(#cupClip)"
-            className="coffee-fill"
-          />
+      <div className="relative z-10 flex w-full max-w-xl flex-col items-center px-6 text-center text-white">
+        <div className="mb-5 flex h-32 w-32 items-center justify-center rounded-full bg-white/8 shadow-[0_0_60px_rgba(255,255,255,0.12)] backdrop-blur-[2px]">
+          <div className="text-7xl drop-shadow-[0_8px_12px_rgba(0,0,0,0.28)] animate-[preloaderFloat_1.2s_ease-in-out_infinite]">
+            ☕
+          </div>
+        </div>
 
-          {/* Corpul ceștii */}
-          <path
-            d="M18 40 Q16 95 20 105 Q30 118 60 118 Q90 118 100 105 Q104 95 102 40 Z"
-            stroke="white" strokeWidth="3.5" fill="none"
-          />
-
-          {/* Marginea de sus */}
-          <ellipse cx="60" cy="40" rx="42" ry="8" stroke="white" strokeWidth="3.5" fill="none" />
-
-          {/* Toarta */}
-          <path
-            d="M102 55 Q125 55 125 75 Q125 95 102 90"
-            stroke="white" strokeWidth="3.5" fill="none" strokeLinecap="round"
-          />
-
-          {/* Farfurioara */}
-          <ellipse cx="60" cy="122" rx="52" ry="7" stroke="white" strokeWidth="3" fill="none" />
-
-          {/* Abur 1 */}
-          <path d="M45 28 Q42 18 45 10 Q48 2 45 -5" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" className="steam steam-1" />
-          {/* Abur 2 */}
-          <path d="M60 26 Q57 16 60 8 Q63 0 60 -7" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" className="steam steam-2" />
-          {/* Abur 3 */}
-          <path d="M75 28 Q72 18 75 10 Q78 2 75 -5" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" className="steam steam-3" />
-        </svg>
-
+        <div className="mt-6 h-[5px] w-full max-w-[220px] overflow-hidden rounded-full bg-white/30">
+          <div className="h-full w-full origin-left rounded-full bg-white shadow-[0_0_14px_rgba(255,255,255,0.38)] animate-[preloaderBar_0.8s_ease-in-out_infinite]" />
+        </div>
       </div>
-
-      <style>{`
-        .preloader-overlay {
-          position: fixed;
-          inset: 0;
-          background: #1a0a00;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 9999;
-          animation: preloaderFadeOut 0.6s ease-out 2.8s forwards;
-        }
-
-        .preloader-cup {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 24px;
-        }
-
-        /* Umplerea cu cafea: de jos în sus, durată 2.2s */
-        .coffee-fill {
-          transform-origin: bottom;
-          transform: scaleY(0);
-          animation: fillCup 2.2s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
-        }
-
-        @keyframes fillCup {
-          from { transform: scaleY(0); }
-          to   { transform: scaleY(1); }
-        }
-
-        /* Abur */
-        .steam {
-          opacity: 0;
-          stroke-dasharray: 30;
-          stroke-dashoffset: 30;
-        }
-        .steam-1 { animation: steamRise 1s ease-out 2s infinite; }
-        .steam-2 { animation: steamRise 1s ease-out 2.3s infinite; }
-        .steam-3 { animation: steamRise 1s ease-out 2.6s infinite; }
-
-        @keyframes steamRise {
-          0%   { opacity: 0; stroke-dashoffset: 30; }
-          30%  { opacity: 1; }
-          100% { opacity: 0; stroke-dashoffset: 0; }
-        }
-
-        /* Fade out overlay */
-        @keyframes preloaderFadeOut {
-          from { opacity: 1; pointer-events: all; }
-          to   { opacity: 0; pointer-events: none; }
-        }
-      `}</style>
     </div>
   );
 }
